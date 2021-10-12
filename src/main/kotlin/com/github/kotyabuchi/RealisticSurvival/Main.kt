@@ -1,13 +1,24 @@
 package com.github.kotyabuchi.RealisticSurvival
 
+import com.github.kotyabuchi.RealisticSurvival.Event.CustomEventCaller
+import com.github.kotyabuchi.RealisticSurvival.Skill.MineAssist
+import com.github.kotyabuchi.RealisticSurvival.Skill.TreeAssist
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
 class Main: JavaPlugin() {
 
+    private fun registerEvents() {
+        val pm = server.pluginManager
+        pm.registerEvents(CustomEventCaller, this)
+        pm.registerEvents(TreeAssist, this)
+        pm.registerEvents(MineAssist, this)
+    }
+
     override fun onEnable() {
         setupKoin()
+        registerEvents()
         println("Enabled")
     }
 
