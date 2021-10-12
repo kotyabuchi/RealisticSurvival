@@ -4,6 +4,7 @@ import com.github.kotyabuchi.RealisticSurvival.Event.CustomEventCaller
 import com.github.kotyabuchi.RealisticSurvival.Skill.MineAssist
 import com.github.kotyabuchi.RealisticSurvival.Skill.TreeAssist
 import com.github.kotyabuchi.RealisticSurvival.System.LevelTheFarmlandAnPath
+import com.github.kotyabuchi.RealisticSurvival.System.SafeFarmland
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
@@ -18,6 +19,7 @@ class Main: JavaPlugin() {
         pm.registerEvents(MineAssist, this)
         // System
         pm.registerEvents(LevelTheFarmlandAnPath, this)
+        pm.registerEvents(SafeFarmland, this)
     }
 
     override fun onEnable() {
