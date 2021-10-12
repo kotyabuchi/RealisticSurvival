@@ -3,6 +3,7 @@ package com.github.kotyabuchi.RealisticSurvival
 import com.github.kotyabuchi.RealisticSurvival.Event.CustomEventCaller
 import com.github.kotyabuchi.RealisticSurvival.Skill.MineAssist
 import com.github.kotyabuchi.RealisticSurvival.Skill.TreeAssist
+import com.github.kotyabuchi.RealisticSurvival.System.LevelTheFarmlandAnPath
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
@@ -12,8 +13,11 @@ class Main: JavaPlugin() {
     private fun registerEvents() {
         val pm = server.pluginManager
         pm.registerEvents(CustomEventCaller, this)
+        // Skill
         pm.registerEvents(TreeAssist, this)
         pm.registerEvents(MineAssist, this)
+        // System
+        pm.registerEvents(LevelTheFarmlandAnPath, this)
     }
 
     override fun onEnable() {
