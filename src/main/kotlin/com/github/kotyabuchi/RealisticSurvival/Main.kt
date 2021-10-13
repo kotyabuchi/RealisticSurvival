@@ -3,6 +3,7 @@ package com.github.kotyabuchi.RealisticSurvival
 import com.github.kotyabuchi.RealisticSurvival.Event.CustomEventCaller
 import com.github.kotyabuchi.RealisticSurvival.Skill.MineAssist
 import com.github.kotyabuchi.RealisticSurvival.Skill.TreeAssist
+import com.github.kotyabuchi.RealisticSurvival.System.Combat.DamagePopup
 import com.github.kotyabuchi.RealisticSurvival.System.Combat.Fracture
 import com.github.kotyabuchi.RealisticSurvival.System.LevelTheFarmlandAnPath
 import com.github.kotyabuchi.RealisticSurvival.System.SafeCropAndReplant
@@ -21,6 +22,7 @@ class Main: JavaPlugin() {
         pm.registerEvents(MineAssist, this)
         // System
             // Combat
+        pm.registerEvents(DamagePopup, this)
         pm.registerEvents(Fracture, this)
 
         pm.registerEvents(LevelTheFarmlandAnPath, this)
