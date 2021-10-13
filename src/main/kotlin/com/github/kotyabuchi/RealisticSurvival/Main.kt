@@ -6,6 +6,7 @@ import com.github.kotyabuchi.RealisticSurvival.Skill.TreeAssist
 import com.github.kotyabuchi.RealisticSurvival.System.Combat.DamagePopup
 import com.github.kotyabuchi.RealisticSurvival.System.Combat.Fracture
 import com.github.kotyabuchi.RealisticSurvival.System.LevelTheFarmlandAnPath
+import com.github.kotyabuchi.RealisticSurvival.System.ReplantSapling
 import com.github.kotyabuchi.RealisticSurvival.System.SafeCropAndReplant
 import com.github.kotyabuchi.RealisticSurvival.System.SafeFarmland
 import org.bukkit.plugin.java.JavaPlugin
@@ -26,6 +27,7 @@ class Main: JavaPlugin() {
         pm.registerEvents(Fracture, this)
 
         pm.registerEvents(LevelTheFarmlandAnPath, this)
+        pm.registerEvents(ReplantSapling, this)
         pm.registerEvents(SafeCropAndReplant, this)
         pm.registerEvents(SafeFarmland, this)
     }
