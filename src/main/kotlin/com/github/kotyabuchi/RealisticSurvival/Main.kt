@@ -5,6 +5,7 @@ import com.github.kotyabuchi.RealisticSurvival.Skill.MineAssist
 import com.github.kotyabuchi.RealisticSurvival.Skill.TreeAssist
 import com.github.kotyabuchi.RealisticSurvival.System.Combat.Fracture
 import com.github.kotyabuchi.RealisticSurvival.System.LevelTheFarmlandAnPath
+import com.github.kotyabuchi.RealisticSurvival.System.SafeCropAndReplant
 import com.github.kotyabuchi.RealisticSurvival.System.SafeFarmland
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.context.startKoin
@@ -23,6 +24,7 @@ class Main: JavaPlugin() {
         pm.registerEvents(Fracture, this)
 
         pm.registerEvents(LevelTheFarmlandAnPath, this)
+        pm.registerEvents(SafeCropAndReplant, this)
         pm.registerEvents(SafeFarmland, this)
     }
 
@@ -33,6 +35,7 @@ class Main: JavaPlugin() {
     }
 
     override fun onDisable() {
+        DamagePopup.clearPopup()
         println("Disabled")
     }
 
