@@ -3,12 +3,9 @@ package com.github.kotyabuchi.RealisticSurvival
 import com.github.kotyabuchi.RealisticSurvival.Event.CustomEventCaller
 import com.github.kotyabuchi.RealisticSurvival.Skill.MineAssist
 import com.github.kotyabuchi.RealisticSurvival.Skill.TreeAssist
+import com.github.kotyabuchi.RealisticSurvival.System.*
 import com.github.kotyabuchi.RealisticSurvival.System.Combat.DamagePopup
 import com.github.kotyabuchi.RealisticSurvival.System.Combat.Fracture
-import com.github.kotyabuchi.RealisticSurvival.System.LevelTheFarmlandAnPath
-import com.github.kotyabuchi.RealisticSurvival.System.ReplantSapling
-import com.github.kotyabuchi.RealisticSurvival.System.SafeCropAndReplant
-import com.github.kotyabuchi.RealisticSurvival.System.SafeFarmland
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
@@ -26,6 +23,7 @@ class Main: JavaPlugin() {
         pm.registerEvents(DamagePopup, this)
         pm.registerEvents(Fracture, this)
 
+        pm.registerEvents(AnimalShearing, this)
         pm.registerEvents(LevelTheFarmlandAnPath, this)
         pm.registerEvents(ReplantSapling, this)
         pm.registerEvents(SafeCropAndReplant, this)
