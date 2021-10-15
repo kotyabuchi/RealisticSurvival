@@ -28,6 +28,7 @@ class Main: JavaPlugin() {
         pm.registerEvents(ReplantSapling, this)
         pm.registerEvents(SafeCropAndReplant, this)
         pm.registerEvents(SafeFarmland, this)
+        pm.registerEvents(StarterItem, this)
     }
 
     override fun onEnable() {
