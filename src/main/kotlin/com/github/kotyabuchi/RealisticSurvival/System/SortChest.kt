@@ -87,7 +87,7 @@ object SortChest: CommandExecutor, TabCompleter, Listener, KoinComponent {
                 while (amount > 0) {
                     val addAmount = min(itemStack.maxStackSize, amount)
                     itemStack.amount = addAmount
-                    newContent.add(itemStack)
+                    newContent.add(itemStack.clone())
                     amount -= addAmount
                 }
             }
