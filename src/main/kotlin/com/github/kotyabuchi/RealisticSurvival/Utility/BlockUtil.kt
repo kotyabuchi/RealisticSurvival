@@ -8,6 +8,7 @@ import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
+import org.bukkit.block.Chest
 import org.bukkit.block.Container
 import org.bukkit.entity.Item
 import org.bukkit.entity.Player
@@ -140,10 +141,15 @@ fun Block.miningWithEvent(main: Main, player: Player, itemStack: ItemStack, main
             this.world.spawnParticle(Particle.BLOCK_CRACK, this.location.add(0.5, 0.5, 0.5), 20, .3, .3, .3, .0, this.blockData)
         }
         if (state is Container && !this.type.name.endsWith("SHULKER_BOX")) {
-            state.inventory.viewers.forEach {
+            val inventory = if (state is Chest) {
+                state.blockInventory
+            } else {
+                state.inventory
+            }
+            inventory.viewers.forEach {
                 it.closeInventory()
             }
-            state.inventory.contents.forEach {
+            inventory.contents.forEach {
                 it?.let { mainBlock.world.dropItem(mainBlock.location.toCenterLocation(), it) }
             }
         }
