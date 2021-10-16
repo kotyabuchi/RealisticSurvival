@@ -139,7 +139,7 @@ fun Block.miningWithEvent(main: Main, player: Player, itemStack: ItemStack, main
             this.world.playSound(this.location.add(.5, .5, .5), this.soundGroup.breakSound, 1f, .75f)
             this.world.spawnParticle(Particle.BLOCK_CRACK, this.location.add(0.5, 0.5, 0.5), 20, .3, .3, .3, .0, this.blockData)
         }
-        if (state is Container && this.type != Material.SHULKER_BOX) {
+        if (state is Container && !this.type.name.endsWith("SHULKER_BOX")) {
             state.inventory.viewers.forEach {
                 it.closeInventory()
             }
