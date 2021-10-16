@@ -28,12 +28,18 @@ class Main: JavaPlugin() {
         pm.registerEvents(ReplantSapling, this)
         pm.registerEvents(SafeCropAndReplant, this)
         pm.registerEvents(SafeFarmland, this)
+        pm.registerEvents(SortChest, this)
         pm.registerEvents(StarterItem, this)
+    }
+
+    private fun registerCommands() {
+        getCommand("sort")?.setExecutor(SortChest)
     }
 
     override fun onEnable() {
         setupKoin()
         registerEvents()
+        registerCommands()
         println("Enabled")
     }
 
