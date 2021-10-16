@@ -8,6 +8,7 @@ import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
+import org.bukkit.block.Container
 import org.bukkit.entity.Item
 import org.bukkit.entity.Player
 import org.bukkit.event.block.BlockDropItemEvent
@@ -130,13 +131,21 @@ fun Block.miningWithEvent(main: Main, player: Player, itemStack: ItemStack, main
     if (!mineEvent.isCancelled) {
         val dropItems = mutableListOf<Item>()
         this.getDrops(itemStack, player).forEach { item ->
-            val dropItem = mainBlock.world.dropItem(mainBlock.location.add(0.5, 0.0, 0.5), item)
+            val dropItem = mainBlock.world.dropItem(mainBlock.location.toCenterLocation(), item)
             dropItems.add(dropItem)
         }
         val state = this.state
         if (this != mainBlock) {
             this.world.playSound(this.location.add(.5, .5, .5), this.soundGroup.breakSound, 1f, .75f)
             this.world.spawnParticle(Particle.BLOCK_CRACK, this.location.add(0.5, 0.5, 0.5), 20, .3, .3, .3, .0, this.blockData)
+        }
+        if (state is Container && this.type != Material.SHULKER_BOX) {
+            state.inventory.viewers.forEach {
+                it.closeInventory()
+            }
+            state.inventory.contents.forEach {
+                it?.let { mainBlock.world.dropItem(mainBlock.location.toCenterLocation(), it) }
+            }
         }
         this.type = Material.AIR
         val dropEvent = BlockDropItemEvent(this, state, player, dropItems)
