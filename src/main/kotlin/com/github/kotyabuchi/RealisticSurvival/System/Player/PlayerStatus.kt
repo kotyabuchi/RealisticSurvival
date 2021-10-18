@@ -23,7 +23,7 @@ data class PlayerStatus(val player: Player) {
         player.showTitle(
             Title.title(
                 Component.text("Level Up!"),
-                Component.text("${job.jobName} Lv. ${jobStatus.getLevel()}"),
+                Component.text("${job.jobName.upperCamelCase()} Lv. ${jobStatus.getLevel()}"),
                 Title.Times.of(Duration.ofMillis(500), Duration.ofSeconds(2), Duration.ofMillis(500))
             )
         )
