@@ -88,7 +88,7 @@ open class GatheringJob(jobName: String): JobMaster(jobName), KoinComponent {
             override fun run() {
                 placedBlock.remove(block)
             }
-        }.runTaskLater(main, 20 * 10L)
+        }.runTaskLater(main, 20 * 60L)
     }
 
     @EventHandler(priority = EventPriority.HIGH)
