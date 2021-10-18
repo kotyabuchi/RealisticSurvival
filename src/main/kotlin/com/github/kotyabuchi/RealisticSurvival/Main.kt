@@ -3,8 +3,8 @@ package com.github.kotyabuchi.RealisticSurvival
 import com.github.kotyabuchi.RealisticSurvival.Event.CustomEventCaller
 import com.github.kotyabuchi.RealisticSurvival.Job.Gathering.Lumberjack
 import com.github.kotyabuchi.RealisticSurvival.Job.Gathering.Miner
-import com.github.kotyabuchi.RealisticSurvival.Skill.MineAssist
-import com.github.kotyabuchi.RealisticSurvival.Skill.TreeAssist
+import com.github.kotyabuchi.RealisticSurvival.Skill.Gathering.MineAssist
+import com.github.kotyabuchi.RealisticSurvival.Skill.Gathering.TreeAssist
 import com.github.kotyabuchi.RealisticSurvival.System.*
 import com.github.kotyabuchi.RealisticSurvival.System.Combat.DamagePopup
 import com.github.kotyabuchi.RealisticSurvival.System.Combat.Fracture

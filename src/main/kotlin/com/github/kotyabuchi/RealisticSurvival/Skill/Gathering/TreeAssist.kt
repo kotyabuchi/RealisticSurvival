@@ -1,7 +1,8 @@
-package com.github.kotyabuchi.RealisticSurvival.Skill
+package com.github.kotyabuchi.RealisticSurvival.Skill.Gathering
 
 import com.github.kotyabuchi.RealisticSurvival.Event.BlockMineEvent
 import com.github.kotyabuchi.RealisticSurvival.Main
+import com.github.kotyabuchi.RealisticSurvival.Skill.ToolLinkedSkill
 import com.github.kotyabuchi.RealisticSurvival.Utility.*
 import com.github.kotyabuchi.RealisticSurvival.Utility.Enum.WoodType
 import org.bukkit.Material
@@ -13,7 +14,6 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.entity.EntityChangeBlockEvent
 import org.bukkit.event.entity.EntityDropItemEvent
-import org.bukkit.event.player.PlayerSwapHandItemsEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.scheduler.BukkitTask

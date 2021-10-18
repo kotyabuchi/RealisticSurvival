@@ -1,7 +1,7 @@
 package com.github.kotyabuchi.RealisticSurvival.Job.Gathering
 
 import com.github.kotyabuchi.RealisticSurvival.Job.GatheringJob
-import com.github.kotyabuchi.RealisticSurvival.Skill.MineAssist
+import com.github.kotyabuchi.RealisticSurvival.Skill.Gathering.MineAssist
 import com.github.kotyabuchi.RealisticSurvival.Skill.SkillCommand
 import org.bukkit.Material
 

@@ -1,13 +1,13 @@
-package com.github.kotyabuchi.RealisticSurvival.Skill
+package com.github.kotyabuchi.RealisticSurvival.Skill.Gathering
 
 import com.github.kotyabuchi.RealisticSurvival.Event.BlockMineEvent
 import com.github.kotyabuchi.RealisticSurvival.Main
+import com.github.kotyabuchi.RealisticSurvival.Skill.ToggleSkill
 import com.github.kotyabuchi.RealisticSurvival.Utility.*
 import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
 import org.bukkit.event.EventHandler
 import org.bukkit.event.block.BlockBreakEvent
-import org.bukkit.event.player.PlayerSwapHandItemsEvent
 import org.koin.core.component.inject
 
 object MineAssist: ToggleSkill {
