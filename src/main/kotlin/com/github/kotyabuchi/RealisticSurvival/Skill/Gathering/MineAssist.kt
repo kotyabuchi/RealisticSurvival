@@ -22,6 +22,7 @@ object MineAssist: ToggleSkill {
     @EventHandler
     fun onBlockBreak(event: BlockMineEvent) {
         if (event.isCancelled) return
+        if (event.isMineAssist) return
 
         val player = event.player
 
@@ -36,7 +37,7 @@ object MineAssist: ToggleSkill {
         searchOres(block, ores, mutableListOf())
 
         ores.forEach {
-            it.miningWithEvent(main, player, itemStack, block)
+            it.miningWithEvent(main, player, itemStack, block, isMineAssist = true)
         }
     }
 

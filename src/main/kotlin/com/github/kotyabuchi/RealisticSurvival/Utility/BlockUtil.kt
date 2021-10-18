@@ -125,8 +125,8 @@ fun BlockFace.reverse(): BlockFace {
     }
 }
 
-fun Block.miningWithEvent(main: Main, player: Player, itemStack: ItemStack, mainBlock: Block = this, isMultiBreak: Boolean = false) {
-    val mineEvent = BlockMineEvent(this, player, isMultiBreak)
+fun Block.miningWithEvent(main: Main, player: Player, itemStack: ItemStack, mainBlock: Block = this, isMultiBreak: Boolean = false, isMineAssist: Boolean = false) {
+    val mineEvent = BlockMineEvent(this, player, isMultiBreak, isMineAssist)
     main.server.pluginManager.callEvent(mineEvent)
     if (!mineEvent.isCancelled) {
         val dropItems = mutableListOf<Item>()
