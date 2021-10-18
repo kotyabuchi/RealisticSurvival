@@ -44,6 +44,7 @@ class Main: JavaPlugin() {
         setupKoin()
         if (!dataFolder.exists()) dataFolder.mkdirs()
         DataBaseManager.initDB()
+        DataBaseManager.startAutoSaveScheduler()
         registerEvents()
         registerCommands()
         println("Enabled")

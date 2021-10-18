@@ -6,6 +6,7 @@ import com.github.kotyabuchi.RealisticSurvival.System.Player.JobStatus
 import com.github.kotyabuchi.RealisticSurvival.System.Player.PlayerManager
 import com.github.kotyabuchi.RealisticSurvival.System.Player.PlayerStatus
 import org.bukkit.entity.Player
+import org.bukkit.scheduler.BukkitRunnable
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.io.File
@@ -90,13 +91,13 @@ object DataBaseManager: KoinComponent {
 
     @Synchronized
     fun savePlayerStatus(vararg statusList: PlayerStatus = PlayerManager.getAllPlayerStatus().toTypedArray()) {
-        println("&a[System]PlayerStatusをデータベースに保存開始...".colorS())
-        var success = true
-        val dbFile = File(main.dataFolder, dbFileName)
-        var stmt: Statement
-        val dbHeader = "jdbc:sqlite:" + dbFile.absolutePath
-        var pstmt: PreparedStatement
         if (statusList.isNotEmpty()) {
+            println("&a[System]PlayerStatusをデータベースに保存開始...".colorS())
+            var success = true
+            val dbFile = File(main.dataFolder, dbFileName)
+            var stmt: Statement
+            val dbHeader = "jdbc:sqlite:" + dbFile.absolutePath
+            var pstmt: PreparedStatement
             try {
                 DriverManager.getConnection(dbHeader).use { conn ->  //try-with-resources
                     conn.autoCommit = false
@@ -133,11 +134,21 @@ object DataBaseManager: KoinComponent {
                 e.printStackTrace()
                 success = false
             }
+
+            if (success) {
+                println("&a[System]PlayerStatusをデータベースに保存しました".colorS())
+            } else {
+                println("&4[System]PlayerStatusの保存に失敗しました".colorS())
+            }
         }
-        if (success) {
-            println("&a[System]PlayerStatusをデータベースに保存しました".colorS())
-        } else {
-            println("&4[System]PlayerStatusの保存に失敗しました".colorS())
-        }
+    }
+
+    fun startAutoSaveScheduler() {
+        val interval = 20 * 60 * 5L
+        object : BukkitRunnable() {
+            override fun run() {
+                savePlayerStatus()
+            }
+        }.runTaskTimer(main, interval, interval)
     }
 }
