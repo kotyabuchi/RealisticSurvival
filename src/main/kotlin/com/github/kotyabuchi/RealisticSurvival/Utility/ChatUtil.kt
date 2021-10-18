@@ -15,7 +15,7 @@ fun String.upperCamelCase(): String {
         else -> {
             var result = ""
             this.split("_").forEach {
-                result += it[0].uppercase() + it.substring(1).uppercase() + " "
+                result += it[0].uppercase() + it.substring(1).lowercase() + " "
             }
             result.trim()
         }
