@@ -6,6 +6,8 @@ import com.github.kotyabuchi.RealisticSurvival.Skill.TreeAssist
 import com.github.kotyabuchi.RealisticSurvival.System.*
 import com.github.kotyabuchi.RealisticSurvival.System.Combat.DamagePopup
 import com.github.kotyabuchi.RealisticSurvival.System.Combat.Fracture
+import com.github.kotyabuchi.RealisticSurvival.System.Player.PlayerManager
+import com.github.kotyabuchi.RealisticSurvival.Utility.DataBaseManager
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
@@ -22,6 +24,8 @@ class Main: JavaPlugin() {
             // Combat
         pm.registerEvents(DamagePopup, this)
         pm.registerEvents(Fracture, this)
+            // Player
+        pm.registerEvents(PlayerManager, this)
 
         pm.registerEvents(AnimalShearing, this)
         pm.registerEvents(LevelTheFarmlandAnPath, this)
@@ -38,6 +42,8 @@ class Main: JavaPlugin() {
 
     override fun onEnable() {
         setupKoin()
+        if (!dataFolder.exists()) dataFolder.mkdirs()
+        DataBaseManager.initDB()
         registerEvents()
         registerCommands()
         println("Enabled")
@@ -45,6 +51,7 @@ class Main: JavaPlugin() {
 
     override fun onDisable() {
         DamagePopup.clearPopup()
+        DataBaseManager.savePlayerStatus()
         println("Disabled")
     }
 
