@@ -1,6 +1,7 @@
 package com.github.kotyabuchi.RealisticSurvival
 
 import com.github.kotyabuchi.RealisticSurvival.Event.CustomEventCaller
+import com.github.kotyabuchi.RealisticSurvival.Job.Gathering.Excavator
 import com.github.kotyabuchi.RealisticSurvival.Job.Gathering.Lumberjack
 import com.github.kotyabuchi.RealisticSurvival.Job.Gathering.Miner
 import com.github.kotyabuchi.RealisticSurvival.Skill.Gathering.MineAssist
@@ -21,6 +22,7 @@ class Main: JavaPlugin() {
         pm.registerEvents(CustomEventCaller, this)
         // Job
             // Gathering
+        pm.registerEvents(Excavator, this)
         pm.registerEvents(Lumberjack, this)
         pm.registerEvents(Miner, this)
         // Skill
