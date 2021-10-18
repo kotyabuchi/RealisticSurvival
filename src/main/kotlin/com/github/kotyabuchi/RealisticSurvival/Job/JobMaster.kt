@@ -7,7 +7,7 @@ import com.github.kotyabuchi.RealisticSurvival.Skill.ToggleSkill
 import com.github.kotyabuchi.RealisticSurvival.System.Player.getJobLevel
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
-import net.kyori.adventure.title.TitlePart
+import net.kyori.adventure.title.Title
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.Sound
@@ -22,6 +22,7 @@ import org.bukkit.event.player.PlayerSwapHandItemsEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import java.time.Duration
 
 open class JobMaster(val jobName: String): Listener, KoinComponent {
     
@@ -33,6 +34,8 @@ open class JobMaster(val jobName: String): Listener, KoinComponent {
     private val castingModeList: MutableList<Player> = mutableListOf()
     private val castingCommandMap: MutableMap<Player, String> = mutableMapOf()
     private val skillMap: MutableMap<SkillCommand, ToggleSkill> = mutableMapOf()
+
+    private val commandTitleTime = Title.Times.of(Duration.ZERO, Duration.ofSeconds(2), Duration.ZERO)
 
     @EventHandler
     fun modeChange(event: PlayerSwapHandItemsEvent) {
@@ -48,7 +51,7 @@ open class JobMaster(val jobName: String): Listener, KoinComponent {
             castingModeList.add(player)
             castingCommandMap[player] = ""
             player.sendActionBar(Component.text("Cast Mode Enabled", NamedTextColor.GREEN))
-            player.sendTitlePart(TitlePart.SUBTITLE, Component.text("- - -"))
+            player.showTitle(Title.title(Component.empty(), Component.text("- - -"), commandTitleTime))
             player.world.playSound(player.eyeLocation, Sound.ENTITY_PLAYER_LEVELUP, 0.2f, 2.0f)
         }
     }
@@ -72,22 +75,22 @@ open class JobMaster(val jobName: String): Listener, KoinComponent {
             }
             val newActionStr = it + thisTimeAction
             castingCommandMap[player] = newActionStr
-            val subTitle = Component.empty()
+            var subTitle = Component.text("")
             val actionLength = newActionStr.length
 
             repeat(3) { repeatTime ->
-                if (actionLength > repeatTime) {
+                subTitle = if (actionLength > repeatTime) {
                     val actionChar = newActionStr[repeatTime]
                     subTitle.append(Component.text(actionChar, if (actionChar == 'L') NamedTextColor.GREEN else NamedTextColor.RED))
                 } else {
                     subTitle.append(Component.text("-"))
                 }
                 if (repeatTime < 2) {
-                    subTitle.append(Component.text(" "))
+                    subTitle = subTitle.append(Component.text(" "))
                 }
             }
 
-            player.sendTitlePart(TitlePart.SUBTITLE, subTitle)
+            player.showTitle(Title.title(Component.empty(), subTitle, commandTitleTime))
             if (actionLength == 3) {
                 activeSkill(player)
                 castingModeList.remove(player)
