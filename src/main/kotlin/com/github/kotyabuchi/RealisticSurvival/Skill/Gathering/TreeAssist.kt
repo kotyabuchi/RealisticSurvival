@@ -1,7 +1,8 @@
-package com.github.kotyabuchi.RealisticSurvival.Skill
+package com.github.kotyabuchi.RealisticSurvival.Skill.Gathering
 
 import com.github.kotyabuchi.RealisticSurvival.Event.BlockMineEvent
 import com.github.kotyabuchi.RealisticSurvival.Main
+import com.github.kotyabuchi.RealisticSurvival.Skill.ToolLinkedSkill
 import com.github.kotyabuchi.RealisticSurvival.Utility.*
 import com.github.kotyabuchi.RealisticSurvival.Utility.Enum.WoodType
 import org.bukkit.Material
@@ -13,7 +14,6 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.entity.EntityChangeBlockEvent
 import org.bukkit.event.entity.EntityDropItemEvent
-import org.bukkit.event.player.PlayerSwapHandItemsEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.scheduler.BukkitTask
@@ -35,15 +35,6 @@ object TreeAssist: ToolLinkedSkill {
     override val lastUseTime: MutableMap<UUID, Long> = mutableMapOf()
 
     override fun calcActiveTime(level: Int): Int = 20 * 6
-
-    @EventHandler
-    fun onSwitch(event: PlayerSwapHandItemsEvent) {
-        val player = event.player
-        val item = event.offHandItem ?: return
-        if (!item.type.isAxe()) return
-        event.isCancelled = true
-        toggleSkill(player, 1)
-    }
 
     @EventHandler
     fun onBreak(event: BlockBreakEvent) {
@@ -123,7 +114,7 @@ object TreeAssist: ToolLinkedSkill {
         }
     }
 
-    fun searchWood(mainBlock: Block, woodType: WoodType, checkBlock: Block, woodList: MutableList<Block>, leaveList: MutableList<Block>, checkedList: MutableList<Block>) {
+    private fun searchWood(mainBlock: Block, woodType: WoodType, checkBlock: Block, woodList: MutableList<Block>, leaveList: MutableList<Block>, checkedList: MutableList<Block>) {
         if (checkedList.contains(checkBlock)) return
         checkedList.add(checkBlock)
         if (mainBlock.location.y > checkBlock.location.y) return

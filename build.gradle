@@ -19,6 +19,7 @@ dependencies {
     implementation "io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT"
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.21"
     api "io.insert-koin:koin-core:3.1.2"
+    api "org.xerial:sqlite-jdbc:3.34.0"
 }
 
 shadowJar {

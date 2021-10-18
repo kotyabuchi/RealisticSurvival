@@ -1,11 +1,15 @@
 package com.github.kotyabuchi.RealisticSurvival
 
 import com.github.kotyabuchi.RealisticSurvival.Event.CustomEventCaller
-import com.github.kotyabuchi.RealisticSurvival.Skill.MineAssist
-import com.github.kotyabuchi.RealisticSurvival.Skill.TreeAssist
+import com.github.kotyabuchi.RealisticSurvival.Job.Gathering.Lumberjack
+import com.github.kotyabuchi.RealisticSurvival.Job.Gathering.Miner
+import com.github.kotyabuchi.RealisticSurvival.Skill.Gathering.MineAssist
+import com.github.kotyabuchi.RealisticSurvival.Skill.Gathering.TreeAssist
 import com.github.kotyabuchi.RealisticSurvival.System.*
 import com.github.kotyabuchi.RealisticSurvival.System.Combat.DamagePopup
 import com.github.kotyabuchi.RealisticSurvival.System.Combat.Fracture
+import com.github.kotyabuchi.RealisticSurvival.System.Player.PlayerManager
+import com.github.kotyabuchi.RealisticSurvival.Utility.DataBaseManager
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
@@ -15,6 +19,10 @@ class Main: JavaPlugin() {
     private fun registerEvents() {
         val pm = server.pluginManager
         pm.registerEvents(CustomEventCaller, this)
+        // Job
+            // Gathering
+        pm.registerEvents(Lumberjack, this)
+        pm.registerEvents(Miner, this)
         // Skill
         pm.registerEvents(TreeAssist, this)
         pm.registerEvents(MineAssist, this)
@@ -22,6 +30,8 @@ class Main: JavaPlugin() {
             // Combat
         pm.registerEvents(DamagePopup, this)
         pm.registerEvents(Fracture, this)
+            // Player
+        pm.registerEvents(PlayerManager, this)
 
         pm.registerEvents(AnimalShearing, this)
         pm.registerEvents(LevelTheFarmlandAnPath, this)
@@ -38,6 +48,9 @@ class Main: JavaPlugin() {
 
     override fun onEnable() {
         setupKoin()
+        if (!dataFolder.exists()) dataFolder.mkdirs()
+        DataBaseManager.initDB()
+        DataBaseManager.startAutoSaveScheduler()
         registerEvents()
         registerCommands()
         println("Enabled")
@@ -45,6 +58,7 @@ class Main: JavaPlugin() {
 
     override fun onDisable() {
         DamagePopup.clearPopup()
+        DataBaseManager.savePlayerStatus()
         println("Disabled")
     }
 

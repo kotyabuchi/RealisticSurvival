@@ -1,13 +1,15 @@
-package com.github.kotyabuchi.RealisticSurvival.Skill
+package com.github.kotyabuchi.RealisticSurvival.Skill.Gathering
 
 import com.github.kotyabuchi.RealisticSurvival.Event.BlockMineEvent
 import com.github.kotyabuchi.RealisticSurvival.Main
-import com.github.kotyabuchi.RealisticSurvival.Utility.*
+import com.github.kotyabuchi.RealisticSurvival.Skill.ToggleSkill
+import com.github.kotyabuchi.RealisticSurvival.Utility.BlockUtil
+import com.github.kotyabuchi.RealisticSurvival.Utility.isOre
+import com.github.kotyabuchi.RealisticSurvival.Utility.isPickAxe
+import com.github.kotyabuchi.RealisticSurvival.Utility.miningWithEvent
 import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
 import org.bukkit.event.EventHandler
-import org.bukkit.event.block.BlockBreakEvent
-import org.bukkit.event.player.PlayerSwapHandItemsEvent
 import org.koin.core.component.inject
 
 object MineAssist: ToggleSkill {
@@ -18,17 +20,7 @@ object MineAssist: ToggleSkill {
     override var description: String = "周囲の鉱石もまとめて採掘する"
 
     @EventHandler
-    fun onSwitch(event: PlayerSwapHandItemsEvent) {
-        val player = event.player
-        val item = event.offHandItem ?: return
-        if (!item.type.isPickAxe()) return
-        event.isCancelled = true
-        toggleSkill(player, 1)
-    }
-
-    @EventHandler
-    fun onBlockBreak(event: BlockBreakEvent) {
-        if (event is BlockMineEvent) return
+    fun onBlockBreak(event: BlockMineEvent) {
         if (event.isCancelled) return
 
         val player = event.player
