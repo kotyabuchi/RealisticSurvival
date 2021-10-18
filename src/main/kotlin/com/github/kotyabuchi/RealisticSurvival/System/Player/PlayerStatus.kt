@@ -24,13 +24,12 @@ data class PlayerStatus(val player: Player) {
             Title.title(
                 Component.text("Level Up!"),
                 Component.text("${job.jobName} Lv. ${jobStatus.getLevel()}"),
-                Title.Times.of(Duration.ZERO, Duration.ofSeconds(2), Duration.ZERO)
+                Title.Times.of(Duration.ofMillis(500), Duration.ofSeconds(2), Duration.ofMillis(500))
             )
         )
         player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 0.2f, 1.0f)
     }
 
-    @Suppress("INTEGER_OPERATOR_RESOLVE_WILL_CHANGE")
     fun addSkillExp(main: Main, job: JobMaster, point: Double, increaseCombo: Int = 1) {
         val jobStatus = getJobStatus(job)
         if (jobStatus.addExp(point, increaseCombo) == JobStatus.AddExpResult.LEVEL_UP) notifyLevelUp(job)
@@ -60,7 +59,7 @@ data class PlayerStatus(val player: Player) {
                 bossBar.removeAll()
                 bossBar.isVisible = false
             }
-        }.runTaskLater(main, 20 * 6)
+        }.runTaskLater(main, 20 * 6L)
         setJobStatus(job, jobStatus)
     }
 
