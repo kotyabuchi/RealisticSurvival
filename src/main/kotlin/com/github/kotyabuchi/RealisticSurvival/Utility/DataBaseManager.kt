@@ -104,18 +104,18 @@ object DataBaseManager: KoinComponent {
                     stmt = conn.createStatement()
                     val rs = stmt.executeQuery("SELECT * FROM jobs")
                     conn.commit()
-                    val skills = mutableMapOf<JobType, Int>()
+                    val jobs = mutableMapOf<JobType, Int>()
                     while (rs.next()) {
-                        skills[JobType.valueOf(rs.getString("skill_name"))] = rs.getInt("skill_id")
+                        jobs[JobType.valueOf(rs.getString("job_name"))] = rs.getInt("job_id")
                     }
                     try {
                         pstmt = conn.prepareStatement("REPLACE INTO player_job_status VALUES (?, ?, ?)")
                         statusList.forEach { status ->
                             JobType.values().forEach { job ->
-                                skills[job]?.let { skillId ->
+                                jobs[job]?.let { jobId ->
                                     val jobStatus = status.getJobStatus(job.jobClass)
                                     pstmt.setString(1, status.player.uniqueId.toString())
-                                    pstmt.setInt(2, skillId)
+                                    pstmt.setInt(2, jobId)
                                     pstmt.setDouble(3, jobStatus.getTotalExp())
                                     pstmt.addBatch()
                                 }
