@@ -36,15 +36,6 @@ object TreeAssist: ToolLinkedSkill {
 
     override fun calcActiveTime(level: Int): Int = 20 * 6
 
-//    @EventHandler
-//    fun onSwitch(event: PlayerSwapHandItemsEvent) {
-//        val player = event.player
-//        val item = event.offHandItem ?: return
-//        if (!item.type.isAxe()) return
-//        event.isCancelled = true
-//        toggleSkill(player, 1)
-//    }
-
     @EventHandler
     fun onBreak(event: BlockBreakEvent) {
         if (event is BlockMineEvent) return
@@ -123,7 +114,7 @@ object TreeAssist: ToolLinkedSkill {
         }
     }
 
-    fun searchWood(mainBlock: Block, woodType: WoodType, checkBlock: Block, woodList: MutableList<Block>, leaveList: MutableList<Block>, checkedList: MutableList<Block>) {
+    private fun searchWood(mainBlock: Block, woodType: WoodType, checkBlock: Block, woodList: MutableList<Block>, leaveList: MutableList<Block>, checkedList: MutableList<Block>) {
         if (checkedList.contains(checkBlock)) return
         checkedList.add(checkBlock)
         if (mainBlock.location.y > checkBlock.location.y) return
