@@ -1,6 +1,7 @@
 package com.github.kotyabuchi.RealisticSurvival
 
 import com.github.kotyabuchi.RealisticSurvival.Event.CustomEventCaller
+import com.github.kotyabuchi.RealisticSurvival.Job.Gathering.Lumberjack
 import com.github.kotyabuchi.RealisticSurvival.Skill.MineAssist
 import com.github.kotyabuchi.RealisticSurvival.Skill.TreeAssist
 import com.github.kotyabuchi.RealisticSurvival.System.*
@@ -17,6 +18,9 @@ class Main: JavaPlugin() {
     private fun registerEvents() {
         val pm = server.pluginManager
         pm.registerEvents(CustomEventCaller, this)
+        // Job
+            // Gathering
+        pm.registerEvents(Lumberjack, this)
         // Skill
         pm.registerEvents(TreeAssist, this)
         pm.registerEvents(MineAssist, this)
