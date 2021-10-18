@@ -1,6 +1,8 @@
 package com.github.kotyabuchi.RealisticSurvival.Job.Gathering
 
 import com.github.kotyabuchi.RealisticSurvival.Job.GatheringJob
+import com.github.kotyabuchi.RealisticSurvival.Skill.MineAssist
+import com.github.kotyabuchi.RealisticSurvival.Skill.SkillCommand
 import org.bukkit.Material
 
 object Miner: GatheringJob("MINER") {
@@ -29,5 +31,7 @@ object Miner: GatheringJob("MINER") {
         addExpMap(7, Material.LAPIS_ORE, Material.DEEPSLATE_LAPIS_ORE)
         addExpMap(8, Material.DIAMOND_ORE, Material.DEEPSLATE_DIAMOND_ORE)
         addExpMap(10, Material.EMERALD_ORE, Material.DEEPSLATE_EMERALD_ORE)
+
+        registerSkill(SkillCommand.LRL, MineAssist)
     }
 }

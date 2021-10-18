@@ -18,15 +18,6 @@ object MineAssist: ToggleSkill {
     override var description: String = "周囲の鉱石もまとめて採掘する"
 
     @EventHandler
-    fun onSwitch(event: PlayerSwapHandItemsEvent) {
-        val player = event.player
-        val item = event.offHandItem ?: return
-        if (!item.type.isPickAxe()) return
-        event.isCancelled = true
-        toggleSkill(player, 1)
-    }
-
-    @EventHandler
     fun onBlockBreak(event: BlockBreakEvent) {
         if (event is BlockMineEvent) return
         if (event.isCancelled) return
