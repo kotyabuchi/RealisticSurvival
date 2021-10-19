@@ -5,6 +5,7 @@ import com.github.kotyabuchi.RealisticSurvival.Job.Gathering.Excavator
 import com.github.kotyabuchi.RealisticSurvival.Job.Gathering.Farmer
 import com.github.kotyabuchi.RealisticSurvival.Job.Gathering.Lumberjack
 import com.github.kotyabuchi.RealisticSurvival.Job.Gathering.Miner
+import com.github.kotyabuchi.RealisticSurvival.Job.JobType
 import com.github.kotyabuchi.RealisticSurvival.Skill.Gathering.MineAssist
 import com.github.kotyabuchi.RealisticSurvival.Skill.Gathering.TreeAssist
 import com.github.kotyabuchi.RealisticSurvival.System.*
@@ -22,11 +23,9 @@ class Main: JavaPlugin() {
         val pm = server.pluginManager
         pm.registerEvents(CustomEventCaller, this)
         // Job
-            // Gathering
-        pm.registerEvents(Excavator, this)
-        pm.registerEvents(Farmer, this)
-        pm.registerEvents(Lumberjack, this)
-        pm.registerEvents(Miner, this)
+        JobType.values().forEach {
+            pm.registerEvents(it.jobClass, this)
+        }
         // Skill
         pm.registerEvents(TreeAssist, this)
         pm.registerEvents(MineAssist, this)
