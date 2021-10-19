@@ -11,6 +11,8 @@ import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
 import org.bukkit.event.EventHandler
 import org.koin.core.component.inject
+import kotlin.math.ceil
+import kotlin.math.max
 
 object MineAssist: ToggleSkill {
     override val main: Main by inject()
@@ -39,6 +41,7 @@ object MineAssist: ToggleSkill {
         ores.forEach {
             it.miningWithEvent(main, player, itemStack, block, isMineAssist = true)
         }
+        player.foodLevel = max(0, player.foodLevel - ceil(ores.size / 10.0).toInt())
     }
 
     private fun searchOres(checkBlock: Block, oreList: MutableList<Block>, checkedList: MutableList<Block>) {

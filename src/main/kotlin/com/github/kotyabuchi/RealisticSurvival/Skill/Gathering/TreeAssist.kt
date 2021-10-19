@@ -19,6 +19,8 @@ import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.scheduler.BukkitTask
 import org.koin.core.component.inject
 import java.util.*
+import kotlin.math.ceil
+import kotlin.math.max
 import kotlin.random.Random
 
 object TreeAssist: ToolLinkedSkill {
@@ -61,6 +63,7 @@ object TreeAssist: ToolLinkedSkill {
         woodList.forEach {
             it.miningWithEvent(main, player, itemStack, block)
         }
+        player.foodLevel = max(0, player.foodLevel - ceil(woodList.size / 10.0).toInt())
         itemStack.damage(woodList.size)
 
         if (leaveList.isNotEmpty()) {
