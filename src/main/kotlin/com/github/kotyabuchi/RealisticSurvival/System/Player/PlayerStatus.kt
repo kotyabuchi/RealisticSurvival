@@ -20,6 +20,8 @@ data class PlayerStatus(val player: Player) {
     private var openingMenuPage: Int = 0
     var openMenuWithCloseMenu = false
 
+    val homes = mutableListOf<Home>()
+
     private val jobStatusMap = mutableMapOf<JobMaster, JobStatus>()
     private val expBarMap = mutableMapOf<JobMaster, BukkitTask>()
 

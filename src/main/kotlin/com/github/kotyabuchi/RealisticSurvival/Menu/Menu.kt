@@ -12,7 +12,7 @@ import kotlin.math.min
 open class Menu(val title: Component, _row: Int) {
 
     private val row = min(4, _row)
-    private val menuSize = (row + 2) * 9
+    val menuSize = (row + 2) * 9
     private var slotAmount = menuSize
     private var hasFrame = false
     private val pages = mutableListOf(getInvTemp())
@@ -23,12 +23,14 @@ open class Menu(val title: Component, _row: Int) {
         return Bukkit.createInventory(null, menuSize, title)
     }
 
-    fun setPrevMenu(menu: Menu): Menu {
+    fun setPrevMenu(menu: Menu?): Menu {
         prevMenu = menu
-        for (i in 0 until pages.size) {
-            setMenuButton(BackPrevButton(menu), i, menuSize - 8)
+        menu?.let {
+            for (i in 0 until pages.size) {
+                setMenuButton(BackPrevButton(menu), i, menuSize - 8)
+            }
+            hasFrame = true
         }
-        hasFrame = true
         return this
     }
 
@@ -78,6 +80,10 @@ open class Menu(val title: Component, _row: Int) {
         removeMenuButton(slot, page)
         pages[page].setItem(slot, null)
         return this
+    }
+
+    fun getPrevMenu(): Menu? {
+        return prevMenu
     }
 
     fun getItem(slot: Int, page: Int = 0): ItemStack? {
