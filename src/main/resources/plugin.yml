@@ -4,3 +4,5 @@ main: com.github.kotyabuchi.RealisticSurvival.Main
 api-version: 1.17
 commands:
   sort:
+  playermanager:
+    aliases: pm

@@ -4,7 +4,9 @@ import com.github.kotyabuchi.RealisticSurvival.Job.JobMaster
 import com.github.kotyabuchi.RealisticSurvival.Main
 import com.github.kotyabuchi.RealisticSurvival.Menu.Menu
 import com.github.kotyabuchi.RealisticSurvival.Utility.*
+import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.title.Title
 import org.bukkit.Sound
 import org.bukkit.boss.BarColor
@@ -13,8 +15,21 @@ import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.scheduler.BukkitTask
 import java.time.Duration
+import kotlin.math.max
+import kotlin.math.min
 
 data class PlayerStatus(val player: Player) {
+
+    var maxMana: Int = 10
+        set(value) {
+            field = value
+            if (mana > value) mana = value
+        }
+    var mana: Int = 10
+        set(value) {
+            field = min(maxMana, value)
+        }
+    private val manaIndicator: BossBar = BossBar.bossBar(Component.text("Mana $mana / $maxMana"), max(0f, min(1f, mana / maxMana.toFloat())), BossBar.Color.BLUE, BossBar.Overlay.PROGRESS)
 
     private var openingMenu: Menu? = null
     private var openingMenuPage: Int = 0
@@ -61,6 +76,25 @@ data class PlayerStatus(val player: Player) {
         openingMenuPage = page
     }
 
+    fun increaseMaxMana(amount: Int): PlayerStatus {
+        maxMana += amount
+        return this
+    }
+
+    fun increaseMana(amount: Int): PlayerStatus {
+        mana += amount
+        return this
+    }
+
+    fun decreaseMana(amount: Int): Boolean {
+        return if (mana >= amount) {
+            mana -= amount
+            true
+        } else {
+            false
+        }
+    }
+
     fun notifyLevelUp(job: JobMaster) {
         val jobStatus = getJobStatus(job)
         player.showTitle(
@@ -73,12 +107,17 @@ data class PlayerStatus(val player: Player) {
         player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 0.2f, 1.0f)
     }
 
-    fun addSkillExp(main: Main, job: JobMaster, point: Double, increaseCombo: Int = 1) {
+    fun addJobExp(main: Main, job: JobMaster, point: Double, increaseCombo: Int = 1) {
         val jobStatus = getJobStatus(job)
-        if (jobStatus.addExp(point, increaseCombo) == JobStatus.AddExpResult.LEVEL_UP) notifyLevelUp(job)
+        if (jobStatus.addExp(point, increaseCombo) == JobStatus.AddExpResult.LEVEL_UP) {
+            increaseMaxMana(1)
+            mana = maxMana
+            refreshManaIndicator()
+            notifyLevelUp(job)
+        }
         val addedExp = jobStatus.getRecentAddedExp()
         val combo = jobStatus.getCombo()
-        val skillName = job.jobName.upperCamelCase()
+        val jobName = job.jobName.upperCamelCase()
 
         if (expBarMap.containsKey(job)) {
             expBarMap[job]!!.cancel()
@@ -86,7 +125,7 @@ data class PlayerStatus(val player: Player) {
         }
         val exp = jobStatus.getExp()
         val nextLevelExp = jobStatus.getNextLevelExp()
-        var title = "$skillName Lv.${jobStatus.getLevel()} ${exp.floor2Digits()}/$nextLevelExp"
+        var title = "$jobName Lv.${jobStatus.getLevel()} ${exp.floor2Digits()}/$nextLevelExp"
         title += if (addedExp > 0) " &a+${addedExp.floor2Digits()} " else " &c+${addedExp.floor2Digits()} "
         title += " &6${combo}Combo(x${(1 + combo * 0.002).floor3Digits()})"
         val bossBar = main.server.getBossBar(job.getExpBossBarKey(player)) ?: main.server.createBossBar(job.getExpBossBarKey(player), title, BarColor.GREEN, BarStyle.SEGMENTED_10)
@@ -112,6 +151,25 @@ data class PlayerStatus(val player: Player) {
 
     fun getJobStatus(job: JobMaster): JobStatus {
         return jobStatusMap[job] ?: JobStatus()
+    }
+
+    fun getAllJobStatus(): List<JobStatus> {
+        return jobStatusMap.values.toList()
+    }
+
+    fun showManaIndicator() {
+        refreshManaIndicator()
+        player.showBossBar(manaIndicator)
+    }
+
+    fun hideManaIndicator() {
+        player.hideBossBar(manaIndicator)
+    }
+
+    fun refreshManaIndicator() {
+        val progress = max(0f, min(1f, mana / maxMana.toFloat()))
+        manaIndicator.name(Component.text("Mana ($mana/$maxMana)"))
+        manaIndicator.progress(progress)
     }
 
     fun save() {
