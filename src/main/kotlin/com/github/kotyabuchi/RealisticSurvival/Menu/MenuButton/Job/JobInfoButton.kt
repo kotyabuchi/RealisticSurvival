@@ -1,6 +1,9 @@
-package com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton
+package com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.Job
 
 import com.github.kotyabuchi.RealisticSurvival.Job.JobType
+import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.ButtonData
+import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.ButtonItem
+import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.MenuButton
 import com.github.kotyabuchi.RealisticSurvival.Menu.SkillInfoMenu
 import com.github.kotyabuchi.RealisticSurvival.System.Player.getStatus
 import com.github.kotyabuchi.RealisticSurvival.Utility.floor1Digits
@@ -18,7 +21,9 @@ class JobInfoButton(private val jobType: JobType, player: Player): MenuButton() 
         lore.add(Component.text("Level: ${jobStatus.getLevel()}", ButtonData.buttonLoreStyle))
         val exp = jobStatus.getExp().floor2Digits()
         val nextLevel = jobStatus.getNextLevelExp()
-        lore.add(Component.text("Need Exp: $exp/$nextLevel [${(round(exp / nextLevel * 1000) / 10).floor1Digits()}%]", ButtonData.buttonLoreStyle))
+        lore.add(Component.text("Need Exp: $exp/$nextLevel [${(round(exp / nextLevel * 1000) / 10).floor1Digits()}%]",
+            ButtonData.buttonLoreStyle
+        ))
         lore.add(Component.text("Total Exp: ${jobStatus.getTotalExp().floor2Digits()}", ButtonData.buttonLoreStyle))
         menuIcon = ButtonItem(jobType.getIcon(), Component.text(jobType.regularName), lore = lore)
     }

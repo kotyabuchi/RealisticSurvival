@@ -1,8 +1,8 @@
 package com.github.kotyabuchi.RealisticSurvival.Menu
 
 import com.github.kotyabuchi.RealisticSurvival.Job.JobType
-import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.BlankButton
-import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.JobInfoButton
+import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.Basic.BlankButton
+import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.Job.JobInfoButton
 import net.kyori.adventure.text.Component
 import org.bukkit.entity.Player
 import kotlin.math.ceil

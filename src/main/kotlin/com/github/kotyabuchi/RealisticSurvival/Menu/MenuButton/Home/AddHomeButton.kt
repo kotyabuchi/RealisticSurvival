@@ -1,10 +1,9 @@
-package com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton
+package com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.Home
 
 import com.github.kotyabuchi.RealisticSurvival.Main
-import com.github.kotyabuchi.RealisticSurvival.System.Player.Home
-import com.github.kotyabuchi.RealisticSurvival.System.Player.getStatus
+import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.ButtonItem
+import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.MenuButton
 import com.github.kotyabuchi.RealisticSurvival.Utility.DataBaseManager
-import com.github.kotyabuchi.RealisticSurvival.Utility.colorS
 import com.github.kotyabuchi.RealisticSurvival.Utility.normalize
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor

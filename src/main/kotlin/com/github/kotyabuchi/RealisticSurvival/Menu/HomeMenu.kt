@@ -1,7 +1,7 @@
 package com.github.kotyabuchi.RealisticSurvival.Menu
 
-import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.AddHomeButton
-import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.HomeInfoButton
+import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.Home.AddHomeButton
+import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.Home.HomeInfoButton
 import com.github.kotyabuchi.RealisticSurvival.System.Player.Home
 import com.github.kotyabuchi.RealisticSurvival.System.Player.getStatus
 import com.github.kotyabuchi.RealisticSurvival.Utility.DataBaseManager

@@ -1,7 +1,7 @@
 package com.github.kotyabuchi.RealisticSurvival.Menu
 
 import com.github.kotyabuchi.RealisticSurvival.Job.JobMaster
-import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.SkillInfoButton
+import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.Job.SkillInfoButton
 import com.github.kotyabuchi.RealisticSurvival.Utility.upperCamelCase
 import net.kyori.adventure.text.Component
 import kotlin.math.ceil

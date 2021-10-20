@@ -1,5 +1,7 @@
-package com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton
+package com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.Basic
 
+import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.ButtonItem
+import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.MenuButton
 import net.kyori.adventure.text.Component
 import org.bukkit.Material
 
