@@ -1,6 +1,10 @@
 package com.github.kotyabuchi.RealisticSurvival.Utility
 
 import com.github.kotyabuchi.RealisticSurvival.Utility.Enum.Symbol
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.format.TextColor
+import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.ChatColor
 import kotlin.math.floor
 
@@ -52,4 +56,8 @@ fun String.toDecimal() : Int {
                 0
             }
         }
+}
+
+fun Component.normalize(color: TextColor = NamedTextColor.WHITE): Component {
+    return this.color(color).decoration(TextDecoration.ITALIC, false)
 }

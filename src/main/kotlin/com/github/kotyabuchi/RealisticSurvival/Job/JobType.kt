@@ -8,10 +8,10 @@ import com.github.kotyabuchi.RealisticSurvival.Utility.upperCamelCase
 import org.bukkit.Material
 
 enum class JobType(val jobClass: JobMaster, private val icon: Material, val regularName: String = jobClass.jobName.upperCamelCase()) {
-    EXCAVATOR(Excavator, Material.IRON_SHOVEL),
-    FARMER(Farmer, Material.STONE_HOE),
-    LUMBERJACK(Lumberjack, Material.IRON_AXE),
     MINER(Miner, Material.IRON_PICKAXE),
+    EXCAVATOR(Excavator, Material.IRON_SHOVEL),
+    LUMBERJACK(Lumberjack, Material.IRON_AXE),
+    FARMER(Farmer, Material.STONE_HOE),
     ;
     fun getIcon(): Material = icon
 }

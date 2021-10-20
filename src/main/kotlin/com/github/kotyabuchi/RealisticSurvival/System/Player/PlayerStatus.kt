@@ -2,6 +2,7 @@ package com.github.kotyabuchi.RealisticSurvival.System.Player
 
 import com.github.kotyabuchi.RealisticSurvival.Job.JobMaster
 import com.github.kotyabuchi.RealisticSurvival.Main
+import com.github.kotyabuchi.RealisticSurvival.Menu.Menu
 import com.github.kotyabuchi.RealisticSurvival.Utility.*
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.title.Title
@@ -15,8 +16,48 @@ import java.time.Duration
 
 data class PlayerStatus(val player: Player) {
 
+    private var openingMenu: Menu? = null
+    private var openingMenuPage: Int = 0
+    var openMenuWithCloseMenu = false
+
     private val jobStatusMap = mutableMapOf<JobMaster, JobStatus>()
     private val expBarMap = mutableMapOf<JobMaster, BukkitTask>()
+
+    fun closeMenu() {
+        openingMenu?.doCloseMenuAction(player)
+        openingMenuPage = 0
+        openingMenu = null
+    }
+
+    fun setOpeningMenu(menu: Menu) {
+        openingMenu = menu
+    }
+
+    fun getOpeningMenu(): Menu? = openingMenu
+
+    fun getOpeningPage(): Int = openingMenuPage
+
+    fun backPage() {
+        openingMenu?.let {
+            openMenu(it, openingMenuPage - 1)
+        }
+    }
+
+    fun nextPage() {
+        openingMenu?.let {
+            openMenu(it, openingMenuPage + 1)
+        }
+    }
+
+    fun openMenu(menu: Menu, page: Int = 0, prev: Boolean = false) {
+        if (openingMenu != null && openingMenu != menu) {
+            if (!prev) menu.setPrevMenu(openingMenu!!)
+            openMenuWithCloseMenu = true
+        }
+        player.openInventory(menu.getInventory(page))
+        openingMenu = menu
+        openingMenuPage = page
+    }
 
     fun notifyLevelUp(job: JobMaster) {
         val jobStatus = getJobStatus(job)
