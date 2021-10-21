@@ -20,16 +20,16 @@ import kotlin.math.min
 
 data class PlayerStatus(val player: Player) {
 
-    var maxMana: Int = 10
+    var maxMana: Double = 10.0
         set(value) {
             field = value
             if (mana > value) mana = value
         }
-    var mana: Int = 10
+    var mana: Double = 10.0
         set(value) {
             field = min(maxMana, value)
         }
-    private val manaIndicator: BossBar = BossBar.bossBar(Component.text("Mana $mana / $maxMana"), max(0f, min(1f, mana / maxMana.toFloat())), BossBar.Color.BLUE, BossBar.Overlay.PROGRESS)
+    private val manaIndicator: BossBar = BossBar.bossBar(Component.text("Mana ${mana.floor1Digits()} / ${maxMana.floor1Digits()}"), getManaProgress(), BossBar.Color.BLUE, BossBar.Overlay.PROGRESS)
 
     private var openingMenu: Menu? = null
     private var openingMenuPage: Int = 0
@@ -39,6 +39,8 @@ data class PlayerStatus(val player: Player) {
 
     private val jobStatusMap = mutableMapOf<JobMaster, JobStatus>()
     private val expBarMap = mutableMapOf<JobMaster, BukkitTask>()
+
+    private fun getManaProgress(): Float = max(0.0, min(1.0, mana / maxMana)).floor1Digits().toFloat()
 
     fun closeMenu() {
         openingMenu?.doCloseMenuAction(player)
@@ -76,17 +78,17 @@ data class PlayerStatus(val player: Player) {
         openingMenuPage = page
     }
 
-    fun increaseMaxMana(amount: Int): PlayerStatus {
+    fun increaseMaxMana(amount: Double): PlayerStatus {
         maxMana += amount
         return this
     }
 
-    fun increaseMana(amount: Int): PlayerStatus {
+    fun increaseMana(amount: Double): PlayerStatus {
         mana += amount
         return this
     }
 
-    fun decreaseMana(amount: Int): Boolean {
+    fun decreaseMana(amount: Double): Boolean {
         return if (mana >= amount) {
             mana -= amount
             true
@@ -110,7 +112,7 @@ data class PlayerStatus(val player: Player) {
     fun addJobExp(main: Main, job: JobMaster, point: Double, increaseCombo: Int = 1) {
         val jobStatus = getJobStatus(job)
         if (jobStatus.addExp(point, increaseCombo) == JobStatus.AddExpResult.LEVEL_UP) {
-            increaseMaxMana(1)
+            increaseMaxMana(1.0)
             mana = maxMana
             refreshManaIndicator()
             notifyLevelUp(job)
@@ -167,9 +169,8 @@ data class PlayerStatus(val player: Player) {
     }
 
     fun refreshManaIndicator() {
-        val progress = max(0f, min(1f, mana / maxMana.toFloat()))
         manaIndicator.name(Component.text("Mana ($mana/$maxMana)"))
-        manaIndicator.progress(progress)
+        manaIndicator.progress(getManaProgress())
     }
 
     fun save() {

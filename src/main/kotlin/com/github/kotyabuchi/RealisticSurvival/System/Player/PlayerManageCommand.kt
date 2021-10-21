@@ -63,7 +63,7 @@ object PlayerManageCommand: CommandExecutor, TabCompleter, KoinComponent {
             "mana" -> {
                 if (args.size < 4) return true
                 val type = args[2]
-                val amount = args[3].toIntOrNull() ?: return true
+                val amount = args[3].toDoubleOrNull() ?: return true
                 val target = if (args.size < 5) {
                     sender as? Player ?: return true
                 } else {
