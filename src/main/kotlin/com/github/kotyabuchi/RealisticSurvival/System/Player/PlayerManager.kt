@@ -37,6 +37,15 @@ object PlayerManager: Listener, KoinComponent {
             playerStatusMap[it.player.uniqueId] = it
             it.showManaIndicator()
         }
+
+        object : BukkitRunnable() {
+            override fun run() {
+                playerStatusMap.values.forEach {
+                    it.increaseMana(it.manaRegen)
+                    it.refreshManaIndicator()
+                }
+            }
+        }.runTaskTimer(main, 0, 10)
     }
 
     fun hideAllManaIndicator() {

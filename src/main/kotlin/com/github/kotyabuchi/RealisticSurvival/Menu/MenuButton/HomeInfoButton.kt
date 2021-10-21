@@ -11,6 +11,7 @@ import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import kotlin.math.cos
+import kotlin.math.floor
 import kotlin.math.round
 import kotlin.random.Random
 
@@ -66,7 +67,7 @@ class HomeInfoButton(val home: Home): MenuButton() {
                     player.sendMessage(Component.text("テレポートに失敗しました").normalize(NamedTextColor.RED))
                 }
             } else {
-                player.sendMessage(Component.text("マナが足りません ").normalize().append(Component.text("${playerStatus.mana - cost}").normalize(NamedTextColor.AQUA)))
+                player.sendMessage(Component.text("マナが足りません ").normalize().append(Component.text("${floor(playerStatus.mana - cost).toInt()}").normalize(NamedTextColor.AQUA)))
             }
         }
     }

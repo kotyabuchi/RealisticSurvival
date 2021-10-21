@@ -29,6 +29,7 @@ data class PlayerStatus(val player: Player) {
         set(value) {
             field = min(maxMana, value)
         }
+    var manaRegen: Double = maxMana / 300.0
     private val manaIndicator: BossBar = BossBar.bossBar(getManaTitle(), getManaProgress(), BossBar.Color.BLUE, BossBar.Overlay.PROGRESS)
 
     private var openingMenu: Menu? = null
