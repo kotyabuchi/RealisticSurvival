@@ -3,6 +3,7 @@ package com.github.kotyabuchi.RealisticSurvival.Utility
 import com.github.kotyabuchi.RealisticSurvival.Job.JobType
 import com.github.kotyabuchi.RealisticSurvival.Main
 import com.github.kotyabuchi.RealisticSurvival.System.Player.*
+import net.kyori.adventure.text.Component
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -83,16 +84,14 @@ object DataBaseManager: KoinComponent {
                         pstmt.setString(1, player.uniqueId.toString())
                         val manaRs = pstmt.executeQuery()
 
-                        if (manaRs.row == 0) {
+                        if (manaRs.next()) {
+                            playerStatus.maxMana = manaRs.getInt("max_mana")
+                            playerStatus.mana = manaRs.getInt("mana")
+                        } else {
                             playerStatus.getAllJobStatus().forEach {
                                 playerStatus.increaseMaxMana(it.getLevel() - 1)
                             }
                             playerStatus.mana = playerStatus.maxMana
-                        } else {
-                            while (manaRs.next()) {
-                                playerStatus.maxMana = manaRs.getInt("max_mana")
-                                playerStatus.mana = manaRs.getInt("mana")
-                            }
                         }
 
                         pstmt = conn.prepareStatement("SELECT * FROM homes WHERE uuid = ?")
