@@ -29,7 +29,7 @@ data class PlayerStatus(val player: Player) {
         set(value) {
             field = min(maxMana, value)
         }
-    private val manaIndicator: BossBar = BossBar.bossBar(Component.text("Mana ${mana.floor1Digits()} / ${maxMana.floor1Digits()}"), getManaProgress(), BossBar.Color.BLUE, BossBar.Overlay.PROGRESS)
+    private val manaIndicator: BossBar = BossBar.bossBar(Component.text("Mana ${mana.floor1Digits()} / ${maxMana.floor1Digits()} +${(maxMana / 100).floor1Digits()}"), getManaProgress(), BossBar.Color.BLUE, BossBar.Overlay.PROGRESS)
 
     private var openingMenu: Menu? = null
     private var openingMenuPage: Int = 0
@@ -83,12 +83,31 @@ data class PlayerStatus(val player: Player) {
         return this
     }
 
+    fun increaseMaxMana(amount: Int): PlayerStatus {
+        maxMana += amount
+        return this
+    }
+
     fun increaseMana(amount: Double): PlayerStatus {
         mana += amount
         return this
     }
 
+    fun increaseMana(amount: Int): PlayerStatus {
+        mana += amount
+        return this
+    }
+
     fun decreaseMana(amount: Double): Boolean {
+        return if (mana >= amount) {
+            mana -= amount
+            true
+        } else {
+            false
+        }
+    }
+
+    fun decreaseMana(amount: Int): Boolean {
         return if (mana >= amount) {
             mana -= amount
             true
