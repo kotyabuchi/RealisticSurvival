@@ -29,7 +29,7 @@ data class PlayerStatus(val player: Player) {
         set(value) {
             field = min(maxMana, value)
         }
-    private val manaIndicator: BossBar = BossBar.bossBar(Component.text("Mana ${mana.floor1Digits()} / ${maxMana.floor1Digits()} +${(maxMana / 100).floor1Digits()}"), getManaProgress(), BossBar.Color.BLUE, BossBar.Overlay.PROGRESS)
+    private val manaIndicator: BossBar = BossBar.bossBar(getManaTitle(), getManaProgress(), BossBar.Color.BLUE, BossBar.Overlay.PROGRESS)
 
     private var openingMenu: Menu? = null
     private var openingMenuPage: Int = 0
@@ -40,7 +40,8 @@ data class PlayerStatus(val player: Player) {
     private val jobStatusMap = mutableMapOf<JobMaster, JobStatus>()
     private val expBarMap = mutableMapOf<JobMaster, BukkitTask>()
 
-    private fun getManaProgress(): Float = max(0.0, min(1.0, mana / maxMana)).floor1Digits().toFloat()
+    private fun getManaTitle(): Component = Component.text("Mana ${mana.floor1Digits()}/${maxMana.floor1Digits()} +${(maxMana / 200).floor2Digits()}")
+    private fun getManaProgress(): Float = max(0.0, min(1.0, mana / maxMana)).toFloat()
 
     fun closeMenu() {
         openingMenu?.doCloseMenuAction(player)
@@ -188,7 +189,7 @@ data class PlayerStatus(val player: Player) {
     }
 
     fun refreshManaIndicator() {
-        manaIndicator.name(Component.text("Mana ($mana/$maxMana)"))
+        manaIndicator.name(getManaTitle())
         manaIndicator.progress(getManaProgress())
     }
 
