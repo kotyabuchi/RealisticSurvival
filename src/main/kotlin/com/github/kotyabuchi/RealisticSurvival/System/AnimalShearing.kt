@@ -1,8 +1,9 @@
 package com.github.kotyabuchi.RealisticSurvival.System
 
 import com.github.kotyabuchi.RealisticSurvival.Utility.damage
-import net.kyori.adventure.sound.Sound
 import org.bukkit.Material
+import org.bukkit.Sound
+import org.bukkit.SoundCategory
 import org.bukkit.entity.Chicken
 import org.bukkit.entity.Cow
 import org.bukkit.entity.LivingEntity
@@ -37,7 +38,7 @@ object AnimalShearing: Listener {
         entity.noDamageTicks = 0
         val world = entity.world
         world.dropItem(entity.location, ItemStack(dropItem))
-        world.playSound(Sound.sound(org.bukkit.Sound.ENTITY_SHEEP_SHEAR.key, Sound.Source.HOSTILE, 1f, 1f))
+        world.playSound(entity.eyeLocation, Sound.ENTITY_SHEEP_SHEAR, SoundCategory.HOSTILE, 1f, 1f)
         item.damage(1)
     }
 }

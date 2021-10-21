@@ -3,8 +3,9 @@ package com.github.kotyabuchi.RealisticSurvival.System
 import com.github.kotyabuchi.RealisticSurvival.Event.PlayerInteractBlockEvent
 import com.github.kotyabuchi.RealisticSurvival.Main
 import com.github.kotyabuchi.RealisticSurvival.Utility.isShovel
-import net.kyori.adventure.sound.Sound
 import org.bukkit.Material
+import org.bukkit.Sound
+import org.bukkit.SoundCategory
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.inventory.EquipmentSlot
@@ -34,7 +35,7 @@ object LevelTheFarmlandAnPath: Listener, KoinComponent {
                     player.swingOffHand()
                 }
                 block.type = Material.DIRT
-                block.world.playSound(Sound.sound(org.bukkit.Sound.ITEM_HOE_TILL.key, Sound.Source.BLOCK, 1f, 1f))
+                block.world.playSound(block.location.toCenterLocation(), Sound.ITEM_HOE_TILL, SoundCategory.BLOCKS, 1f, 1f)
             }
         }.runTaskLater(main, 1)
     }
