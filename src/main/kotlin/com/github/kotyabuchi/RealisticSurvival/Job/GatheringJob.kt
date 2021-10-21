@@ -73,7 +73,7 @@ open class GatheringJob(jobName: String): JobMaster(jobName), KoinComponent {
                     exp += (itemExp * item.amount)
                 }
 
-                playerStatus.addSkillExp(main, this, exp, multiDropAmount)
+                playerStatus.addJobExp(main, this, exp, multiDropAmount)
                 afterDropAction(event)
             }
         }

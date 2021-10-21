@@ -8,8 +8,10 @@ import com.github.kotyabuchi.RealisticSurvival.Skill.Gathering.TreeAssist
 import com.github.kotyabuchi.RealisticSurvival.System.*
 import com.github.kotyabuchi.RealisticSurvival.System.Combat.DamagePopup
 import com.github.kotyabuchi.RealisticSurvival.System.Combat.Fracture
+import com.github.kotyabuchi.RealisticSurvival.System.Player.PlayerManageCommand
 import com.github.kotyabuchi.RealisticSurvival.System.Player.PlayerManager
 import com.github.kotyabuchi.RealisticSurvival.Utility.DataBaseManager
+import org.bukkit.NamespacedKey
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
@@ -46,6 +48,7 @@ class Main: JavaPlugin() {
 
     private fun registerCommands() {
         getCommand("sort")?.setExecutor(SortChest)
+        getCommand("playermanager")?.setExecutor(PlayerManageCommand)
     }
 
     override fun onEnable() {
@@ -61,7 +64,21 @@ class Main: JavaPlugin() {
     override fun onDisable() {
         DamagePopup.clearPopup()
         DataBaseManager.savePlayerStatus()
+        PlayerManager.hideAllManaIndicator()
+        refreshBossbar()
         println("Disabled")
+    }
+
+    private fun refreshBossbar() {
+        val cache = mutableSetOf<NamespacedKey>()
+        server.bossBars.forEach {
+            it.removeAll()
+            it.isVisible = false
+            cache.add(it.key)
+        }
+        cache.forEach {
+            server.removeBossBar(it)
+        }
     }
 
     private val pluginModule = module {

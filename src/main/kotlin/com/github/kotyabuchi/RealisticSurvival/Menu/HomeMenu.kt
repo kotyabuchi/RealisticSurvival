@@ -19,12 +19,12 @@ class HomeMenu(player: Player): Menu(Component.text("${player.name}'s Homes"), c
         var page = 0
         player.bedSpawnLocation?.let { loc ->
             loc.world?.let { world ->
-                setMenuButton(HomeInfoButton(Home(null, "Bed", world, loc.x, loc.y, loc.z, 0f, Material.RED_BED)), page)
+                setMenuButton(HomeInfoButton(player, Home(null, "Bed", world, loc.x, loc.y, loc.z, 0f, Material.RED_BED)), page)
             }
         }
         player.getStatus().homes.forEach {
             if (getLastBlankSlot(page) == null) page++
-            setMenuButton(HomeInfoButton(it), page)
+            setMenuButton(HomeInfoButton(player, it), page)
         }
         repeat(page + 1) {
             setMenuButton(AddHomeButton(), it, menuSize - 5)
