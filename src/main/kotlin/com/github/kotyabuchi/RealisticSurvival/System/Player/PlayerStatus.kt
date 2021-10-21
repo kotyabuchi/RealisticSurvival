@@ -23,7 +23,10 @@ data class PlayerStatus(val player: Player) {
     var maxMana: Double = 10.0
         set(value) {
             field = value
-            if (mana > value) mana = value
+            if (mana > value) {
+                mana = value
+                manaRegen = value / 300.0
+            }
         }
     var mana: Double = 10.0
         set(value) {
@@ -41,7 +44,7 @@ data class PlayerStatus(val player: Player) {
     private val jobStatusMap = mutableMapOf<JobMaster, JobStatus>()
     private val expBarMap = mutableMapOf<JobMaster, BukkitTask>()
 
-    private fun getManaTitle(): Component = Component.text("Mana ${mana.floor1Digits()}/${maxMana.floor1Digits()} +${(maxMana / 200).floor2Digits()}")
+    private fun getManaTitle(): Component = Component.text("\u25C6").normalize(NamedTextColor.AQUA).append(Component.text("Mana ${mana.floor1Digits()}/${maxMana.floor1Digits()} +${manaRegen.floor2Digits()}"))
     private fun getManaProgress(): Float = max(0.0, min(1.0, mana / maxMana)).toFloat()
 
     fun closeMenu() {
