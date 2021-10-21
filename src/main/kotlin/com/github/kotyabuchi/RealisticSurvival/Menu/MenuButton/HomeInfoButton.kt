@@ -52,15 +52,19 @@ class HomeInfoButton(val home: Home): MenuButton() {
                     world.spawnParticle(Particle.PORTAL, player.location.clone().add(.0, 1.0, .0).add(x, y, z), 20)
                 }
                 world.playSound(player.location, Sound.ENTITY_ENDERMAN_TELEPORT, .4f, .6f)
-                player.teleport(location)
-                for (i in 0 until 20) {
-                    val x = Random.nextInt(15) / 10.0 - .75
-                    val y = Random.nextInt(20) / 10.0 - 1
-                    val z = Random.nextInt(15) / 10.0 - .75
-                    world.spawnParticle(Particle.SPELL, location.clone().add(.0, 1.0, .0).add(x, y, z), 20)
-                    world.spawnParticle(Particle.PORTAL, location.clone().add(.0, 1.0, .0).add(x, y, z), 20)
+                if (player.teleport(location)) {
+                    for (i in 0 until 20) {
+                        val x = Random.nextInt(15) / 10.0 - .75
+                        val y = Random.nextInt(20) / 10.0 - 1
+                        val z = Random.nextInt(15) / 10.0 - .75
+                        world.spawnParticle(Particle.SPELL, location.clone().add(.0, 1.0, .0).add(x, y, z), 20)
+                        world.spawnParticle(Particle.PORTAL, location.clone().add(.0, 1.0, .0).add(x, y, z), 20)
+                    }
+                    world.playSound(location, Sound.ENTITY_ENDERMAN_TELEPORT, .4f, .6f)
+                } else {
+                    playerStatus.increaseMana(cost)
+                    player.sendMessage(Component.text("テレポートに失敗しました").normalize(NamedTextColor.RED))
                 }
-                world.playSound(location, Sound.ENTITY_ENDERMAN_TELEPORT, .4f, .6f)
             } else {
                 player.sendMessage(Component.text("マナが足りません ").normalize().append(Component.text("${playerStatus.mana - cost}").normalize(NamedTextColor.AQUA)))
             }
