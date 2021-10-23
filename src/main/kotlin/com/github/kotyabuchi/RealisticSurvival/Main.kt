@@ -4,6 +4,7 @@ import com.github.kotyabuchi.RealisticSurvival.Event.CustomEventCaller
 import com.github.kotyabuchi.RealisticSurvival.Job.JobType
 import com.github.kotyabuchi.RealisticSurvival.Menu.MenuController
 import com.github.kotyabuchi.RealisticSurvival.Skill.Gathering.MineAssist
+import com.github.kotyabuchi.RealisticSurvival.Skill.Gathering.BlessOfDemeter
 import com.github.kotyabuchi.RealisticSurvival.Skill.Gathering.TreeAssist
 import com.github.kotyabuchi.RealisticSurvival.System.*
 import com.github.kotyabuchi.RealisticSurvival.System.Combat.DamagePopup
@@ -28,7 +29,9 @@ class Main: JavaPlugin() {
         // Menu
         pm.registerEvents(MenuController, this)
         // Skill
+            // Gathering
         pm.registerEvents(TreeAssist, this)
+        pm.registerEvents(BlessOfDemeter, this)
         pm.registerEvents(MineAssist, this)
         // System
             // Combat
