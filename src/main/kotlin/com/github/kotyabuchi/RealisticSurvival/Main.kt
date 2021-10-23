@@ -47,6 +47,7 @@ class Main: JavaPlugin() {
         pm.registerEvents(SafeFarmland, this)
         pm.registerEvents(SortChest, this)
         pm.registerEvents(StarterItem, this)
+        pm.registerEvents(StoneGenerator, this)
     }
 
     private fun registerCommands() {
