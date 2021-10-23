@@ -20,6 +20,10 @@ object SafeCropAndReplant: Listener {
         Material.COCOA to Material.COCOA_BEANS
     )
 
+    fun addHarvestBlock(block: Block) {
+        harvestBlock.add(block)
+    }
+
     @EventHandler
     fun onMine(event: BlockMineEvent) {
         val blockData = event.block.blockData
