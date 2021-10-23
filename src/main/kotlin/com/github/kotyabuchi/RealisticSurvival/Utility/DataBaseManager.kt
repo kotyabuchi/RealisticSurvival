@@ -152,6 +152,9 @@ object DataBaseManager: KoinComponent {
                                     pstmt.addBatch()
                                 }
                             }
+                        }
+                        pstmt.executeBatch()
+                        statusList.forEach { status ->
                             pstmt = conn.prepareStatement("REPLACE INTO player_mana VALUES (?, ?, ?)")
                             pstmt.setString(1, status.player.uniqueId.toString())
                             pstmt.setDouble(2, status.maxMana)
