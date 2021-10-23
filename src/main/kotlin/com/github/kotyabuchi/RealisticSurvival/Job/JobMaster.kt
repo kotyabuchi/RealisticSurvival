@@ -2,6 +2,7 @@ package com.github.kotyabuchi.RealisticSurvival.Job
 
 import com.github.kotyabuchi.RealisticSurvival.Event.PlayerInteractBlockEvent
 import com.github.kotyabuchi.RealisticSurvival.Main
+import com.github.kotyabuchi.RealisticSurvival.Skill.Skill
 import com.github.kotyabuchi.RealisticSurvival.Skill.SkillCommand
 import com.github.kotyabuchi.RealisticSurvival.Skill.ToggleSkill
 import com.github.kotyabuchi.RealisticSurvival.System.Player.getJobLevel
@@ -33,7 +34,7 @@ open class JobMaster(val jobName: String): Listener, KoinComponent {
     private val targetTool: MutableList<Material> = mutableListOf()
     private val castingModeList: MutableList<Player> = mutableListOf()
     private val castingCommandMap: MutableMap<Player, String> = mutableMapOf()
-    private val skillMap: MutableMap<SkillCommand, ToggleSkill> = mutableMapOf()
+    private val skillMap: MutableMap<SkillCommand, Skill> = mutableMapOf()
 
     private val commandTitleTime = Title.Times.of(Duration.ZERO, Duration.ofSeconds(2), Duration.ZERO)
 
@@ -122,11 +123,11 @@ open class JobMaster(val jobName: String): Listener, KoinComponent {
         return targetTool.contains(tool)
     }
 
-    protected fun registerSkill(skillCommand: SkillCommand, skill: ToggleSkill) {
+    protected fun registerSkill(skillCommand: SkillCommand, skill: Skill) {
         skillMap[skillCommand] = skill
     }
 
-    fun getSkills(): Map<SkillCommand, ToggleSkill> {
+    fun getSkills(): Map<SkillCommand, Skill> {
         return skillMap
     }
 
@@ -138,7 +139,12 @@ open class JobMaster(val jobName: String): Listener, KoinComponent {
             if (skill == null) {
                 notRegisterActionNotice(player)
             } else {
-                skill.toggleSkill(player, player.getJobLevel(this))
+                val level = player.getJobLevel(this)
+                if (skill is ToggleSkill) {
+                    skill.toggleSkill(player, level)
+                } else {
+                    skill.enableSkill(player, level)
+                }
             }
         } catch (e: IllegalArgumentException) {
             notRegisterActionNotice(player)

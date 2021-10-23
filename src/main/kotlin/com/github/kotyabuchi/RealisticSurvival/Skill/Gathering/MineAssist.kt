@@ -11,6 +11,7 @@ import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
 import org.bukkit.event.EventHandler
 import org.koin.core.component.inject
+import java.util.*
 import kotlin.math.ceil
 import kotlin.math.max
 
@@ -20,6 +21,8 @@ object MineAssist: ToggleSkill {
     override val cost: Int = 0
     override val needLevel: Int = 0
     override var description: String = "周囲の鉱石もまとめて採掘する"
+    override val coolTime: Long = 0
+    override val lastUseTime: MutableMap<UUID, Long> = mutableMapOf()
 
     @EventHandler
     fun onBlockBreak(event: BlockMineEvent) {

@@ -3,13 +3,13 @@ package com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.Job
 import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.ButtonData
 import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.ButtonItem
 import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.MenuButton
-import com.github.kotyabuchi.RealisticSurvival.Skill.ToggleSkill
+import com.github.kotyabuchi.RealisticSurvival.Skill.Skill
 import com.github.kotyabuchi.RealisticSurvival.Utility.normalize
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.Material
 
-class SkillInfoButton(skill: ToggleSkill): MenuButton() {
+class SkillInfoButton(skill: Skill): MenuButton() {
 
     init {
         val lore = mutableListOf<Component>()
