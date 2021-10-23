@@ -2,6 +2,7 @@ package com.github.kotyabuchi.RealisticSurvival.Skill
 
 import com.github.kotyabuchi.RealisticSurvival.Main
 import com.github.kotyabuchi.RealisticSurvival.System.Player.getStatus
+import com.github.kotyabuchi.RealisticSurvival.Utility.Emoji
 import com.github.kotyabuchi.RealisticSurvival.Utility.floor1Digits
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
@@ -31,18 +32,21 @@ interface Skill: Listener, KoinComponent {
         when {
             level < needLevel -> {
                 player.playSound(player.location, Sound.ENTITY_BLAZE_SHOOT, 0.5f, 2f)
-                sendErrorMessage(player, "$skillName: Not enough levels (Need Lv.$needLevel)")
+                sendErrorMessage(player, Component.text("$skillName: Not enough levels (Need Lv.$needLevel)").color(NamedTextColor.RED))
             }
             !isReadySkill(uuid) -> {
                 player.playSound(player.location, Sound.ENTITY_BLAZE_SHOOT, 0.5f, 2f)
-                sendErrorMessage(player, "$skillName: Not yet (${(getRemainingCoolTime(uuid) / 1000.0).floor1Digits()}s)")
+                sendErrorMessage(player, Component.text("$skillName: Not yet (${(getRemainingCoolTime(uuid) / 1000.0).floor1Digits()}s)").color(NamedTextColor.RED))
             }
             playerStatus.decreaseMana(cost) -> {
                 enableAction(player, level)
                 setLastUseTime(uuid)
             }
             else -> {
-                sendErrorMessage(player, "$skillName: Not enough mana (Need Lv.$cost)")
+                sendErrorMessage(player, Component.text("$skillName: Not enough mana ").color(NamedTextColor.RED)
+                    .append(Component.text("(").color(NamedTextColor.WHITE))
+                    .append(Component.text("${Emoji.DIAMOND}$cost").color(NamedTextColor.AQUA))
+                    .append(Component.text(")").color(NamedTextColor.WHITE)))
             }
         }
     }
@@ -64,8 +68,8 @@ interface Skill: Listener, KoinComponent {
         return getRemainingCoolTime(uuid) <= 0L
     }
 
-    fun sendErrorMessage(player: Player, message: String) {
+    fun sendErrorMessage(player: Player, message: Component) {
         player.playSound(player.location, Sound.ENTITY_BLAZE_SHOOT, 0.5f, 2f)
-        player.sendActionBar(Component.text(message).color(NamedTextColor.RED))
+        player.sendActionBar(message)
     }
 }

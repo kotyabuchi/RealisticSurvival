@@ -43,7 +43,7 @@ interface ToggleSkill: Skill {
 
     override fun enableSkill(player: Player, level: Int) {
         if (needLevel > level) {
-            sendErrorMessage(player, "$skillName: Not enough levels (Need Lv.$needLevel)")
+            sendErrorMessage(player, Component.text("$skillName: Not enough levels (Need Lv.$needLevel)").color(NamedTextColor.RED))
         } else if (!isEnabledSkill(player)) {
             enableAction(player, level)
             setSkillLevel(player, level)
