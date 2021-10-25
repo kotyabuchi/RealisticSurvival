@@ -2,6 +2,7 @@ package com.github.kotyabuchi.RealisticSurvival.Job.Gathering
 
 import com.github.kotyabuchi.RealisticSurvival.Job.GatheringJob
 import com.github.kotyabuchi.RealisticSurvival.Skill.Gathering.MineAssist
+import com.github.kotyabuchi.RealisticSurvival.Skill.PassiveSkill.Gathering.GemCollector
 import com.github.kotyabuchi.RealisticSurvival.Skill.SkillCommand
 import org.bukkit.Material
 
@@ -33,5 +34,6 @@ object Miner: GatheringJob("MINER") {
         addExpMap(10, Material.EMERALD_ORE, Material.DEEPSLATE_EMERALD_ORE)
 
         registerSkill(SkillCommand.LRL, MineAssist)
+        registerPassiveSkill(GemCollector(this))
     }
 }
