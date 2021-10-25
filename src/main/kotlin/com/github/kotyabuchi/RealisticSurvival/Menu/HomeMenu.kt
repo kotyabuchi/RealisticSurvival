@@ -11,9 +11,13 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import kotlin.math.ceil
 
-class HomeMenu(player: Player): Menu(Component.text("${player.name}'s Homes"), ceil(player.getStatus().homes.size / 7.0).toInt()) {
+class HomeMenu(val player: Player): Menu(Component.text("${player.name}'s Homes"), ceil(player.getStatus().homes.size / 7.0).toInt()) {
 
     init {
+        createMenu()
+    }
+
+    override fun createMenu() {
         setFrame()
 
         var page = 0
@@ -45,7 +49,8 @@ class HomeMenu(player: Player): Menu(Component.text("${player.name}'s Homes"), c
                 val homeId = home.homeId ?: return
                 DataBaseManager.removeHome(homeId)
                 status.homes.remove(home)
-                status.openMenu(HomeMenu(player).setPrevMenu(getPrevMenu()), 0, true)
+                refresh()
+                status.openMenu(this, 0, true)
             }
         } else {
             super.doButtonClickEvent(slot, event, page)

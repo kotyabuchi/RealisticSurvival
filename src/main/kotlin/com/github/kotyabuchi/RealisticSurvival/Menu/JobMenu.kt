@@ -7,9 +7,13 @@ import net.kyori.adventure.text.Component
 import org.bukkit.entity.Player
 import kotlin.math.ceil
 
-class JobMenu(player: Player): Menu(Component.text("Job"), ceil(JobType.values().size / 7.0).toInt()) {
+class JobMenu(val player: Player): Menu(Component.text("Job"), ceil(JobType.values().size / 7.0).toInt()) {
 
     init {
+        createMenu()
+    }
+
+    override fun createMenu() {
         setFrame()
         JobType.values().forEach {
             setMenuButton(JobInfoButton(it, player))

@@ -23,6 +23,17 @@ open class Menu(val title: Component, _row: Int) {
     private var prevMenu: Menu? = null
     private val buttonItems = mutableListOf(mutableMapOf<Int, MenuButton>())
 
+    fun refresh() {
+        pages.clear()
+        pages.add(getInvTemp())
+        buttonItems.clear()
+        buttonItems.add(mutableMapOf())
+        createMenu()
+        setPrevMenu(prevMenu)
+    }
+
+    open fun createMenu() {}
+
     private fun getInvTemp(): Inventory {
         return Bukkit.createInventory(null, menuSize, title)
     }
