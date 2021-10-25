@@ -1,6 +1,8 @@
 package com.github.kotyabuchi.RealisticSurvival.Job
 
 import com.github.kotyabuchi.RealisticSurvival.Event.BlockMineEvent
+import com.github.kotyabuchi.RealisticSurvival.Event.CustomEventCaller
+import com.github.kotyabuchi.RealisticSurvival.Event.GatheringEvent
 import com.github.kotyabuchi.RealisticSurvival.Main
 import com.github.kotyabuchi.RealisticSurvival.System.Player.getStatus
 import org.bukkit.Material
@@ -101,5 +103,6 @@ open class GatheringJob(jobName: String): JobMaster(jobName), KoinComponent {
         if (!isJobTool(toolType) && !canGetExpWithHand) return
         if (!isTargetBlock(block)) return
         addBrokenBlockSet(block)
+        CustomEventCaller.callEvent(GatheringEvent(player, this, block))
     }
 }
