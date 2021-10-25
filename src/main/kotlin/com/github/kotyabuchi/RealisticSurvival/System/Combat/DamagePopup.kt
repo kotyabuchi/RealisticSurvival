@@ -1,12 +1,13 @@
 package com.github.kotyabuchi.RealisticSurvival.System.Combat
 
 import com.github.kotyabuchi.RealisticSurvival.Main
-import com.github.kotyabuchi.RealisticSurvival.Utility.colorS
 import com.github.kotyabuchi.RealisticSurvival.Utility.floor1Digits
-import com.github.kotyabuchi.RealisticSurvival.Utility.floor2Digits
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
-import org.bukkit.entity.*
+import org.bukkit.entity.ArmorStand
+import org.bukkit.entity.EntityType
+import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener

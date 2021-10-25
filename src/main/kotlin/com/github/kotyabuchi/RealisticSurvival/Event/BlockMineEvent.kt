@@ -4,7 +4,6 @@ import org.bukkit.Statistic
 import org.bukkit.block.Block
 import org.bukkit.entity.Player
 import org.bukkit.event.block.BlockBreakEvent
-import java.lang.Exception
 
 class BlockMineEvent(block: Block, player: Player, val isMultiBreak: Boolean = false, val isMineAssist: Boolean = false): BlockBreakEvent(block, player) {
 

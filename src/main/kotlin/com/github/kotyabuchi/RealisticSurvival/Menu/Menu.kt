@@ -1,10 +1,10 @@
 package com.github.kotyabuchi.RealisticSurvival.Menu
 
-import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.*
 import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.Basic.BackPageButton
 import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.Basic.BackPrevButton
 import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.Basic.BlankButton
 import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.Basic.NextPageButton
+import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.MenuButton
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player

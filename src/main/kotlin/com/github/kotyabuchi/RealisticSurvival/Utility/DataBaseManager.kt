@@ -3,7 +3,6 @@ package com.github.kotyabuchi.RealisticSurvival.Utility
 import com.github.kotyabuchi.RealisticSurvival.Job.JobType
 import com.github.kotyabuchi.RealisticSurvival.Main
 import com.github.kotyabuchi.RealisticSurvival.System.Player.*
-import net.kyori.adventure.text.Component
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.Player

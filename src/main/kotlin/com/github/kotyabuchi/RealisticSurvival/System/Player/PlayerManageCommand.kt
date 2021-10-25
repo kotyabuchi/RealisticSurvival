@@ -1,7 +1,6 @@
 package com.github.kotyabuchi.RealisticSurvival.System.Player
 
 import com.github.kotyabuchi.RealisticSurvival.Main
-import net.kyori.adventure.text.Component
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender

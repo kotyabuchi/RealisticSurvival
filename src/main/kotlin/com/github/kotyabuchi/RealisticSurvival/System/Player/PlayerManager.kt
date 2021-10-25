@@ -12,7 +12,6 @@ import org.bukkit.scheduler.BukkitRunnable
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.util.*
-import kotlin.random.Random
 
 fun Player.getStatus(): PlayerStatus {
     val uuid = this.uniqueId

@@ -3,11 +3,8 @@ package com.github.kotyabuchi.RealisticSurvival.Utility
 import com.github.kotyabuchi.RealisticSurvival.Item.Enum.ArmorType
 import com.github.kotyabuchi.RealisticSurvival.Item.Enum.EquipmentType
 import com.github.kotyabuchi.RealisticSurvival.Item.Enum.ToolType
-import com.github.kotyabuchi.RealisticSurvival.Main
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
-import org.bukkit.entity.Player
-import org.bukkit.event.player.PlayerItemDamageEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
 import kotlin.random.Random
