@@ -3,6 +3,7 @@ package com.github.kotyabuchi.RealisticSurvival.System.Player
 import com.github.kotyabuchi.RealisticSurvival.Job.JobMaster
 import com.github.kotyabuchi.RealisticSurvival.Main
 import com.github.kotyabuchi.RealisticSurvival.Menu.Menu
+import com.github.kotyabuchi.RealisticSurvival.Skill.Skill
 import com.github.kotyabuchi.RealisticSurvival.Utility.*
 import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.text.Component
@@ -133,14 +134,34 @@ data class PlayerStatus(val player: Player) {
         player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 0.2f, 1.0f)
     }
 
+    fun notifyLearnedSkill(skill: Skill) {
+        player.playSound(player.eyeLocation, Sound.ENTITY_PLAYER_LEVELUP, 0.2f, 2.0f)
+        player.sendMessage(Component.text("[${skill.skillName}]を習得しました").normalize(NamedTextColor.GREEN))
+    }
+
+    fun levelUp(job: JobMaster, level: Int) {
+        increaseMaxMana(1.0)
+        mana = maxMana
+        refreshManaIndicator()
+        notifyLevelUp(job)
+
+        job.getPassiveSkills().forEach {
+            if (level == it.needLevel) {
+                it.enableSkill(player, level)
+                notifyLearnedSkill(it)
+            }
+        }
+        job.getSkills().values.forEach {
+            if (level == it.needLevel) {
+                it.enableSkill(player, level)
+                notifyLearnedSkill(it)
+            }
+        }
+    }
+
     fun addJobExp(main: Main, job: JobMaster, point: Double, increaseCombo: Int = 1) {
         val jobStatus = getJobStatus(job)
-        if (jobStatus.addExp(point, increaseCombo) == JobStatus.AddExpResult.LEVEL_UP) {
-            increaseMaxMana(1.0)
-            mana = maxMana
-            refreshManaIndicator()
-            notifyLevelUp(job)
-        }
+        if (jobStatus.addExp(point, increaseCombo) == JobStatus.AddExpResult.LEVEL_UP) levelUp(job, jobStatus.getLevel())
         val addedExp = jobStatus.getRecentAddedExp()
         val combo = jobStatus.getCombo()
         val jobName = job.jobName.upperCamelCase()
