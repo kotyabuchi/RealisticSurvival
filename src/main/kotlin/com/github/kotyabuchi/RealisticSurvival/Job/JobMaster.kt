@@ -125,6 +125,7 @@ open class JobMaster(val jobName: String): Listener, KoinComponent {
 
     protected fun registerSkill(skillCommand: SkillCommand, skill: Skill) {
         skillMap[skillCommand] = skill
+        main.server.pluginManager.registerEvents(skill, main)
     }
 
     fun getSkills(): Map<SkillCommand, Skill> {
