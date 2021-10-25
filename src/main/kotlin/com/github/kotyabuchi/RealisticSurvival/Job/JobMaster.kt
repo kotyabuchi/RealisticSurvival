@@ -2,6 +2,7 @@ package com.github.kotyabuchi.RealisticSurvival.Job
 
 import com.github.kotyabuchi.RealisticSurvival.Event.PlayerInteractBlockEvent
 import com.github.kotyabuchi.RealisticSurvival.Main
+import com.github.kotyabuchi.RealisticSurvival.Skill.PassiveSkill.PassiveSkill
 import com.github.kotyabuchi.RealisticSurvival.Skill.Skill
 import com.github.kotyabuchi.RealisticSurvival.Skill.SkillCommand
 import com.github.kotyabuchi.RealisticSurvival.Skill.ToggleSkill
@@ -35,6 +36,7 @@ open class JobMaster(val jobName: String): Listener, KoinComponent {
     private val castingModeList: MutableList<Player> = mutableListOf()
     private val castingCommandMap: MutableMap<Player, String> = mutableMapOf()
     private val skillMap: MutableMap<SkillCommand, Skill> = mutableMapOf()
+    private val passiveSkillSet: MutableSet<PassiveSkill> = mutableSetOf()
 
     private val commandTitleTime = Title.Times.of(Duration.ZERO, Duration.ofSeconds(2), Duration.ZERO)
 
@@ -128,8 +130,17 @@ open class JobMaster(val jobName: String): Listener, KoinComponent {
         main.server.pluginManager.registerEvents(skill, main)
     }
 
+    protected fun registerPassiveSkill(skill: PassiveSkill) {
+        passiveSkillSet.add(skill)
+        main.server.pluginManager.registerEvents(skill, main)
+    }
+
     fun getSkills(): Map<SkillCommand, Skill> {
         return skillMap
+    }
+
+    fun getPassiveSkills(): Set<PassiveSkill> {
+        return passiveSkillSet
     }
 
     private fun activeSkill(player: Player) {
