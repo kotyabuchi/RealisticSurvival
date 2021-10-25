@@ -2,12 +2,12 @@ package com.github.kotyabuchi.RealisticSurvival.Event
 
 import com.github.kotyabuchi.RealisticSurvival.Main
 import com.github.kotyabuchi.RealisticSurvival.Utility.miningWithEvent
+import org.bukkit.event.Event
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.player.PlayerInteractEvent
-import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.PluginManager
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -38,5 +38,9 @@ object CustomEventCaller: Listener, KoinComponent {
         val hand = event.hand ?: return
         val itemStack = player.inventory.getItem(hand)
         pm.callEvent(PlayerInteractBlockEvent(event.player, event.action, itemStack, block, event.blockFace, hand))
+    }
+
+    fun callEvent(event: Event) {
+        pm.callEvent(event)
     }
 }
