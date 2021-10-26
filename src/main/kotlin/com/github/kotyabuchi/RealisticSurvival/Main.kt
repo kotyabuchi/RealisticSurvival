@@ -5,7 +5,6 @@ import com.github.kotyabuchi.RealisticSurvival.Job.JobType
 import com.github.kotyabuchi.RealisticSurvival.Menu.MenuController
 import com.github.kotyabuchi.RealisticSurvival.System.*
 import com.github.kotyabuchi.RealisticSurvival.System.Combat.DamagePopup
-import com.github.kotyabuchi.RealisticSurvival.System.Combat.Fracture
 import com.github.kotyabuchi.RealisticSurvival.System.Player.PlayerManageCommand
 import com.github.kotyabuchi.RealisticSurvival.System.Player.PlayerManager
 import com.github.kotyabuchi.RealisticSurvival.Utility.DataBaseManager
@@ -28,7 +27,6 @@ class Main: JavaPlugin() {
         // System
             // Combat
         pm.registerEvents(DamagePopup, this)
-        pm.registerEvents(Fracture, this)
             // Player
         pm.registerEvents(PlayerManager, this)
 
