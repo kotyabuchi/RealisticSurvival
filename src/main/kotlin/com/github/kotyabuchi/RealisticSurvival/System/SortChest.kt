@@ -87,10 +87,13 @@ object SortChest: CommandExecutor, TabCompleter, Listener, KoinComponent {
         val player = event.whoClicked as? Player ?: return
         if (event.click != ClickType.MIDDLE) return
         if (event.currentItem?.type?.isAir == false) return
-        val inv = event.clickedInventory as? PlayerInventory ?: return
+        val inv = event.clickedInventory ?: return
         var content = inv.contents.toMutableList()
-        val toolBelt = content.subList(0, 9)
-        content = content.drop(9).toMutableList()
+        var toolBelt = listOf<ItemStack>()
+        if (inv is PlayerInventory) {
+            toolBelt = content.subList(0, 9)
+            content = content.drop(9).toMutableList()
+        }
         content = sort(content, true)
         inv.contents = toolBelt.toTypedArray() + content.toTypedArray()
         player.playSound(player.eyeLocation, Sound.UI_BUTTON_CLICK, 1f ,1f)
