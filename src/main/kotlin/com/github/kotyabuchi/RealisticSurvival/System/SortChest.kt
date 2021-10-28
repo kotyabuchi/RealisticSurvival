@@ -70,9 +70,20 @@ object SortChest: CommandExecutor, TabCompleter, Listener, KoinComponent {
         val chest = block.state as? Chest ?: return
         val inventory = chest.inventory
         var content = inventory.contents.toMutableList()
+        content = sort(content, sortWithRestackPlayer.contains(player))
+        chest.inventory.storageContents = content.toTypedArray()
+        event.isCancelled = true
+        sortPlayer.remove(player)
+        sortWithRestackPlayer.remove(player)
+        player.sendMessage(Component.text("ソート完了", NamedTextColor.GREEN))
+        player.playSound(block.location.toCenterLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1.3f)
+    }
+
+    private fun sort(_content: MutableList<ItemStack?>, withRestack: Boolean): MutableList<ItemStack?> {
+        var content = _content
         val comparator = compareBy<ItemStack?> { it?.type }.thenByDescending { it?.amount }
 
-        if (sortWithRestackPlayer.contains(player)) {
+        if (withRestack) {
             val contentSize = content.size
             val cache = mutableMapOf<ItemStack, Int>()
             content.forEach {
@@ -97,12 +108,7 @@ object SortChest: CommandExecutor, TabCompleter, Listener, KoinComponent {
             content = newContent
         }
         content.sortWith(nullsLast(comparator))
-        chest.inventory.storageContents = content.toTypedArray()
-        event.isCancelled = true
-        sortPlayer.remove(player)
-        sortWithRestackPlayer.remove(player)
-        player.sendMessage(Component.text("ソート完了", NamedTextColor.GREEN))
-        player.playSound(block.location.toCenterLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1.3f)
+        return content
     }
 
     private fun cancelSortMode(player: Player) {
