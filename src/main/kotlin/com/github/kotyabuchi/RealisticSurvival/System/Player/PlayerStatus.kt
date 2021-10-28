@@ -24,9 +24,9 @@ data class PlayerStatus(val player: Player) {
     var maxMana: Double = 10.0
         set(value) {
             field = value
+            manaRegen = value / 300.0
             if (mana > value) {
                 mana = value
-                manaRegen = value / 300.0
             }
         }
     var mana: Double = 10.0
