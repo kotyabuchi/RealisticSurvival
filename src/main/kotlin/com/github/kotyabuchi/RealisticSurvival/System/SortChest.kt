@@ -14,9 +14,12 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
+import org.bukkit.event.inventory.ClickType
+import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.PlayerInventory
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import kotlin.math.min
@@ -77,6 +80,20 @@ object SortChest: CommandExecutor, TabCompleter, Listener, KoinComponent {
         sortWithRestackPlayer.remove(player)
         player.sendMessage(Component.text("ソート完了", NamedTextColor.GREEN))
         player.playSound(block.location.toCenterLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1.3f)
+    }
+
+    @EventHandler
+    fun onClickInv(event: InventoryClickEvent) {
+        val player = event.whoClicked as? Player ?: return
+        if (event.click != ClickType.MIDDLE) return
+        if (event.currentItem?.type?.isAir == false) return
+        val inv = event.clickedInventory as? PlayerInventory ?: return
+        var content = inv.contents.toMutableList()
+        val toolBelt = content.subList(0, 9)
+        content = content.drop(9).toMutableList()
+        content = sort(content, true)
+        inv.contents = toolBelt.toTypedArray() + content.toTypedArray()
+        player.playSound(player.eyeLocation, Sound.UI_BUTTON_CLICK, 1f ,1f)
     }
 
     private fun sort(_content: MutableList<ItemStack?>, withRestack: Boolean): MutableList<ItemStack?> {
