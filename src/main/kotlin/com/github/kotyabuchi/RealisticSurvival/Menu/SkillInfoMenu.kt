@@ -21,8 +21,8 @@ class SkillInfoMenu(val player: Player, val job: JobMaster, val isPassiveSkill: 
                 setMenuButton(PassiveSkillInfoButton(player, skill, this))
             }
         } else {
-            job.getSkills().values.forEach { skill ->
-                setMenuButton(SkillInfoButton(skill))
+            job.getSkills().forEach { (command, skill) ->
+                setMenuButton(SkillInfoButton(command, skill))
             }
         }
     }
