@@ -56,7 +56,6 @@ class Main: JavaPlugin() {
     }
 
     override fun onDisable() {
-        DamagePopup.clearPopup()
         DataBaseManager.savePlayerStatus()
         PlayerManager.hideAllManaIndicator()
         refreshBossbar()
