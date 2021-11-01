@@ -56,6 +56,8 @@ object MenuController: Listener {
                 event.isCancelled = true
                 openingMenu.doButtonClickEvent(event.rawSlot, event, openingPage)
             }
+        } else if (openingMenu.disallowPlayerInventoryClick && clickedInventory is PlayerInventory) {
+            event.isCancelled = true
         }
         openingMenu.doItemClickEvent(event.rawSlot, event, openingPage)
     }

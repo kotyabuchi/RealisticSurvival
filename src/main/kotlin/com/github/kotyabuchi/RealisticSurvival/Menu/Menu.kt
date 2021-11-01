@@ -22,6 +22,7 @@ open class Menu(val title: Component, _row: Int) {
     private val pages = mutableListOf(getInvTemp())
     private var prevMenu: Menu? = null
     private val buttonItems = mutableListOf(mutableMapOf<Int, MenuButton>())
+    val disallowPlayerInventoryClick = true
 
     fun refresh() {
         pages.clear()
