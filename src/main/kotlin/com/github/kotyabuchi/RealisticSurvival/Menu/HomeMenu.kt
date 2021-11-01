@@ -11,7 +11,8 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import kotlin.math.ceil
 
-class HomeMenu(val player: Player): Menu(Component.text("${player.name}'s Homes"), ceil(player.getStatus().homes.size / 7.0).toInt()) {
+class HomeMenu(val player: Player): Menu(Component.text("${player.name}'s Homes"),
+    ceil(((if (player.bedSpawnLocation == null) 0 else 1) + player.getStatus().homes.size) / 7.0).toInt()) {
 
     init {
         createMenu()
