@@ -61,6 +61,7 @@ object SortChest: CommandExecutor, TabCompleter, Listener, KoinComponent {
 
     @EventHandler
     fun onClick(event: PlayerInteractEvent) {
+        if (event.isCancelled) return
         if (event is PlayerInteractBlockEvent) return
         if (event.hand != EquipmentSlot.HAND) return
         val player = event.player
@@ -84,6 +85,7 @@ object SortChest: CommandExecutor, TabCompleter, Listener, KoinComponent {
 
     @EventHandler
     fun onClickInv(event: InventoryClickEvent) {
+        if (event.isCancelled) return
         val player = event.whoClicked as? Player ?: return
         if (event.click != ClickType.MIDDLE) return
         if (event.currentItem?.type?.isAir == false) return

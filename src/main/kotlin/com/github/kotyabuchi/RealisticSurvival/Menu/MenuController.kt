@@ -52,8 +52,8 @@ object MenuController: Listener {
         val openingMenu = playerStatus.getOpeningMenu() ?: return
         val openingPage = playerStatus.getOpeningPage()
         if (clickedInventory == openingMenu.getInventory(openingPage)) {
+            event.isCancelled = true
             if (openingMenu.hasButton(event.rawSlot, openingPage)) {
-                event.isCancelled = true
                 openingMenu.doButtonClickEvent(event.rawSlot, event, openingPage)
             }
         } else if (openingMenu.disallowPlayerInventoryClick && clickedInventory is PlayerInventory) {
