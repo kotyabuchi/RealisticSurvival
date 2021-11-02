@@ -6,7 +6,6 @@ import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.entity.AreaEffectCloud
-import org.bukkit.entity.EntityType
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -46,16 +45,15 @@ object DamagePopup: Listener {
         val z = Random.nextInt(15) / 10.0 - .75
         val popupLoc = baseLoc.add(x, y, z)
         val color = if (isDamage) NamedTextColor.RED else NamedTextColor.GREEN
-        entity.world.spawnEntity(popupLoc, EntityType.AREA_EFFECT_CLOUD).apply {
-            this as AreaEffectCloud
-            duration = 30
-            durationOnUse = 0
-            radius = 0f
-            radiusOnUse = 0f
-            radiusPerTick = 0f
-            setParticle(Particle.BLOCK_CRACK, Material.AIR.createBlockData())
-            isCustomNameVisible = true
-            customName(Component.text(amount, color))
+        entity.world.spawn(popupLoc, AreaEffectCloud::class.java) {
+            it.duration = 30
+            it.durationOnUse = 0
+            it.radius = 0f
+            it.radiusOnUse = 0f
+            it.radiusPerTick = 0f
+            it.setParticle(Particle.BLOCK_CRACK, Material.AIR.createBlockData())
+            it.isCustomNameVisible = true
+            it.customName(Component.text(amount, color))
         }
     }
 }
