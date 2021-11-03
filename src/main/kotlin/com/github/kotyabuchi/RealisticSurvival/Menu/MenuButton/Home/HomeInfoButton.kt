@@ -22,21 +22,26 @@ import kotlin.random.Random
 class HomeInfoButton(val player: Player, val home: Home): MenuButton() {
     private val location = Location(home.world, home.x, home.y, home.z, home.yaw, 0f)
     private val distanceCost = round(player.location.toVector().distance(location.toVector()) / 3).toInt()
-    private var cost = distanceCost
-    private var pearCost = distanceCost / 2
+    private var totalCost = distanceCost
+    private var pearlCost = distanceCost / 2
 
     init {
-        if (home.world != player.world) {
-            cost += 100
-            pearCost += 100
+        val otherWorld = player.world != home.world
+        var costLore = Component.text("Cost: ").normalize().append(Component.text("${Emoji.DIAMOND}$distanceCost($pearlCost)").normalize(NamedTextColor.AQUA))
+
+        if (otherWorld) {
+            totalCost += 100
+            pearlCost += 100
+            costLore = costLore.append(Component.text(" +100").normalize(NamedTextColor.RED))
         }
+        val worldColor = if (otherWorld) NamedTextColor.RED else NamedTextColor.WHITE
         val lore = mutableListOf<Component>()
-        lore.add(Component.text("World: ${location.world?.name}").normalize())
+        lore.add(Component.text("World: ").normalize().append(Component.text("${location.world?.name}").normalize(worldColor)))
         lore.add(Component.text("X: ${location.x}").normalize())
         lore.add(Component.text("Y: ${location.y}").normalize())
         lore.add(Component.text("Z: ${location.z}").normalize())
         lore.add(Component.text("Yaw: ${location.yaw}").normalize())
-        lore.add(Component.text("Cost: ").normalize().append(Component.text("${Emoji.DIAMOND}$cost($pearCost)").normalize(NamedTextColor.AQUA)))
+        lore.add(costLore)
         lore.add(Component.empty())
         lore.add(Component.text("Left Click: Teleport to location").normalize(NamedTextColor.GOLD))
         lore.add(Component.text("Right Click: Remove home").normalize(NamedTextColor.RED))
@@ -48,7 +53,7 @@ class HomeInfoButton(val player: Player, val home: Home): MenuButton() {
         val playerStatus = player.getStatus()
         val world = player.world
         val inv = player.inventory
-        val teleportCost = if (inv.contains(ItemStack(Material.ENDER_PEARL))) pearCost else cost
+        val teleportCost = if (inv.contains(ItemStack(Material.ENDER_PEARL))) pearlCost else totalCost
 
         if (playerStatus.decreaseMana(teleportCost)) {
             inv.consume(ItemStack(Material.ENDER_PEARL))
@@ -72,7 +77,7 @@ class HomeInfoButton(val player: Player, val home: Home): MenuButton() {
                 }
                 world.playSound(location, Sound.ENTITY_ENDERMAN_TELEPORT, .4f, .6f)
             } else {
-                playerStatus.increaseMana(cost)
+                playerStatus.increaseMana(teleportCost)
                 player.sendMessage(Component.text("テレポートに失敗しました").normalize(NamedTextColor.RED))
             }
         } else {
