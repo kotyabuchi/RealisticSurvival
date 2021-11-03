@@ -20,7 +20,7 @@ class NextPageButton(private val page: Int, private val totalPage: Int): MenuBut
         val player = event.whoClicked as? Player ?: return
         val status = player.getStatus()
         status.getOpeningMenu()?.let { menu ->
-            val changeMenuPageEvent = ChangeMenuPageEvent(menu, page, totalPage, player)
+            val changeMenuPageEvent = ChangeMenuPageEvent(menu, page, totalPage, true, player)
             CustomEventCaller.callEvent(changeMenuPageEvent)
             status.nextPage()
         }
