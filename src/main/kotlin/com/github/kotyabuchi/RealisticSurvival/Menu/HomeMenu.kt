@@ -9,18 +9,14 @@ import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
-import kotlin.math.ceil
 
-class HomeMenu(val player: Player): Menu(Component.text("${player.name}'s Homes"),
-    ceil(((if (player.bedSpawnLocation == null) 0 else 1) + player.getStatus().homes.size) / 7.0).toInt()) {
+class HomeMenu(val player: Player): Menu(Component.text("${player.name}'s Homes"), player.getStatus().homes.size, FrameType.TOP, FrameType.SIDE) {
 
     init {
         createMenu()
     }
 
     override fun createMenu() {
-        setFrame()
-
         var page = 0
         player.bedSpawnLocation?.let { loc ->
             loc.world?.let { world ->
