@@ -18,9 +18,12 @@ class HomeMenu(val player: Player): Menu(Component.text("${player.name}'s Homes"
 
     override fun createMenu() {
         var page = 0
+        player.world.spawnLocation.let { loc ->
+            setMenuButton(HomeInfoButton(player, Home(null, "World Spawn", loc.world, loc.x, loc.y, loc.z, 0f, Material.GRASS_BLOCK)), 0)
+        }
         player.bedSpawnLocation?.let { loc ->
             loc.world?.let { world ->
-                setMenuButton(HomeInfoButton(player, Home(null, "Bed", world, loc.x, loc.y, loc.z, 0f, Material.RED_BED)), page)
+                setMenuButton(HomeInfoButton(player, Home(null, "Bed", world, loc.x, loc.y, loc.z, 0f, Material.RED_BED)), 0)
             }
         }
         player.getStatus().homes.forEach {
