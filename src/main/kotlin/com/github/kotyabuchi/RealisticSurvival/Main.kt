@@ -18,6 +18,7 @@ class Main: JavaPlugin() {
     private fun registerEvents() {
         val pm = server.pluginManager
         pm.registerEvents(CustomEventCaller, this)
+        pm.registerEvents(Debug, this)
         // Job
         JobType.values().forEach {
             pm.registerEvents(it.jobClass, this)
