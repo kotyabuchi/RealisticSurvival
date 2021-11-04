@@ -43,6 +43,11 @@ object MenuController: Listener, KoinComponent {
     }
 
     @EventHandler
+    fun onDeath(event: PlayerDeathEvent) {
+        event.itemsToKeep.add(menuCompass)
+    }
+
+    @EventHandler
     fun onClickCompass(event: PlayerInteractEvent) {
         if (event is PlayerInteractBlockEvent) return
         if (event.hand != EquipmentSlot.HAND) return
