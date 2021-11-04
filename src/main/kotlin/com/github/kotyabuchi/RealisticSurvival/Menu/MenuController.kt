@@ -15,6 +15,7 @@ import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
+import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerLoginEvent
 import org.bukkit.inventory.EquipmentSlot
@@ -50,6 +51,11 @@ object MenuController: Listener, KoinComponent {
     @EventHandler
     fun onDeath(event: PlayerDeathEvent) {
         event.itemsToKeep.add(menuCompass)
+    }
+
+    @EventHandler
+    fun onDrop(event: PlayerDropItemEvent) {
+        if (event.itemDrop.itemStack.isSimilar(menuCompass)) event.isCancelled = true
     }
 
     @EventHandler
