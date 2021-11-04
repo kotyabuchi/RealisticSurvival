@@ -7,7 +7,18 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
+import java.util.*
 import kotlin.random.Random
+
+object ItemUtil {
+    fun serializedString(itemStack: ItemStack): String {
+        return Base64.getEncoder().encodeToString(itemStack.serializeAsBytes())
+    }
+
+    fun deserializeItem(serializeString: String): ItemStack {
+        return ItemStack.deserializeBytes(Base64.getDecoder().decode(serializeString))
+    }
+}
 
 fun Material.hasDurability(): Boolean {
     return this.isTools() || this.isWeapons() || this.isArmors() || this.isShield()
