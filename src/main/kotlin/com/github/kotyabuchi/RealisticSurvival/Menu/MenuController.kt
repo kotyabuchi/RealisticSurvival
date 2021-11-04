@@ -11,10 +11,12 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.event.player.PlayerLoginEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.PlayerInventory
@@ -29,6 +31,15 @@ object MenuController: Listener, KoinComponent {
         this.editMeta {
             it.displayName(Component.text("Menu").normalize(NamedTextColor.GOLD))
         }
+    }
+
+    @EventHandler
+    fun onLogin(event: PlayerLoginEvent) {
+        object : BukkitRunnable() {
+            override fun run() {
+                event.player.inventory.setItem(8, menuCompass)
+            }
+        }.runTaskLater(main, 0)
     }
 
     @EventHandler

@@ -25,6 +25,5 @@ object StarterItem: Listener, KoinComponent {
         inventory.setItem(2, ItemStack(Material.WOODEN_SHOVEL))
         inventory.setItem(3, ItemStack(Material.WOODEN_AXE))
         inventory.setItem(7, ItemStack(Material.APPLE, 8))
-        inventory.setItem(8, ItemStack(Material.COMPASS))
     }
 }
