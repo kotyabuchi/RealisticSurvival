@@ -161,8 +161,8 @@ abstract class Menu(val title: Component, contentAmount: Int, vararg frames: Fra
 
     private fun addPage() {
         pages.add(getInvTemp())
-        setFooter(pages.size)
-        setFrame(pages.size)
+        setFooter(pages.size - 1)
+        setFrame(pages.size - 1)
     }
 
     protected fun createPageIfNeed(page: Int) {
