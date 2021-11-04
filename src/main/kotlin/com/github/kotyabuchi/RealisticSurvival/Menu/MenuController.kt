@@ -1,47 +1,76 @@
 package com.github.kotyabuchi.RealisticSurvival.Menu
 
 import com.github.kotyabuchi.RealisticSurvival.Event.PlayerInteractBlockEvent
+import com.github.kotyabuchi.RealisticSurvival.Main
 import com.github.kotyabuchi.RealisticSurvival.System.Player.getStatus
 import com.github.kotyabuchi.RealisticSurvival.Utility.addItemOrDrop
+import com.github.kotyabuchi.RealisticSurvival.Utility.normalize
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlot
+import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.PlayerInventory
+import org.bukkit.scheduler.BukkitRunnable
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-object MenuController: Listener {
+object MenuController: Listener, KoinComponent {
+
+    private val main: Main by inject()
+    private val menuCompass = ItemStack(Material.COMPASS).apply {
+        this.editMeta {
+            it.displayName(Component.text("Menu").normalize(NamedTextColor.GOLD))
+        }
+    }
 
     @EventHandler
     fun onClickCompass(event: PlayerInteractEvent) {
         if (event is PlayerInteractBlockEvent) return
         if (event.hand != EquipmentSlot.HAND) return
         val player = event.player
-        val inventory = player.inventory
-        if (inventory.heldItemSlot != 8) return
-        val item = player.inventory.getItem(EquipmentSlot.HAND)
-        if (item?.type != Material.COMPASS) return
+        val item = player.inventory.getItem(EquipmentSlot.HAND) ?: return
+        if (!item.isSimilar(menuCompass)) return
         event.isCancelled = true
-        player.getStatus().openMenu(MainMenu())
+        player.getStatus().openMenu(MainMenu(player.isOp))
     }
 
     @EventHandler
     fun onClickInvCompass(event: InventoryClickEvent) {
+        if (event.isCancelled) return
         val player = event.whoClicked as? Player ?: return
-        val item = event.currentItem ?: return
-        val clickedInventory = event.clickedInventory ?: return
-        if (clickedInventory !is PlayerInventory) return
-        if (event.slot != 8) return
-        if (item.type != Material.COMPASS) return
-        event.isCancelled = true
-        event.cursor?.let {
-            player.inventory.addItemOrDrop(player, it)
-            event.cursor = null
+        val status = player.getStatus()
+        val isOp = player.isOp
+        if (event.click == ClickType.NUMBER_KEY) {
+            val cache = event.currentItem?.clone()
+            object : BukkitRunnable() {
+                override fun run() {
+                    val item = event.currentItem ?: return
+                    if (!item.isSimilar(menuCompass)) return
+                    event.currentItem = cache
+                    player.inventory.setItem(8, menuCompass)
+                    status.openMenu(MainMenu(isOp))
+                }
+            }.runTaskLater(main, 0)
+        } else {
+            val item = event.currentItem ?: return
+            val clickedInventory = event.clickedInventory ?: return
+            if (clickedInventory !is PlayerInventory) return
+            if (!item.isSimilar(menuCompass)) return
+            event.isCancelled = true
+            event.cursor?.let {
+                player.inventory.addItemOrDrop(player, it)
+                event.cursor = null
+            }
+            status.openMenu(MainMenu(isOp))
         }
-        player.getStatus().openMenu(MainMenu())
     }
 
     @EventHandler
