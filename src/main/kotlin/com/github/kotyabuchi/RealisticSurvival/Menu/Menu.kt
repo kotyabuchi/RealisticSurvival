@@ -84,7 +84,7 @@ abstract class Menu(val title: Component, contentAmount: Int, vararg frames: Fra
         pages[page].setItem(slot, menuButton.menuIcon)
         if (checkNextPage && page > 0) {
             setMenuButton(BackPageButton(page, pages.size), page, menuSize - 7, false)
-            setMenuButton(NextPageButton(page, pages.size), page - 1, menuSize - 3)
+            setMenuButton(NextPageButton(page + 1, pages.size), page - 1, menuSize - 3)
         }
         return this
     }
