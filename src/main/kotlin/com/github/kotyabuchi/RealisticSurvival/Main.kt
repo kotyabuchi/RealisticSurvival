@@ -34,6 +34,7 @@ class Main: JavaPlugin() {
         pm.registerEvents(PlayerManager, this)
 
         pm.registerEvents(AnimalShearing, this)
+        pm.registerEvents(Elevator, this)
         pm.registerEvents(LevelTheFarmlandAnPath, this)
         pm.registerEvents(ReplantSapling, this)
         pm.registerEvents(SafeCropAndReplant, this)
