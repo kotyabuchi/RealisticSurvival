@@ -23,19 +23,19 @@ object Debug: Listener, KoinComponent {
             var count = 0
             override fun run() {
                 println("$count/${materials.size}")
+                if (count > 0) {
+                    inv.contents.forEachIndexed { index, itemStack ->
+                        if (itemStack == null || itemStack.type.isAir) {
+                            if (materials[count - 1].size > index) result.appendLine("this == Material.${materials[count - 1][index].name} ||")
+                        }
+                    }
+                }
                 if (count >= materials.size) {
                     cancel()
                     val file = File(main.dataFolder, "CanNotItemMaterials.txt")
                     FileUtil.saveFile(file, result.toString())
                     println("===== Finished =====")
                 } else {
-                    if (count > 0) {
-                        inv.contents.forEachIndexed { index, itemStack ->
-                            if (itemStack == null || itemStack.type.isAir) {
-                                result.appendLine("this == Material.${materials[count - 1][index].name} ||")
-                            }
-                        }
-                    }
                     materials[count].forEachIndexed { index, material ->
                         inv.setItem(index, ItemStack(material))
                     }

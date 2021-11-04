@@ -191,7 +191,46 @@ fun Material.canNotItem(): Boolean {
             this == Material.DEAD_HORN_CORAL_WALL_FAN ||
             this == Material.TUBE_CORAL_WALL_FAN ||
             this == Material.BRAIN_CORAL_WALL_FAN ||
-            this == Material.BUBBLE_CORAL_WALL_FAN
+            this == Material.BUBBLE_CORAL_WALL_FAN ||
+            this == Material.FIRE_CORAL_WALL_FAN ||
+            this == Material.HORN_CORAL_WALL_FAN ||
+            this == Material.BAMBOO_SAPLING ||
+            this == Material.POTTED_BAMBOO ||
+            this == Material.VOID_AIR ||
+            this == Material.CAVE_AIR ||
+            this == Material.BUBBLE_COLUMN ||
+            this == Material.SWEET_BERRY_BUSH ||
+            this == Material.WEEPING_VINES_PLANT ||
+            this == Material.TWISTING_VINES_PLANT ||
+            this == Material.CRIMSON_WALL_SIGN ||
+            this == Material.WARPED_WALL_SIGN ||
+            this == Material.POTTED_CRIMSON_FUNGUS ||
+            this == Material.POTTED_WARPED_FUNGUS ||
+            this == Material.POTTED_CRIMSON_ROOTS ||
+            this == Material.POTTED_WARPED_ROOTS ||
+            this == Material.CANDLE_CAKE ||
+            this == Material.WHITE_CANDLE_CAKE ||
+            this == Material.ORANGE_CANDLE_CAKE ||
+            this == Material.MAGENTA_CANDLE_CAKE ||
+            this == Material.LIGHT_BLUE_CANDLE_CAKE ||
+            this == Material.YELLOW_CANDLE_CAKE ||
+            this == Material.LIME_CANDLE_CAKE ||
+            this == Material.PINK_CANDLE_CAKE ||
+            this == Material.GRAY_CANDLE_CAKE ||
+            this == Material.LIGHT_GRAY_CANDLE_CAKE ||
+            this == Material.CYAN_CANDLE_CAKE ||
+            this == Material.PURPLE_CANDLE_CAKE ||
+            this == Material.BLUE_CANDLE_CAKE ||
+            this == Material.BROWN_CANDLE_CAKE ||
+            this == Material.GREEN_CANDLE_CAKE ||
+            this == Material.RED_CANDLE_CAKE ||
+            this == Material.BLACK_CANDLE_CAKE ||
+            this == Material.POWDER_SNOW ||
+            this == Material.CAVE_VINES ||
+            this == Material.CAVE_VINES_PLANT ||
+            this == Material.BIG_DRIPLEAF_STEM ||
+            this == Material.POTTED_AZALEA_BUSH ||
+            this == Material.POTTED_FLOWERING_AZALEA_BUSH
 }
 
 fun BlockFace.reverse(): BlockFace {
