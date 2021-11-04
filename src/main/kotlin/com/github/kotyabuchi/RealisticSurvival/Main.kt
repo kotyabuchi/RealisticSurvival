@@ -3,6 +3,7 @@ package com.github.kotyabuchi.RealisticSurvival
 import com.github.kotyabuchi.RealisticSurvival.Event.CustomEventCaller
 import com.github.kotyabuchi.RealisticSurvival.Job.JobType
 import com.github.kotyabuchi.RealisticSurvival.Menu.MenuController
+import com.github.kotyabuchi.RealisticSurvival.Menu.SoundSampleMenu
 import com.github.kotyabuchi.RealisticSurvival.System.*
 import com.github.kotyabuchi.RealisticSurvival.System.Combat.DamagePopup
 import com.github.kotyabuchi.RealisticSurvival.System.Player.PlayerManageCommand
@@ -25,6 +26,7 @@ class Main: JavaPlugin() {
         }
         // Menu
         pm.registerEvents(MenuController, this)
+        pm.registerEvents(SoundSampleMenu, this)
         // System
             // Combat
         pm.registerEvents(DamagePopup, this)
