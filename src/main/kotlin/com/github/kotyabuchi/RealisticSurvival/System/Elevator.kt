@@ -19,7 +19,7 @@ import kotlin.math.abs
 
 object Elevator: Listener {
 
-    private val limit = 50
+    private const val limit = 50
 
     @EventHandler
     fun onJump(event: PlayerJumpEvent) {
