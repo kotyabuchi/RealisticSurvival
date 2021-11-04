@@ -102,6 +102,98 @@ fun Material.isOre(): Boolean {
             this == Material.ANCIENT_DEBRIS
 }
 
+fun Material.canNotItem(): Boolean {
+    return this == Material.AIR ||
+            this == Material.WATER ||
+            this == Material.LAVA ||
+            this == Material.TALL_SEAGRASS ||
+            this == Material.PISTON_HEAD ||
+            this == Material.MOVING_PISTON ||
+            this == Material.WALL_TORCH ||
+            this == Material.FIRE ||
+            this == Material.SOUL_FIRE ||
+            this == Material.REDSTONE_WIRE ||
+            this == Material.OAK_WALL_SIGN ||
+            this == Material.SPRUCE_WALL_SIGN ||
+            this == Material.BIRCH_WALL_SIGN ||
+            this == Material.ACACIA_WALL_SIGN ||
+            this == Material.JUNGLE_WALL_SIGN ||
+            this == Material.DARK_OAK_WALL_SIGN ||
+            this == Material.REDSTONE_WALL_TORCH ||
+            this == Material.SOUL_WALL_TORCH ||
+            this == Material.NETHER_PORTAL ||
+            this == Material.ATTACHED_PUMPKIN_STEM ||
+            this == Material.ATTACHED_MELON_STEM ||
+            this == Material.PUMPKIN_STEM ||
+            this == Material.MELON_STEM ||
+            this == Material.WATER_CAULDRON ||
+            this == Material.LAVA_CAULDRON ||
+            this == Material.POWDER_SNOW_CAULDRON ||
+            this == Material.END_PORTAL ||
+            this == Material.COCOA ||
+            this == Material.TRIPWIRE ||
+            this == Material.POTTED_OAK_SAPLING ||
+            this == Material.POTTED_SPRUCE_SAPLING ||
+            this == Material.POTTED_BIRCH_SAPLING ||
+            this == Material.POTTED_JUNGLE_SAPLING ||
+            this == Material.POTTED_ACACIA_SAPLING ||
+            this == Material.POTTED_DARK_OAK_SAPLING ||
+            this == Material.POTTED_FERN ||
+            this == Material.POTTED_DANDELION ||
+            this == Material.POTTED_POPPY ||
+            this == Material.POTTED_BLUE_ORCHID ||
+            this == Material.POTTED_ALLIUM ||
+            this == Material.POTTED_AZURE_BLUET ||
+            this == Material.POTTED_RED_TULIP ||
+            this == Material.POTTED_ORANGE_TULIP ||
+            this == Material.POTTED_WHITE_TULIP ||
+            this == Material.POTTED_PINK_TULIP ||
+            this == Material.POTTED_OXEYE_DAISY ||
+            this == Material.POTTED_CORNFLOWER ||
+            this == Material.POTTED_LILY_OF_THE_VALLEY ||
+            this == Material.POTTED_WITHER_ROSE ||
+            this == Material.POTTED_RED_MUSHROOM ||
+            this == Material.POTTED_BROWN_MUSHROOM ||
+            this == Material.POTTED_DEAD_BUSH ||
+            this == Material.POTTED_CACTUS ||
+            this == Material.CARROTS ||
+            this == Material.POTATOES ||
+            this == Material.SKELETON_WALL_SKULL ||
+            this == Material.WITHER_SKELETON_WALL_SKULL ||
+            this == Material.ZOMBIE_WALL_HEAD ||
+            this == Material.PLAYER_WALL_HEAD ||
+            this == Material.CREEPER_WALL_HEAD ||
+            this == Material.DRAGON_WALL_HEAD ||
+            this == Material.WHITE_WALL_BANNER ||
+            this == Material.ORANGE_WALL_BANNER ||
+            this == Material.MAGENTA_WALL_BANNER ||
+            this == Material.LIGHT_BLUE_WALL_BANNER ||
+            this == Material.YELLOW_WALL_BANNER ||
+            this == Material.LIME_WALL_BANNER ||
+            this == Material.PINK_WALL_BANNER ||
+            this == Material.GRAY_WALL_BANNER ||
+            this == Material.LIGHT_GRAY_WALL_BANNER ||
+            this == Material.CYAN_WALL_BANNER ||
+            this == Material.PURPLE_WALL_BANNER ||
+            this == Material.BLUE_WALL_BANNER ||
+            this == Material.BROWN_WALL_BANNER ||
+            this == Material.GREEN_WALL_BANNER ||
+            this == Material.RED_WALL_BANNER ||
+            this == Material.BLACK_WALL_BANNER ||
+            this == Material.BEETROOTS ||
+            this == Material.END_GATEWAY ||
+            this == Material.FROSTED_ICE ||
+            this == Material.KELP_PLANT ||
+            this == Material.DEAD_TUBE_CORAL_WALL_FAN ||
+            this == Material.DEAD_BRAIN_CORAL_WALL_FAN ||
+            this == Material.DEAD_BUBBLE_CORAL_WALL_FAN ||
+            this == Material.DEAD_FIRE_CORAL_WALL_FAN ||
+            this == Material.DEAD_HORN_CORAL_WALL_FAN ||
+            this == Material.TUBE_CORAL_WALL_FAN ||
+            this == Material.BRAIN_CORAL_WALL_FAN ||
+            this == Material.BUBBLE_CORAL_WALL_FAN
+}
+
 fun BlockFace.reverse(): BlockFace {
     return when (this) {
         BlockFace.UP -> BlockFace.DOWN
