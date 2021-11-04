@@ -37,6 +37,11 @@ object MenuController: Listener, KoinComponent {
     fun onLogin(event: PlayerLoginEvent) {
         object : BukkitRunnable() {
             override fun run() {
+                val player = event.player
+                val inv = player.inventory
+                inv.getItem(8)?.let {
+                    if (!it.isSimilar(menuCompass)) inv.addItemOrDrop(player, it)
+                }
                 event.player.inventory.setItem(8, menuCompass)
             }
         }.runTaskLater(main, 0)
