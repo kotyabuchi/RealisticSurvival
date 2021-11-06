@@ -1,5 +1,6 @@
 package com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.Home
 
+import com.github.kotyabuchi.RealisticSurvival.CustomModelData
 import com.github.kotyabuchi.RealisticSurvival.Main
 import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.ButtonItem
 import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.MenuButton
@@ -20,7 +21,7 @@ class AddHomeButton: MenuButton(), KoinComponent {
     private val main: Main by inject()
 
     init {
-        menuIcon = ButtonItem(Material.ENDER_EYE, Component.text("Add Home").normalize(NamedTextColor.GREEN))
+        menuIcon = ButtonItem(Material.ENDER_EYE, Component.text("Add Home").normalize(NamedTextColor.GREEN), modelData = CustomModelData.PLUS)
     }
 
     override fun clickEvent(event: InventoryClickEvent) {

@@ -1,5 +1,6 @@
 package com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.Basic
 
+import com.github.kotyabuchi.RealisticSurvival.CustomModelData
 import com.github.kotyabuchi.RealisticSurvival.Event.ChangeMenuPageEvent
 import com.github.kotyabuchi.RealisticSurvival.Event.CustomEventCaller
 import com.github.kotyabuchi.RealisticSurvival.Main
@@ -17,7 +18,7 @@ import org.koin.core.component.inject
 class BackPageButton(private val page: Int, private val totalPage: Int): MenuButton() {
 
     init {
-        menuIcon = ButtonItem(Material.ARROW, Component.text("Back page $page / $totalPage"))
+        menuIcon = ButtonItem(Material.ARROW, Component.text("Back page $page / $totalPage"), modelData = CustomModelData.ARROW_LEFT)
     }
 
     override fun clickEvent(event: InventoryClickEvent) {
