@@ -39,6 +39,6 @@ object AnimalShearing: Listener {
         val world = entity.world
         world.dropItem(entity.location, ItemStack(dropItem))
         world.playSound(entity.eyeLocation, Sound.ENTITY_SHEEP_SHEAR, SoundCategory.HOSTILE, 1f, 1f)
-        item.damage(1)
+        item.damage(player, 1)
     }
 }

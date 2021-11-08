@@ -3,10 +3,7 @@ package com.github.kotyabuchi.RealisticSurvival.Skill.Gathering
 import com.github.kotyabuchi.RealisticSurvival.Event.BlockMineEvent
 import com.github.kotyabuchi.RealisticSurvival.Main
 import com.github.kotyabuchi.RealisticSurvival.Skill.ToggleSkill
-import com.github.kotyabuchi.RealisticSurvival.Utility.BlockUtil
-import com.github.kotyabuchi.RealisticSurvival.Utility.isOre
-import com.github.kotyabuchi.RealisticSurvival.Utility.isPickAxe
-import com.github.kotyabuchi.RealisticSurvival.Utility.miningWithEvent
+import com.github.kotyabuchi.RealisticSurvival.Utility.*
 import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
 import org.bukkit.event.EventHandler
@@ -42,9 +39,10 @@ object MineAssist: ToggleSkill {
         searchOres(block, ores, mutableListOf())
 
         ores.forEach {
-            it.miningWithEvent(main, player, itemStack, block, isMineAssist = true)
+            it.miningWithEvent(main, player, itemStack, block, false, isMineAssist = true)
         }
         player.foodLevel = max(0, player.foodLevel - ceil(ores.size / 10.0).toInt())
+        itemStack.damage(player, ores.size)
     }
 
     private fun searchOres(checkBlock: Block, oreList: MutableList<Block>, checkedList: MutableList<Block>) {

@@ -61,10 +61,10 @@ object TreeAssist: ToolLinkedSkill {
         leaveList.sortWith { o1, o2 -> o1.y - o2.y }
 
         woodList.forEach {
-            it.miningWithEvent(main, player, itemStack, block)
+            it.miningWithEvent(main, player, itemStack, block, false)
         }
         player.foodLevel = max(0, player.foodLevel - ceil(woodList.size / 10.0).toInt())
-        itemStack.damage(woodList.size)
+        itemStack.damage(player, woodList.size)
 
         if (leaveList.isNotEmpty()) {
             val lowestLeave = leaveList[0].y

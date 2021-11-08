@@ -257,7 +257,7 @@ fun BlockFace.reverse(): BlockFace {
     }
 }
 
-fun Block.miningWithEvent(main: Main, player: Player, itemStack: ItemStack, mainBlock: Block = this, isMultiBreak: Boolean = false, isMineAssist: Boolean = false) {
+fun Block.miningWithEvent(main: Main, player: Player, itemStack: ItemStack, mainBlock: Block = this, damage: Boolean = true, isMultiBreak: Boolean = false, isMineAssist: Boolean = false) {
     val mineEvent = BlockMineEvent(this, player, isMultiBreak, isMineAssist)
     main.server.pluginManager.callEvent(mineEvent)
     if (!mineEvent.isCancelled) {
@@ -292,6 +292,7 @@ fun Block.miningWithEvent(main: Main, player: Player, itemStack: ItemStack, main
                 item.remove()
             }
         }
+        if (damage) itemStack.damage(player, 1)
     }
 }
 

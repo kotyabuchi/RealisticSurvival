@@ -1,10 +1,13 @@
 package com.github.kotyabuchi.RealisticSurvival.Utility
 
+import com.github.kotyabuchi.RealisticSurvival.Event.CustomEventCaller
 import com.github.kotyabuchi.RealisticSurvival.Item.Enum.ArmorType
 import com.github.kotyabuchi.RealisticSurvival.Item.Enum.EquipmentType
 import com.github.kotyabuchi.RealisticSurvival.Item.Enum.ToolType
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
+import org.bukkit.entity.Player
+import org.bukkit.event.player.PlayerItemDamageEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
 import java.util.*
@@ -98,7 +101,7 @@ fun Material.getEquipmentType(): EquipmentType? {
     return null
 }
 
-fun ItemStack.damage(_amount: Int) {
+fun ItemStack.damage(player: Player, _amount: Int) {
     val meta = itemMeta
     if (meta is Damageable) {
         var amount = _amount
@@ -108,10 +111,6 @@ fun ItemStack.damage(_amount: Int) {
                 if (Random.nextInt(100) <= damageChance) amount--
             }
         }
-//        if (amount > 0) main.server.pluginManager.callEvent(PlayerItemDamageEvent(player, this, amount))
-        if (amount > 0) {
-            meta.damage += amount
-            this.itemMeta = meta
-        }
+        if (amount > 0) CustomEventCaller.callEvent(PlayerItemDamageEvent(player, this, amount))
     }
 }
