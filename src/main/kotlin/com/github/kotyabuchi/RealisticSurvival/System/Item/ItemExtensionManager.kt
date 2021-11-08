@@ -25,4 +25,10 @@ object ItemExtensionManager: Listener {
         val inv = event.inventory
         inv.result = ItemExtension(result).applySetting().itemStack
     }
+
+    @EventHandler
+    fun onMendItem(event: PlayerItemMendEvent) {
+        ItemExtension(event.item).mending(event.repairAmount, event.player).applyDurability().applySetting()
+        event.isCancelled = true
+    }
 }
