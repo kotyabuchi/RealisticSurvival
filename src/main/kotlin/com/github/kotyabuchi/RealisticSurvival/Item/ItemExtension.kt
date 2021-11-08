@@ -32,7 +32,7 @@ class ItemExtension(_itemStack: ItemStack): KoinComponent {
     init {
         itemStack.itemMeta?.let { meta ->
             val pdc = meta.persistentDataContainer
-            if (meta is Damageable) {
+            if (meta is Damageable && itemStack.type.maxDurability > 0) {
                 hasDurability = true
                 maxDurability = pdc.getOrDefault(maxDurabilityKey, PersistentDataType.INTEGER, itemStack.type.maxDurability.toInt())
                 durability = pdc.getOrDefault(durabilityKey, PersistentDataType.INTEGER, min(maxDurability - meta.damage, maxDurability))
