@@ -6,6 +6,8 @@ import com.github.kotyabuchi.RealisticSurvival.Menu.MenuController
 import com.github.kotyabuchi.RealisticSurvival.Menu.SoundSampleMenu
 import com.github.kotyabuchi.RealisticSurvival.System.*
 import com.github.kotyabuchi.RealisticSurvival.System.Combat.DamagePopup
+import com.github.kotyabuchi.RealisticSurvival.System.Item.ItemExtensionManager
+import com.github.kotyabuchi.RealisticSurvival.System.Item.UUIDForItem
 import com.github.kotyabuchi.RealisticSurvival.System.Player.PlayerManageCommand
 import com.github.kotyabuchi.RealisticSurvival.System.Player.PlayerManager
 import com.github.kotyabuchi.RealisticSurvival.Utility.DataBaseManager
@@ -30,6 +32,9 @@ class Main: JavaPlugin() {
         // System
             // Combat
         pm.registerEvents(DamagePopup, this)
+            // Item
+        pm.registerEvents(ItemExtensionManager, this)
+        pm.registerEvents(UUIDForItem, this)
             // Player
         pm.registerEvents(PlayerManager, this)
 
