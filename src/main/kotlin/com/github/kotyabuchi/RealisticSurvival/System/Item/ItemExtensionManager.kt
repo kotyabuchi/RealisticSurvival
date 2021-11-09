@@ -9,6 +9,7 @@ import org.bukkit.event.inventory.PrepareItemCraftEvent
 import org.bukkit.event.player.PlayerItemDamageEvent
 import org.bukkit.event.player.PlayerItemMendEvent
 import org.bukkit.inventory.AnvilInventory
+import org.bukkit.inventory.meta.Damageable
 import kotlin.math.round
 
 object ItemExtensionManager: Listener {
@@ -38,9 +39,20 @@ object ItemExtensionManager: Listener {
         val result = event.result ?: return
         if (!result.type.hasDurability()) return
         val inv = event.inventory as? AnvilInventory ?: return
+        val firstItem = inv.firstItem ?: return
         val secondItem = inv.secondItem ?: return
-        if (inv.firstItem?.type != secondItem.type) return
-        ItemExtension(result).mending(ItemExtension(secondItem).durability).applyDurability().applySetting()
+        val mendAmount = when {
+            firstItem.type == secondItem.type -> {
+                ItemExtension(secondItem).durability
+            }
+            secondItem.canRepair(firstItem) -> {
+                val vanillaDurability = firstItem.type.maxDurability
+                val mendPerItem = vanillaDurability * .25
+                round(secondItem.amount * mendPerItem).toInt()
+            }
+            else -> return
+        }
+        ItemExtension(result).mending(mendAmount).applyDurability().applySetting()
     }
 
     @EventHandler
