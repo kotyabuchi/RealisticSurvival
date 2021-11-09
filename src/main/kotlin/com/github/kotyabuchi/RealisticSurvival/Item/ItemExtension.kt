@@ -67,6 +67,7 @@ class ItemExtension(_itemStack: ItemStack): KoinComponent {
             Bukkit.getLogger().log(Level.INFO, """
                 
                 ItemExtension Damage call not damageable
+                ItemStack: $itemStack
                 $stackTrace
             """.trimIndent())
         }
@@ -87,6 +88,7 @@ class ItemExtension(_itemStack: ItemStack): KoinComponent {
         Bukkit.getLogger().log(Level.INFO, """
                 
                 ItemExtension Mending call not damageable
+                ItemStack: $itemStack
                 $stackTrace
             """.trimIndent())
     }
