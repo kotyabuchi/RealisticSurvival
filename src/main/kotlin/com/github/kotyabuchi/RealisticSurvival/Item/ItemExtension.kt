@@ -1,6 +1,7 @@
 package com.github.kotyabuchi.RealisticSurvival.Item
 
 import com.github.kotyabuchi.RealisticSurvival.Main
+import com.github.kotyabuchi.RealisticSurvival.Utility.hasDurability
 import com.github.kotyabuchi.RealisticSurvival.Utility.normalize
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
@@ -35,7 +36,7 @@ class ItemExtension(_itemStack: ItemStack): KoinComponent {
     init {
         itemStack.itemMeta?.let { meta ->
             val pdc = meta.persistentDataContainer
-            if (meta is Damageable && itemStack.type.maxDurability > 0) {
+            if (itemStack.type.hasDurability() && meta is Damageable) {
                 hasDurability = true
                 maxDurability = pdc.getOrDefault(maxDurabilityKey, PersistentDataType.INTEGER, itemStack.type.maxDurability.toInt())
                 durability = pdc.getOrDefault(durabilityKey, PersistentDataType.INTEGER, min(maxDurability - meta.damage, maxDurability))

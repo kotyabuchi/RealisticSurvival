@@ -292,7 +292,7 @@ fun Block.miningWithEvent(main: Main, player: Player, itemStack: ItemStack, main
                 item.remove()
             }
         }
-        if (damage) itemStack.damage(player, 1)
+        if (damage && itemStack.type.hasDurability()) itemStack.damage(player, 1)
     }
 }
 
