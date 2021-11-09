@@ -19,10 +19,14 @@ object ItemExtensionManager: Listener {
 
     @EventHandler
     fun onCraft(event: PrepareItemCraftEvent) {
-        val recipe = event.recipe ?: return
-        val result = recipe.result
-        if (result.itemMeta !is Damageable) return
         val inv = event.inventory
+        val result = if (event.isRepair) {
+            inv.result
+        } else {
+            val recipe = event.recipe ?: return
+            recipe.result
+        }
+        if (result?.itemMeta !is Damageable) return
         inv.result = ItemExtension(result).applySetting().itemStack
     }
 
