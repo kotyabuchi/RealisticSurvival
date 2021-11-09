@@ -116,7 +116,7 @@ class ItemExtension(_itemStack: ItemStack): KoinComponent {
         val lore = mutableListOf<Component>()
         if (hasDurability) {
             lore.add(Component.empty())
-            lore.add(Component.text("Durability: ").normalize(NamedTextColor.GRAY).append(Component.text("$durability / $maxDurability").normalize(NamedTextColor.GREEN)))
+            lore.add(Component.text("Durability: ").normalize(NamedTextColor.GRAY).append(Component.text("$durability / $maxDurability").normalize(durabilityColor())))
         }
         itemStack.editMeta {
             it.lore(lore)
@@ -124,14 +124,17 @@ class ItemExtension(_itemStack: ItemStack): KoinComponent {
         return this
     }
 
-    fun notifyDurability(player: Player) {
+    private fun durabilityColor(): NamedTextColor {
         val percent = durability / maxDurability.toDouble()
-        val color = when {
+        return when {
             percent > .7 -> NamedTextColor.GREEN
-            percent > .5 -> NamedTextColor.GOLD
-            percent > .2 -> NamedTextColor.RED
+            percent > .3 -> NamedTextColor.GOLD
+            percent > .1 -> NamedTextColor.RED
             else -> NamedTextColor.DARK_RED
         }
-        player.sendActionBar(Component.text("$durability / $maxDurability").normalize(color))
+    }
+
+    fun notifyDurability(player: Player) {
+        player.sendActionBar(Component.text("$durability / $maxDurability").normalize(durabilityColor()))
     }
 }
