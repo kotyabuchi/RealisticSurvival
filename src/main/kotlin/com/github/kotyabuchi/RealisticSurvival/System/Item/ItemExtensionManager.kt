@@ -3,9 +3,11 @@ package com.github.kotyabuchi.RealisticSurvival.System.Item
 import com.github.kotyabuchi.RealisticSurvival.Item.ItemExtension
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.event.inventory.PrepareItemCraftEvent
 import org.bukkit.event.player.PlayerItemDamageEvent
 import org.bukkit.event.player.PlayerItemMendEvent
+import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.meta.Damageable
 
 object ItemExtensionManager: Listener {
@@ -28,6 +30,15 @@ object ItemExtensionManager: Listener {
         }
         if (result?.itemMeta !is Damageable) return
         inv.result = ItemExtension(result).applySetting().itemStack
+    }
+
+    @EventHandler
+    fun onCombined(event: PrepareAnvilEvent) {
+        val result = event.result ?: return
+        val inv = event.inventory as? AnvilInventory ?: return
+        val secondItem = inv.secondItem ?: return
+        if (inv.firstItem?.type != secondItem.type) return
+        ItemExtension(result).mending(ItemExtension(secondItem).durability).applyDurability().applySetting()
     }
 
     @EventHandler
