@@ -6,9 +6,10 @@ import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.Job.SkillInfoButt
 import com.github.kotyabuchi.RealisticSurvival.Utility.upperCamelCase
 import net.kyori.adventure.text.Component
 import org.bukkit.entity.Player
+import kotlin.math.max
 
 class SkillInfoMenu(val player: Player, val job: JobMaster, val isPassiveSkill: Boolean = false)
-    : Menu(Component.text("${job.jobName.upperCamelCase()} skills"), job.getSkills().size, FrameType.TOP, FrameType.SIDE) {
+    : Menu(Component.text("${job.jobName.upperCamelCase()} skills"), if (isPassiveSkill) job.getPassiveSkills().size else job.getSkills().values.size, FrameType.TOP, FrameType.SIDE) {
 
     init {
         createMenu()
