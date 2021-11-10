@@ -2,6 +2,7 @@ package com.github.kotyabuchi.RealisticSurvival.System.Item
 
 import com.github.kotyabuchi.RealisticSurvival.Item.ItemExtension
 import com.github.kotyabuchi.RealisticSurvival.Utility.hasDurability
+import com.github.kotyabuchi.RealisticSurvival.Utility.isArmors
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.PrepareAnvilEvent
@@ -9,7 +10,6 @@ import org.bukkit.event.inventory.PrepareItemCraftEvent
 import org.bukkit.event.player.PlayerItemDamageEvent
 import org.bukkit.event.player.PlayerItemMendEvent
 import org.bukkit.inventory.AnvilInventory
-import org.bukkit.inventory.meta.Damageable
 import kotlin.math.round
 
 object ItemExtensionManager: Listener {
@@ -18,7 +18,12 @@ object ItemExtensionManager: Listener {
     fun onDamage(event: PlayerItemDamageEvent) {
         if (event.isCancelled) return
         event.isCancelled = true
-        ItemExtension(event.item).damage(event.damage, event.player).applyDurability().applySetting()
+        val item = event.item
+        if (item.type.isArmors()) {
+            ItemExtension(event.item).damage(event.damage).applyDurability().applySetting()
+        } else {
+            ItemExtension(event.item).damage(event.damage, event.player).applyDurability().applySetting()
+        }
     }
 
     @EventHandler
