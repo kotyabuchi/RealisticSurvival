@@ -26,14 +26,14 @@ class GemCollector(override val ownerJob: GatheringJob): PassiveSkill {
     private val dropTable = RandomTable<Material>()
 
     init {
-        dropTable.addItem(Material.COAL, .4)
-        dropTable.addItem(Material.RAW_IRON, .15)
-        dropTable.addItem(Material.RAW_COPPER, .2)
-        dropTable.addItem(Material.RAW_GOLD, .05)
-        dropTable.addItem(Material.REDSTONE, .05)
-        dropTable.addItem(Material.LAPIS_LAZULI, .03)
-        dropTable.addItem(Material.DIAMOND, .01)
-        dropTable.addItem(Material.EMERALD, .008)
+        dropTable.addItem(Material.COAL, 40)
+            .addItem(Material.RAW_IRON, 15)
+            .addItem(Material.RAW_COPPER, 20)
+            .addItem(Material.RAW_GOLD, 5)
+            .addItem(Material.REDSTONE, 5)
+            .addItem(Material.LAPIS_LAZULI, 3)
+            .addItem(Material.DIAMOND, 1)
+            .addItem(Material.EMERALD, 1)
     }
 
     @EventHandler

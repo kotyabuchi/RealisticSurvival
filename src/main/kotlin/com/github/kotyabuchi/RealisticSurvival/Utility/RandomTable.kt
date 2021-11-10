@@ -4,32 +4,31 @@ import org.apache.commons.lang.math.DoubleRange
 
 class RandomTable<T> {
 
-    private var usedRange: Double = 0.0
     private val tables: MutableMap<T, DoubleRange> = mutableMapOf()
+    private val weightMap: MutableMap<T, Int> = mutableMapOf()
 
-    fun addItem(item: T, rate: Double): Boolean {
-        if (usedRange + rate > 1) return false
-        tables[item] = DoubleRange(usedRange, usedRange + rate)
-        usedRange += rate
-        return true
+    fun addItem(item: T, weight: Int): RandomTable<T> {
+        weightMap[item] = weight
+        return this
     }
 
-    fun remove(item: T) {
-        tables.remove(item)?.let { range ->
-            usedRange -= (range.maximumDouble - range.minimumDouble)
-            usedRange = 0.0
-            val cache = tables.toMap()
-            tables.clear()
-            cache.forEach {
-                addItem(it.key, (it.value.maximumDouble - it.value.minimumDouble))
-            }
+    fun generate(): RandomTable<T> {
+        val totalWeight = weightMap.values.sum()
+        val percentPerWeight = 1.0 / totalWeight
+        tables.clear()
+        var filledWeight = 0.0
+        weightMap.forEach { (item, weight) ->
+            val itemWeight = weight * percentPerWeight
+            tables[item] = DoubleRange(filledWeight, itemWeight)
+            filledWeight += itemWeight
         }
+        return this
     }
 
     fun getRandom(): T? {
         val random = Math.random()
-        for ((any, range) in tables) {
-            if (range.containsDouble(random)) return any
+        for ((item, range) in tables) {
+            if (range.containsDouble(random)) return item
         }
         return null
     }
