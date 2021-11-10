@@ -34,6 +34,7 @@ class GemCollector(override val ownerJob: GatheringJob): PassiveSkill {
             .addItem(Material.LAPIS_LAZULI, 3)
             .addItem(Material.DIAMOND, 1)
             .addItem(Material.EMERALD, 1)
+            .generate()
     }
 
     @EventHandler
