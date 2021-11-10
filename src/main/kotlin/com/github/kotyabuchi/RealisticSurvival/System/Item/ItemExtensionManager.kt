@@ -1,12 +1,17 @@
 package com.github.kotyabuchi.RealisticSurvival.System.Item
 
+import com.github.kotyabuchi.RealisticSurvival.Event.CustomEventCaller
 import com.github.kotyabuchi.RealisticSurvival.Item.ItemExtension
+import com.github.kotyabuchi.RealisticSurvival.Utility.findFirst
 import com.github.kotyabuchi.RealisticSurvival.Utility.hasDurability
 import com.github.kotyabuchi.RealisticSurvival.Utility.isArmors
+import org.bukkit.Material
+import org.bukkit.Sound
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.event.inventory.PrepareItemCraftEvent
+import org.bukkit.event.player.PlayerItemBreakEvent
 import org.bukkit.event.player.PlayerItemDamageEvent
 import org.bukkit.event.player.PlayerItemMendEvent
 import org.bukkit.inventory.AnvilInventory
@@ -18,11 +23,23 @@ object ItemExtensionManager: Listener {
     fun onDamage(event: PlayerItemDamageEvent) {
         if (event.isCancelled) return
         event.isCancelled = true
-        val item = event.item
-        if (item.type.isArmors()) {
-            ItemExtension(event.item).damage(event.damage).applyDurability().applySetting()
+        val itemStack = event.item
+        val itemExtension = ItemExtension(itemStack)
+        if (itemStack.type.isArmors()) {
+            itemExtension.damage(event.damage)
         } else {
-            ItemExtension(event.item).damage(event.damage, event.player).applyDurability().applySetting()
+            itemExtension.damage(event.damage, event.player)
+        }
+        itemExtension.applyDurability().applySetting()
+
+        if (itemExtension.durability > 0) return
+        val player = event.player
+        val itemBreakEvent = PlayerItemBreakEvent(player, itemStack)
+        CustomEventCaller.callEvent(itemBreakEvent)
+        player.world.playSound(player.location, Sound.ENTITY_ITEM_BREAK, 1f, 1f)
+        val inv = player.inventory
+        inv.findFirst(itemStack)?.slot?.let { slot ->
+            inv.setItem(slot, null)
         }
     }
 
