@@ -103,7 +103,7 @@ fun Material.getEquipmentType(): EquipmentType? {
 
 fun ItemStack.damage(player: Player, _amount: Int) {
     val meta = itemMeta
-    if (meta is Damageable) {
+    if (meta is Damageable && this.type.hasDurability()) {
         var amount = _amount
         val damageChance = 100 / (getEnchantmentLevel(Enchantment.DURABILITY) + 1)
         if (containsEnchantment(Enchantment.DURABILITY)) {
