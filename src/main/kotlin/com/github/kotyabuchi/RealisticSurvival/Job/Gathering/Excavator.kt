@@ -1,6 +1,7 @@
 package com.github.kotyabuchi.RealisticSurvival.Job.Gathering
 
 import com.github.kotyabuchi.RealisticSurvival.Job.GatheringJob
+import com.github.kotyabuchi.RealisticSurvival.Skill.PassiveSkill.Gathering.Archaeologist
 import org.bukkit.Material
 
 object Excavator: GatheringJob("EXCAVATOR") {
@@ -18,5 +19,7 @@ object Excavator: GatheringJob("EXCAVATOR") {
             addExpMap(1, it)
         }
         addExpMap(2, Material.CLAY)
+
+        registerPassiveSkill(Archaeologist(this))
     }
 }
