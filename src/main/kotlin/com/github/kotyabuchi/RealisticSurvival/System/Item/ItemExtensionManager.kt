@@ -7,14 +7,20 @@ import com.github.kotyabuchi.RealisticSurvival.Utility.hasDurability
 import com.github.kotyabuchi.RealisticSurvival.Utility.isArmors
 import org.bukkit.Material
 import org.bukkit.Sound
+import org.bukkit.enchantments.Enchantment
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
+import org.bukkit.event.enchantment.EnchantItemEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.event.inventory.PrepareItemCraftEvent
+import org.bukkit.event.inventory.PrepareSmithingEvent
 import org.bukkit.event.player.PlayerItemBreakEvent
 import org.bukkit.event.player.PlayerItemDamageEvent
 import org.bukkit.event.player.PlayerItemMendEvent
 import org.bukkit.inventory.AnvilInventory
+import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import kotlin.math.round
 
 object ItemExtensionManager: Listener {
@@ -63,23 +69,62 @@ object ItemExtensionManager: Listener {
         val inv = event.inventory as? AnvilInventory ?: return
         val firstItem = inv.firstItem ?: return
         val secondItem = inv.secondItem ?: return
-        val mendAmount = when {
-            firstItem.type == secondItem.type -> {
-                ItemExtension(secondItem).durability
+        if (secondItem.type == Material.ENCHANTED_BOOK) {
+            val meta = secondItem.itemMeta as? EnchantmentStorageMeta ?: return
+            if (meta.hasStoredEnchant(Enchantment.DURABILITY)) {
+                applyUnbreaking(result, meta.getStoredEnchantLevel(Enchantment.DURABILITY))
             }
-            secondItem.canRepair(firstItem) -> {
-                val vanillaDurability = firstItem.type.maxDurability
-                val mendPerItem = vanillaDurability * .25
-                round(secondItem.amount * mendPerItem).toInt()
+        } else {
+            val mendAmount = when {
+                firstItem.type == secondItem.type -> {
+                    ItemExtension(secondItem).durability
+                }
+                secondItem.canRepair(firstItem) -> {
+                    val vanillaDurability = firstItem.type.maxDurability
+                    val mendPerItem = vanillaDurability * .25
+                    round(secondItem.amount * mendPerItem).toInt()
+                }
+                else -> return
             }
-            else -> return
+            ItemExtension(result).mending(mendAmount).applyDurability().applySetting()
         }
-        ItemExtension(result).mending(mendAmount).applyDurability().applySetting()
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     fun onMendItem(event: PlayerItemMendEvent) {
         ItemExtension(event.item).mending(event.repairAmount, event.player).applyDurability().applySetting()
         event.isCancelled = true
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    fun onEnchant(event: EnchantItemEvent) {
+        val level = event.enchantsToAdd[Enchantment.DURABILITY] ?: return
+        applyUnbreaking(event.item, level)
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    fun onSmithing(event: PrepareSmithingEvent) {
+        val result = event.result ?: return
+        ItemExtension(result).durabilityReset().applyDurability().applySetting()
+        event.result = applyUnbreaking(result)
+    }
+
+    private fun applyUnbreaking(item: ItemStack, _level: Int? = null): ItemStack {
+        val material = item.type
+        if (!material.hasDurability()) return item
+        val level = _level ?: item.getEnchantmentLevel(Enchantment.DURABILITY)
+        if (level > 0) {
+            val multiple = if (material.isArmors()) {
+                1.25 + (.09 * level)
+            } else {
+                1.0 + level
+            }
+            val itemExtension = ItemExtension(item)
+            val maxDurability = itemExtension.maxDurability
+            val durabilityRatio = itemExtension.durability / maxDurability.toDouble()
+            itemExtension.maxDurability(round(maxDurability * multiple).toInt())
+            itemExtension.durability(round(itemExtension.maxDurability * durabilityRatio).toInt()).applyDurability().applySetting()
+        }
+        return item
     }
 }

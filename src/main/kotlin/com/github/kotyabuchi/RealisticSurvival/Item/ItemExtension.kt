@@ -44,6 +44,17 @@ class ItemExtension(_itemStack: ItemStack): KoinComponent {
         }
     }
 
+    fun durabilityReset(): ItemExtension {
+        if (hasDurability) {
+            itemStack.itemMeta?.let { meta ->
+                meta as Damageable
+                maxDurability = itemStack.type.maxDurability.toInt()
+                durability = min(maxDurability - meta.damage, maxDurability)
+            }
+        }
+        return this
+    }
+
     fun maxDurability(amount: Int): ItemExtension {
         maxDurability = amount
         return this

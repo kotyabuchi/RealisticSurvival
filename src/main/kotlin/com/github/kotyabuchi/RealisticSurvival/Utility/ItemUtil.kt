@@ -101,16 +101,6 @@ fun Material.getEquipmentType(): EquipmentType? {
     return null
 }
 
-fun ItemStack.damage(player: Player, _amount: Int) {
-    val meta = itemMeta
-    if (meta is Damageable && this.type.hasDurability()) {
-        var amount = _amount
-        val damageChance = 100 / (getEnchantmentLevel(Enchantment.DURABILITY) + 1)
-        if (containsEnchantment(Enchantment.DURABILITY)) {
-            repeat(_amount) {
-                if (Random.nextInt(100) <= damageChance) amount--
-            }
-        }
-        if (amount > 0) CustomEventCaller.callEvent(PlayerItemDamageEvent(player, this, amount))
-    }
+fun ItemStack.damage(player: Player, amount: Int) {
+    if (this.type.hasDurability() && amount > 0) CustomEventCaller.callEvent(PlayerItemDamageEvent(player, this, amount))
 }
