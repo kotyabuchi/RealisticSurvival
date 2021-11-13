@@ -69,25 +69,21 @@ object ItemExtensionManager: Listener {
         val inv = event.inventory as? AnvilInventory ?: return
         val firstItem = inv.firstItem ?: return
         val secondItem = inv.secondItem ?: return
-        if (secondItem.type == Material.ENCHANTED_BOOK) {
-            val meta = secondItem.itemMeta as? EnchantmentStorageMeta ?: return
-            if (meta.hasStoredEnchant(Enchantment.DURABILITY)) {
-                applyUnbreaking(result, meta.getStoredEnchantLevel(Enchantment.DURABILITY))
-            }
-        } else {
-            val mendAmount = when {
-                firstItem.type == secondItem.type -> {
-                    ItemExtension(secondItem).durability
-                }
-                secondItem.canRepair(firstItem) -> {
-                    val vanillaDurability = firstItem.type.maxDurability
-                    val mendPerItem = vanillaDurability * .25
-                    round(secondItem.amount * mendPerItem).toInt()
-                }
-                else -> return
-            }
-            ItemExtension(result).mending(mendAmount).applyDurability().applySetting()
+        if (!firstItem.containsEnchantment(Enchantment.DURABILITY) && result.containsEnchantment(Enchantment.DURABILITY)) {
+            applyUnbreaking(result)
         }
+        val mendAmount = when {
+            firstItem.type == secondItem.type -> {
+                ItemExtension(secondItem).durability
+            }
+            secondItem.canRepair(firstItem) -> {
+                val vanillaDurability = firstItem.type.maxDurability
+                val mendPerItem = vanillaDurability * .25
+                round(secondItem.amount * mendPerItem).toInt()
+            }
+            else -> return
+        }
+        ItemExtension(result).mending(mendAmount).applyDurability().applySetting()
     }
 
     @EventHandler(priority = EventPriority.HIGH)
