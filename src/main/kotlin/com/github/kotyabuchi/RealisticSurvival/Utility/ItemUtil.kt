@@ -58,6 +58,7 @@ fun Material.isTools(): Boolean {
             this.isHoe() ||
             this.isAxe() ||
             this == Material.FISHING_ROD ||
+            this == Material.SHEARS ||
             this == Material.FLINT_AND_STEEL
 }
 
