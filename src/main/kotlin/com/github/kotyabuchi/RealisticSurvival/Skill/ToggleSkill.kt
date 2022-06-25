@@ -25,12 +25,12 @@ interface ToggleSkill: Skill {
 
     override fun enableAction(player: Player, level: Int) {
         player.playSound(player.eyeLocation, Sound.ENTITY_PLAYER_LEVELUP, 0.2f, 2.0f)
-        player.sendActionBar(Component.text("$skillName On", NamedTextColor.GREEN))
+        player.sendActionBar(Component.text("$displayName On", NamedTextColor.GREEN))
     }
 
     fun disableAction(player: Player) {
         player.playSound(player.eyeLocation, Sound.ENTITY_PLAYER_LEVELUP, 0.2f, 2.0f)
-        player.sendActionBar(Component.text("$skillName Off", NamedTextColor.RED))
+        player.sendActionBar(Component.text("$displayName Off", NamedTextColor.RED))
     }
 
     fun toggleSkill(player: Player, level: Int) {
@@ -43,7 +43,7 @@ interface ToggleSkill: Skill {
 
     override fun enableSkill(player: Player, level: Int) {
         if (needLevel > level) {
-            sendErrorMessage(player, Component.text("$skillName: Not enough levels (Need Lv.$needLevel)").color(NamedTextColor.RED))
+            sendErrorMessage(player, Component.text("$displayName: Not enough levels (Need Lv.$needLevel)").color(NamedTextColor.RED))
         } else if (!isEnabledSkill(player)) {
             enableAction(player, level)
             setSkillLevel(player, level)

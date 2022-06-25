@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.kotlin.jvm' version '1.5.21'
+    id 'org.jetbrains.kotlin.jvm' version '1.7.0'
     id 'com.github.johnrengelman.shadow' version '7.1.0'
 }
 
@@ -15,20 +15,37 @@ repositories {
     maven {
         url 'https://repo.codemc.io/repository/maven-snapshots/'
     }
+    maven {
+        name = 'CodeMC'
+        url = 'https://repo.codemc.org/repository/maven-public/'
+    }
+    maven {
+        name = 'sonatype'
+        url = 'https://oss.sonatype.org/content/groups/public/'
+    }
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib"
-    implementation "io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT"
-    api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.21"
-    api "io.insert-koin:koin-core:3.1.2"
-    api "org.xerial:sqlite-jdbc:3.34.0"
-    api "net.wesjd:anvilgui:1.5.3-SNAPSHOT"
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib'
+    implementation 'io.papermc.paper:paper-api:1.19-R0.1-SNAPSHOT'
+    api 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.0'
+    api 'io.insert-koin:koin-core:3.2.0'
+    api 'org.apache.commons:commons-lang3:3.12.0'
+    api 'org.xerial:sqlite-jdbc:3.36.0.3'
+//    api files('anvilgui-1.5.3-20220609.032626-7.jar')
+    api 'de.tr7zw:item-nbt-api-plugin:2.10.0'
+    api 'com.eclipsesource.minimal-json:minimal-json:0.9.5'
 }
 
 shadowJar {
+    destinationDirectory.set(file ("E:/Program/Minecraft/TestServer/plugins"))
     configurations = [project.configurations.compileClasspath]
     dependencies {
         exclude(dependency('io.papermc.paper:paper-api'))
+        exclude(dependency('de.tr7zw:item-nbt-api-plugin'))
     }
+}
+
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }

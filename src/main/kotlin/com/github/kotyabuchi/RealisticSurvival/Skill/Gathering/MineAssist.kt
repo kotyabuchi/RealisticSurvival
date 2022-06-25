@@ -7,6 +7,7 @@ import com.github.kotyabuchi.RealisticSurvival.Utility.*
 import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.koin.core.component.inject
 import java.util.*
 import kotlin.math.ceil
@@ -14,14 +15,15 @@ import kotlin.math.max
 
 object MineAssist: ToggleSkill {
     override val main: Main by inject()
-    override val skillName: String = "MineAssist"
+    override val skillName: String = "MINE_ASSIST"
+    override val displayName: String = "Mine Assist"
     override val cost: Int = 0
     override val needLevel: Int = 0
-    override var description: String = "周囲の鉱石もまとめて採掘する"
+    override var description: String = "鉱石を破壊した際に繋がった鉱石もまとめて採掘する"
     override val coolTime: Long = 0
     override val lastUseTime: MutableMap<UUID, Long> = mutableMapOf()
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     fun onBlockBreak(event: BlockMineEvent) {
         if (event.isCancelled) return
         if (event.isMineAssist) return
@@ -34,10 +36,13 @@ object MineAssist: ToggleSkill {
         val itemStack = player.inventory.itemInMainHand
         if (!itemStack.type.isPickAxe()) return
         if (!block.type.isOre()) return
+        event.isCancelled = true
 
         val ores: MutableList<Block> = mutableListOf()
         searchOres(block, ores, mutableListOf())
+        ores.remove(block)
 
+        block.miningWithEvent(main, player, itemStack, block, true, event.isMultiBreak, true)
         ores.forEach {
             it.miningWithEvent(main, player, itemStack, block, false, isMineAssist = true)
         }

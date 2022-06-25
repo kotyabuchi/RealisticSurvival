@@ -18,12 +18,12 @@ interface Skill: Listener, KoinComponent {
     val main: Main
 
     val skillName: String
+    val displayName: String
     val cost: Int
     val needLevel: Int
     val description: String
     val coolTime: Long
     val lastUseTime: MutableMap<UUID, Long>
-
     fun getSkillNamespacedKey(): NamespacedKey = NamespacedKey(main, skillName)
 
     fun enableSkill(player: Player, level: Int) {
@@ -32,28 +32,32 @@ interface Skill: Listener, KoinComponent {
         when {
             level < needLevel -> {
                 player.playSound(player.location, Sound.ENTITY_BLAZE_SHOOT, 0.5f, 2f)
-                sendErrorMessage(player, Component.text("$skillName: Not enough levels (Need Lv.$needLevel)").color(NamedTextColor.RED))
+                sendErrorMessage(player, Component.text("$displayName: Not enough levels (Need Lv.$needLevel)").color(NamedTextColor.RED))
             }
             !isReadySkill(uuid) -> {
                 player.playSound(player.location, Sound.ENTITY_BLAZE_SHOOT, 0.5f, 2f)
-                sendErrorMessage(player, Component.text("$skillName: Not yet (${(getRemainingCoolTime(uuid) / 1000.0).floor1Digits()}s)").color(NamedTextColor.RED))
+                sendErrorMessage(player, Component.text("$displayName: Not yet (${(getRemainingCoolTime(uuid) / 1000.0).floor1Digits()}s)").color(NamedTextColor.RED))
             }
-            playerStatus.decreaseMana(cost) -> {
+            else -> {
                 enableAction(player, level)
                 setLastUseTime(uuid)
             }
-            else -> {
-                sendErrorMessage(player, Component.text("$skillName: Not enough mana ").color(NamedTextColor.RED)
-                    .append(Component.text("(").color(NamedTextColor.WHITE))
-                    .append(Component.text("${Emoji.DIAMOND}$cost").color(NamedTextColor.AQUA))
-                    .append(Component.text(")").color(NamedTextColor.WHITE)))
-            }
+//            playerStatus.decreaseMana(cost) -> {
+//                enableAction(player, level)
+//                setLastUseTime(uuid)
+//            }
+//            else -> {
+//                sendErrorMessage(player, Component.text("$displayName: Not enough mana ").color(NamedTextColor.RED)
+//                    .append(Component.text("(").color(NamedTextColor.WHITE))
+//                    .append(Component.text("${Emoji.DIAMOND}$cost").color(NamedTextColor.AQUA))
+//                    .append(Component.text(")").color(NamedTextColor.WHITE)))
+//            }
         }
     }
 
     fun enableAction(player: Player, level: Int) {
         player.playSound(player.eyeLocation, Sound.ENTITY_PLAYER_LEVELUP, 0.2f, 2.0f)
-        player.sendActionBar(Component.text(skillName, NamedTextColor.GREEN))
+        player.sendActionBar(Component.text(displayName, NamedTextColor.GREEN))
     }
 
     fun setLastUseTime(uuid: UUID) {

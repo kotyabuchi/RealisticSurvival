@@ -3,6 +3,7 @@ package com.github.kotyabuchi.RealisticSurvival.Utility
 import com.github.kotyabuchi.RealisticSurvival.Job.JobType
 import com.github.kotyabuchi.RealisticSurvival.Main
 import com.github.kotyabuchi.RealisticSurvival.System.Player.*
+import com.github.kotyabuchi.RealisticSurvival.System.TombStone
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -21,7 +22,7 @@ object DataBaseManager: KoinComponent {
 
     private const val dbFileName = "RealisticSurvival.db"
     private val dbFile = File(main.dataFolder, dbFileName)
-    private val dbHeader = "jdbc:sqlite:" + dbFile.absolutePath
+    val dbHeader = "jdbc:sqlite:" + dbFile.absolutePath
 
     fun initDB() {
         var stmt: Statement
@@ -74,9 +75,11 @@ object DataBaseManager: KoinComponent {
                         val jobRs = pstmt.executeQuery()
 
                         while (jobRs.next()) {
-                            val jobStatus = JobStatus()
-                            jobStatus.setTotalExp(jobRs.getDouble("job_total_exp"))
-                            playerStatus.setJobStatus(JobType.valueOf(jobRs.getString("job_name")).jobClass, jobStatus)
+                            valueOfOrNull<JobType>(jobRs.getString("job_name"))?.jobClass?.let { job ->
+                                val jobStatus = JobStatus()
+                                jobStatus.setTotalExp(jobRs.getDouble("job_total_exp"))
+                                playerStatus.setJobStatus(job, jobStatus)
+                            }
                         }
 
                         pstmt = conn.prepareStatement("SELECT * FROM player_mana WHERE uuid = ?")
@@ -136,7 +139,9 @@ object DataBaseManager: KoinComponent {
                     conn.commit()
                     val jobs = mutableMapOf<JobType, Int>()
                     while (rs.next()) {
-                        jobs[JobType.valueOf(rs.getString("job_name"))] = rs.getInt("job_id")
+                        valueOfOrNull<JobType>(rs.getString("job_name"))?.let { job ->
+                            jobs[job] = rs.getInt("job_id")
+                        }
                     }
                     try {
                         pstmt = conn.prepareStatement("REPLACE INTO player_job_status VALUES (?, ?, ?)")
@@ -261,6 +266,7 @@ object DataBaseManager: KoinComponent {
         object : BukkitRunnable() {
             override fun run() {
                 savePlayerStatus()
+                TombStone.saveTombStoneFile()
             }
         }.runTaskTimer(main, interval, interval)
     }

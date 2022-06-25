@@ -24,7 +24,8 @@ import kotlin.random.Random
 
 object BlessOfDemeter: Skill {
     override val main: Main by inject()
-    override val skillName: String = "TotemOfDemeter"
+    override val skillName: String = "TOTEM_OF_DEMETER"
+    override val displayName: String = "Totem of Demeter"
     override val cost: Int = 35
     override val needLevel: Int = 20
     override val description: String = "周囲の植物の成長を促進するトーテムをその場に設置する"
@@ -101,19 +102,21 @@ object BlessOfDemeter: Skill {
                     totemItem.remove()
                 } else {
                     val checkBlocks = targetBlocks.toMutableList()
-                    for (i in 0 .. targetBlocks.size) {
-                        val checkBlock = checkBlocks[Random.nextInt(checkBlocks.size)]
-                        val blockData = checkBlock.blockData
-                        if (blockData !is Ageable) continue
-                        if (blockData.age == blockData.maximumAge) {
-                            SafeCropAndReplant.addHarvestBlock(checkBlock)
-                            checkBlock.miningWithEvent(main, player, item)
-                        } else {
-                            blockData.age++
-                            checkBlock.blockData = blockData
+                    if (checkBlocks.isNotEmpty()) {
+                        for (i in 0 .. targetBlocks.size) {
+                            val checkBlock = checkBlocks[Random.nextInt(checkBlocks.size)]
+                            val blockData = checkBlock.blockData
+                            if (blockData !is Ageable) continue
+                            if (blockData.age == blockData.maximumAge) {
+                                SafeCropAndReplant.addHarvestBlock(checkBlock)
+                                checkBlock.miningWithEvent(main, player, item)
+                            } else {
+                                blockData.age++
+                                checkBlock.blockData = blockData
+                            }
+                            particleBuilder.location(checkBlock.location.toCenterLocation()).spawn()
+                            break
                         }
-                        particleBuilder.location(checkBlock.location.toCenterLocation()).spawn()
-                        break
                     }
                 }
                 count++

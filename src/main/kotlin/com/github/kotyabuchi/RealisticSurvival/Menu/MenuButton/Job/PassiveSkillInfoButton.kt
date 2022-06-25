@@ -37,7 +37,7 @@ class PassiveSkillInfoButton(val player: Player, val skill: PassiveSkill, val me
             clickAction.append(Component.text("Enable skill").normalize(NamedTextColor.GREEN))
         }
         lore.add(clickAction)
-        menuIcon = ButtonItem(Material.WRITABLE_BOOK, Component.text("${skill.skillName} ").normalize(), lore = lore)
+        menuIcon = ButtonItem(Material.WRITABLE_BOOK, Component.text(skill.displayName).normalize(), lore = lore)
     }
 
     override fun clickEvent(event: InventoryClickEvent) {

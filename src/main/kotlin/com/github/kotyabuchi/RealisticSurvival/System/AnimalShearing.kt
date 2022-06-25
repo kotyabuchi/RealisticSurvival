@@ -19,7 +19,7 @@ object AnimalShearing: Listener {
     fun onShearing(event: PlayerInteractEntityEvent) {
         val player = event.player
         val entity = event.rightClicked as? LivingEntity ?: return
-        val item = player.inventory.getItem(event.hand) ?: return
+        val item = player.inventory.getItem(event.hand)
 
         if (item.type != Material.SHEARS) return
         if (entity.health <= 0) return

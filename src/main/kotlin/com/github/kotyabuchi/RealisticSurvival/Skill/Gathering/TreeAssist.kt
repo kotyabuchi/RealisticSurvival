@@ -25,10 +25,11 @@ import kotlin.random.Random
 
 object TreeAssist: ToolLinkedSkill {
     override val main: Main by inject()
-    override val skillName: String = "TreeAssist"
+    override val skillName: String = "TREE_ASSIST"
+    override val displayName: String = "Tree Assist"
     override val cost: Int = 0
     override val needLevel: Int = 0
-    override val description: String = "繋がった木を一括破壊する"
+    override val description: String = "原木を破壊した際に繋がった原木もまとめて伐採する"
 
     override val skillItemBackup: MutableMap<UUID, ItemStack> = mutableMapOf()
     override val coolTime: Long = 0
@@ -57,13 +58,14 @@ object TreeAssist: ToolLinkedSkill {
         val leaveList: MutableList<Block> = mutableListOf()
 
         val woodType = material.getWoodType()
-        searchWood(block, woodType, block, woodList, leaveList, mutableListOf())
+        val foundRoot = searchRoot(block, woodType, mutableListOf()) ?: return
+        searchWood(foundRoot, woodType, foundRoot, woodList, leaveList, mutableListOf())
         leaveList.sortWith { o1, o2 -> o1.y - o2.y }
 
         woodList.forEach {
             it.miningWithEvent(main, player, itemStack, block, false)
         }
-        player.foodLevel = max(0, player.foodLevel - ceil(woodList.size / 10.0).toInt())
+        player.foodLevel = max(0, player.foodLevel - ceil(woodList.size / 20.0).toInt())
         itemStack.damage(player, woodList.size)
 
         if (leaveList.isNotEmpty()) {
@@ -71,7 +73,8 @@ object TreeAssist: ToolLinkedSkill {
             leaveList.forEach {
                 object : BukkitRunnable() {
                     override fun run() {
-                        block.world.spawnFallingBlock(it.location.add(0.5, 0.0, 0.5), it.blockData)
+                        val fallingBlock = block.world.spawnFallingBlock(it.location.add(0.5, 0.0, 0.5), it.blockData)
+                        fallingBlock.dropItem = false
                         it.type = Material.AIR
                     }
                 }.runTaskLater(main, it.y - lowestLeave.toLong())
@@ -84,18 +87,16 @@ object TreeAssist: ToolLinkedSkill {
         val entity = event.entity as? FallingBlock ?: return
         val material = entity.blockData.material
         if (material.isLeave()) {
-            dropFromLeave(entity)
-            event.isCancelled = true
-            entity.remove()
-        }
-    }
-
-    @EventHandler
-    fun onDropItemFromEntity(event: EntityDropItemEvent) {
-        val entity = event.entity as? FallingBlock ?: return
-        val material = entity.blockData.material
-        if (material.isLeave()) {
-            dropFromLeave(entity)
+            if (event.to == entity.blockData.material) {
+                val block = event.block
+                block.type = event.to
+                block.drops.forEach {
+                    val item = entity.world.dropItem(entity.location, it)
+                    main.server.pluginManager.callEvent(EntityDropItemEvent(entity, item))
+                }
+                block.type = Material.AIR
+//            dropFromLeave(entity)
+            }
             event.isCancelled = true
             entity.remove()
         }
@@ -115,6 +116,30 @@ object TreeAssist: ToolLinkedSkill {
             val item = entity.world.dropItem(entity.location, ItemStack(Material.APPLE, 1))
             main.server.pluginManager.callEvent(EntityDropItemEvent(entity, item))
         }
+    }
+
+    private fun searchRoot(checkBlock: Block, woodType: WoodType, checkedList: MutableList<Block>): Block? {
+        if (checkedList.contains(checkBlock)) return null
+        checkedList.add(checkBlock)
+        val checkMaterial = checkBlock.type
+        if (!checkMaterial.isWood()) return null
+        if (woodType != checkMaterial.getWoodType()) return null
+        if (checkedList.size > 496) return null
+        val downBlock = checkBlock.getRelative(BlockFace.DOWN)
+        if (downBlock.type.isDirt()) return checkBlock
+
+        var result: Block? = null
+        for (face in BlockUtil.aroundBlockFace) {
+            result = searchRoot(downBlock.getRelative(face), woodType, checkedList)
+            if (result != null) break
+        }
+        if (result == null) {
+            for (face in BlockUtil.aroundBlockFace) {
+                result = searchRoot(checkBlock.getRelative(face), woodType, checkedList)
+                if (result != null) break
+            }
+        }
+        return result
     }
 
     private fun searchWood(mainBlock: Block, woodType: WoodType, checkBlock: Block, woodList: MutableList<Block>, leaveList: MutableList<Block>, checkedList: MutableList<Block>) {

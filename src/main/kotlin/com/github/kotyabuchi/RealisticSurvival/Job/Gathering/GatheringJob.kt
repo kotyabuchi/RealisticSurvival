@@ -1,8 +1,9 @@
-package com.github.kotyabuchi.RealisticSurvival.Job
+package com.github.kotyabuchi.RealisticSurvival.Job.Gathering
 
 import com.github.kotyabuchi.RealisticSurvival.Event.BlockMineEvent
 import com.github.kotyabuchi.RealisticSurvival.Event.CustomEventCaller
 import com.github.kotyabuchi.RealisticSurvival.Event.GatheringEvent
+import com.github.kotyabuchi.RealisticSurvival.Job.JobMaster
 import com.github.kotyabuchi.RealisticSurvival.Main
 import com.github.kotyabuchi.RealisticSurvival.System.Player.getStatus
 import org.bukkit.Material

@@ -1,6 +1,6 @@
 package com.github.kotyabuchi.RealisticSurvival
 
-import com.github.kotyabuchi.RealisticSurvival.Utility.FileUtil
+import com.github.kotyabuchi.RealisticSurvival.Utility.saveFile
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.event.Listener
@@ -24,8 +24,8 @@ object Debug: Listener, KoinComponent {
             override fun run() {
                 println("$count/${materials.size}")
                 if (count > 0) {
-                    inv.contents.forEachIndexed { index, itemStack ->
-                        if (itemStack == null || itemStack.type.isAir) {
+                    inv.storageContents.forEachIndexed { index, itemStack ->
+                        if (itemStack == null) {
                             if (materials[count - 1].size > index) result.appendLine("this == Material.${materials[count - 1][index].name} ||")
                         }
                     }
@@ -33,7 +33,7 @@ object Debug: Listener, KoinComponent {
                 if (count >= materials.size) {
                     cancel()
                     val file = File(main.dataFolder, "CanNotItemMaterials.txt")
-                    FileUtil.saveFile(file, result.toString())
+                    saveFile(file, result.toString())
                     println("===== Finished =====")
                 } else {
                     materials[count].forEachIndexed { index, material ->

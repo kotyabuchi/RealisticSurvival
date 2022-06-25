@@ -1,6 +1,6 @@
 package com.github.kotyabuchi.RealisticSurvival.Event
 
-import com.github.kotyabuchi.RealisticSurvival.Job.GatheringJob
+import com.github.kotyabuchi.RealisticSurvival.Job.Gathering.GatheringJob
 import org.bukkit.block.Block
 import org.bukkit.entity.Player
 

@@ -12,10 +12,10 @@ class MainMenu(private val isOp: Boolean): Menu(Component.text("Menu"), 3, Frame
     }
 
     override fun createMenu() {
-        setMenuButton(JobButton())
-        setMenuButton(HomeButton())
+        setMenuButton(JobButton)
+        setMenuButton(HomeButton)
         if (isOp) {
-            setMenuButton(SoundMenuButton())
+            setMenuButton(SoundMenuButton)
         }
     }
 }

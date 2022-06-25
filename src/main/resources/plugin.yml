@@ -2,6 +2,7 @@ name: RealisticSurvival
 version: 0.1
 main: com.github.kotyabuchi.RealisticSurvival.Main
 api-version: 1.17
+depend: [NBTAPI]
 commands:
   sort:
   playermanager:

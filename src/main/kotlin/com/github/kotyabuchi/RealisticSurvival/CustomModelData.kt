@@ -5,4 +5,5 @@ enum class CustomModelData(val id: Int) {
     ARROW_RIGHT(2),
     RETURN(3),
     PLUS(4),
+    TOMB_STONE(100),
 }

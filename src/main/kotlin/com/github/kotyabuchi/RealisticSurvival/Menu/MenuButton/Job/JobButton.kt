@@ -9,7 +9,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class JobButton: MenuButton() {
+object JobButton: MenuButton() {
 
     init {
         menuIcon = ButtonItem(Material.DIAMOND_PICKAXE, Component.text("JobInfo"))

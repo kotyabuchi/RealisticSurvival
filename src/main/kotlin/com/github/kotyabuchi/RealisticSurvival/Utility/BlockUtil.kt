@@ -26,17 +26,28 @@ fun Material.isWood(): Boolean {
             this == Material.JUNGLE_LOG ||
             this == Material.OAK_LOG ||
             this == Material.SPRUCE_LOG ||
+            this == Material.MANGROVE_LOG ||
+            this == Material.MANGROVE_ROOTS ||
+            this == Material.MUDDY_MANGROVE_ROOTS ||
             this == Material.STRIPPED_ACACIA_LOG ||
             this == Material.STRIPPED_BIRCH_LOG ||
             this == Material.STRIPPED_DARK_OAK_LOG ||
             this == Material.STRIPPED_JUNGLE_LOG ||
             this == Material.STRIPPED_OAK_LOG ||
             this == Material.STRIPPED_SPRUCE_LOG ||
+            this == Material.STRIPPED_MANGROVE_LOG ||
             this == Material.ACACIA_WOOD ||
             this == Material.BIRCH_WOOD ||
             this == Material.JUNGLE_WOOD ||
             this == Material.OAK_WOOD ||
             this == Material.SPRUCE_WOOD ||
+            this == Material.MANGROVE_WOOD ||
+            this == Material.STRIPPED_ACACIA_WOOD ||
+            this == Material.STRIPPED_BIRCH_WOOD ||
+            this == Material.STRIPPED_JUNGLE_WOOD ||
+            this == Material.STRIPPED_OAK_WOOD ||
+            this == Material.STRIPPED_SPRUCE_WOOD ||
+            this == Material.STRIPPED_MANGROVE_WOOD ||
             this == Material.CRIMSON_STEM ||
             this == Material.WARPED_STEM ||
             this == Material.STRIPPED_CRIMSON_STEM ||
@@ -54,8 +65,17 @@ fun Material.isLeave(): Boolean {
             this == Material.JUNGLE_LEAVES ||
             this == Material.OAK_LEAVES ||
             this == Material.SPRUCE_LEAVES ||
+            this == Material.MANGROVE_LEAVES ||
             this == Material.AZALEA_LEAVES ||
             this == Material.FLOWERING_AZALEA_LEAVES
+}
+
+fun Material.isDirt(): Boolean {
+    return this == Material.GRASS_BLOCK ||
+            this == Material.DIRT ||
+            this == Material.COARSE_DIRT ||
+            this == Material.PODZOL ||
+            this == Material.ROOTED_DIRT
 }
 
 fun Block.getWoodType(): WoodType {
@@ -71,6 +91,7 @@ fun Material.getWoodType(): WoodType {
         name.contains("DARK_OAK") -> WoodType.DARK_OAK
         name.contains("SPRUCE") -> WoodType.SPRUCE
         name.contains("ACACIA") -> WoodType.ACACIA
+        name.contains("MANGROVE") -> WoodType.MANGROVE
         name.contains("CRIMSON") -> WoodType.CRIMSON
         name.contains("WARPED") -> WoodType.WARPED
         else -> WoodType.OAK
@@ -94,7 +115,6 @@ fun Material.isOre(): Boolean {
             this == Material.DEEPSLATE_DIAMOND_ORE ||
             this == Material.EMERALD_ORE ||
             this == Material.DEEPSLATE_EMERALD_ORE ||
-            this == Material.NETHER_GOLD_ORE ||
             this == Material.NETHER_GOLD_ORE ||
             this == Material.GLOWSTONE ||
             this == Material.NETHER_QUARTZ_ORE ||
@@ -257,43 +277,52 @@ fun BlockFace.reverse(): BlockFace {
     }
 }
 
-fun Block.miningWithEvent(main: Main, player: Player, itemStack: ItemStack, mainBlock: Block = this, damage: Boolean = true, isMultiBreak: Boolean = false, isMineAssist: Boolean = false) {
-    val mineEvent = BlockMineEvent(this, player, isMultiBreak, isMineAssist)
+fun Block.miningWithEvent(main: Main, player: Player, itemStack: ItemStack, mainBlock: Block = this, damage: Boolean = true, isMultiBreak: Boolean = false, isMineAssist: Boolean = false, dropItemCallBack: (BlockDropItemEvent) -> Unit = {}, blockCallBack: (Block) -> Unit = {}) {
+    val isMainBlock = this == mainBlock
+    val mineEvent = BlockMineEvent(this, player, itemStack, isMainBlock, isMultiBreak, isMineAssist)
     main.server.pluginManager.callEvent(mineEvent)
     if (!mineEvent.isCancelled) {
-        val dropItems = mutableListOf<Item>()
-        this.getDrops(itemStack, player).forEach { item ->
+        this.breakBlock(main, player, itemStack, mainBlock, damage, dropItemCallBack, blockCallBack)
+    }
+}
+
+fun Block.breakBlock(main: Main, player: Player, itemStack: ItemStack, mainBlock: Block, damage: Boolean, dropItemCallBack: (BlockDropItemEvent) -> Unit = {}, blockCallBack: (Block) -> Unit = {}) {
+    val dropItems = mutableListOf<Item>()
+    this.getDrops(itemStack, player).forEach { item ->
+        if (!item.type.isAir) {
             val dropItem = mainBlock.world.dropItem(mainBlock.location.toCenterLocation(), item)
             dropItems.add(dropItem)
         }
-        val state = this.state
-        if (this != mainBlock) {
-            this.world.playSound(this.location.add(.5, .5, .5), this.soundGroup.breakSound, 1f, .75f)
-            this.world.spawnParticle(Particle.BLOCK_CRACK, this.location.add(0.5, 0.5, 0.5), 20, .3, .3, .3, .0, this.blockData)
-        }
-        if (state is Container && !this.type.name.endsWith("SHULKER_BOX")) {
-            val inventory = if (state is Chest) {
-                state.blockInventory
-            } else {
-                state.inventory
-            }
-            inventory.viewers.forEach {
-                it.closeInventory()
-            }
-            inventory.contents.forEach {
-                it?.let { mainBlock.world.dropItem(mainBlock.location.toCenterLocation(), it) }
-            }
-        }
-        this.type = Material.AIR
-        val dropEvent = BlockDropItemEvent(this, state, player, dropItems)
-        main.server.pluginManager.callEvent(dropEvent)
-        if (dropEvent.items.isEmpty()) {
-            dropItems.forEach { item ->
-                item.remove()
-            }
-        }
-        if (damage && itemStack.type.hasDurability()) itemStack.damage(player, 1)
     }
+    val state = this.state
+    if (this != mainBlock) {
+        this.world.playSound(this.location.add(.5, .5, .5), this.blockSoundGroup.breakSound, 1f, .75f)
+        this.world.spawnParticle(Particle.BLOCK_CRACK, this.location.add(0.5, 0.5, 0.5), 20, .3, .3, .3, .0, this.blockData)
+    }
+    if (state is Container && !this.type.name.endsWith("SHULKER_BOX")) {
+        val inventory = if (state is Chest) {
+            state.blockInventory
+        } else {
+            state.inventory
+        }
+        inventory.viewers.forEach {
+            it.closeInventory()
+        }
+        inventory.storageContents.forEach {
+            it?.let { mainBlock.world.dropItem(mainBlock.location.toCenterLocation(), it) }
+        }
+    }
+    this.type = Material.AIR
+    val dropEvent = BlockDropItemEvent(this, state, player, dropItems)
+    main.server.pluginManager.callEvent(dropEvent)
+    dropItemCallBack(dropEvent)
+    if (dropEvent.items.isEmpty()) {
+        dropItems.forEach { item ->
+            item.remove()
+        }
+    }
+    if (damage && itemStack.type.hasDurability()) itemStack.damage(player, 1)
+    blockCallBack(this)
 }
 
 fun Block.destroyWithEffect(playSound: Boolean = true) {

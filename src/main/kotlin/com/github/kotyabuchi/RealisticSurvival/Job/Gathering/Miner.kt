@@ -1,8 +1,10 @@
 package com.github.kotyabuchi.RealisticSurvival.Job.Gathering
 
-import com.github.kotyabuchi.RealisticSurvival.Job.GatheringJob
 import com.github.kotyabuchi.RealisticSurvival.Skill.Gathering.MineAssist
+import com.github.kotyabuchi.RealisticSurvival.Skill.Gathering.MultiBreakMiner
 import com.github.kotyabuchi.RealisticSurvival.Skill.PassiveSkill.Gathering.GemCollector
+import com.github.kotyabuchi.RealisticSurvival.Skill.PassiveSkill.Gathering.HadesBlessing
+import com.github.kotyabuchi.RealisticSurvival.Skill.PassiveSkill.Gathering.StoneReplacer
 import com.github.kotyabuchi.RealisticSurvival.Skill.SkillCommand
 import org.bukkit.Material
 
@@ -34,6 +36,9 @@ object Miner: GatheringJob("MINER") {
         addExpMap(10, Material.EMERALD_ORE, Material.DEEPSLATE_EMERALD_ORE)
 
         registerSkill(SkillCommand.LRL, MineAssist)
+        registerSkill(SkillCommand.RLR, MultiBreakMiner)
         registerPassiveSkill(GemCollector(this))
+        registerPassiveSkill(StoneReplacer(this))
+        registerPassiveSkill(HadesBlessing(this))
     }
 }

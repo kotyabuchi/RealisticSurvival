@@ -20,7 +20,7 @@ class SkillInfoButton(command: SkillCommand, skill: Skill): MenuButton() {
         lore.add(Component.text("Command: ", ButtonData.buttonLoreStyle).append(Component.text(command.name).normalize()))
         lore.add(Component.text("===============", ButtonData.buttonLoreStyle))
         lore.add(Component.text(skill.description, ButtonData.buttonLoreStyle))
-        menuIcon = ButtonItem(Material.WRITABLE_BOOK, Component.text(skill.skillName).normalize(), lore = lore)
+        menuIcon = ButtonItem(Material.WRITABLE_BOOK, Component.text(skill.displayName).normalize(), lore = lore)
         clickSound = null
     }
 }

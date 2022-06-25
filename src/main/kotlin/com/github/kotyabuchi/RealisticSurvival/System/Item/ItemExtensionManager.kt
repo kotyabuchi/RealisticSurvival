@@ -5,7 +5,6 @@ import com.github.kotyabuchi.RealisticSurvival.Item.ItemExtension
 import com.github.kotyabuchi.RealisticSurvival.Utility.findFirst
 import com.github.kotyabuchi.RealisticSurvival.Utility.hasDurability
 import com.github.kotyabuchi.RealisticSurvival.Utility.isArmors
-import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.event.EventHandler
@@ -20,7 +19,6 @@ import org.bukkit.event.player.PlayerItemDamageEvent
 import org.bukkit.event.player.PlayerItemMendEvent
 import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import kotlin.math.round
 
 object ItemExtensionManager: Listener {
@@ -43,10 +41,11 @@ object ItemExtensionManager: Listener {
         val itemBreakEvent = PlayerItemBreakEvent(player, itemStack)
         CustomEventCaller.callEvent(itemBreakEvent)
         player.world.playSound(player.location, Sound.ENTITY_ITEM_BREAK, 1f, 1f)
-        val inv = player.inventory
-        inv.findFirst(itemStack)?.slot?.let { slot ->
-            inv.setItem(slot, null)
-        }
+        itemStack.subtract(Int.MAX_VALUE)
+//        val inv = player.inventory
+//        inv.findFirst(itemStack)?.slot?.let { slot ->
+//            inv.setItem(slot, null)
+//        }
     }
 
     @EventHandler

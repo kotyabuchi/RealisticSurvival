@@ -8,7 +8,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class SoundMenuButton: MenuButton() {
+object SoundMenuButton: MenuButton() {
 
     init {
         menuIcon = ButtonItem(Material.NOTE_BLOCK, Component.text("Sound Sample").normalize())

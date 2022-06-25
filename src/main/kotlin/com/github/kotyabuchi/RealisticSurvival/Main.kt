@@ -4,50 +4,77 @@ import com.github.kotyabuchi.RealisticSurvival.Event.CustomEventCaller
 import com.github.kotyabuchi.RealisticSurvival.Job.JobType
 import com.github.kotyabuchi.RealisticSurvival.Menu.MenuController
 import com.github.kotyabuchi.RealisticSurvival.Menu.SoundSampleMenu
+import com.github.kotyabuchi.RealisticSurvival.Monster.*
 import com.github.kotyabuchi.RealisticSurvival.System.*
 import com.github.kotyabuchi.RealisticSurvival.System.Combat.DamagePopup
+import com.github.kotyabuchi.RealisticSurvival.System.Combat.HealthBar
 import com.github.kotyabuchi.RealisticSurvival.System.Item.ItemExtensionManager
 import com.github.kotyabuchi.RealisticSurvival.System.Item.UUIDForItem
+import com.github.kotyabuchi.RealisticSurvival.System.Player.HomePoint
 import com.github.kotyabuchi.RealisticSurvival.System.Player.PlayerManageCommand
 import com.github.kotyabuchi.RealisticSurvival.System.Player.PlayerManager
 import com.github.kotyabuchi.RealisticSurvival.Utility.DataBaseManager
 import org.bukkit.NamespacedKey
+import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
 class Main: JavaPlugin() {
 
+    fun registerEvent(vararg events: Listener) {
+        val pm = server.pluginManager
+        events.forEach {
+            pm.registerEvents(it, this)
+        }
+    }
+
     private fun registerEvents() {
         val pm = server.pluginManager
-        pm.registerEvents(CustomEventCaller, this)
-        pm.registerEvents(Debug, this)
+        registerEvent(
+            CustomEventCaller,
+            Debug
+        )
         // Job
         JobType.values().forEach {
             pm.registerEvents(it.jobClass, this)
         }
-        // Menu
-        pm.registerEvents(MenuController, this)
-        pm.registerEvents(SoundSampleMenu, this)
-        // System
-            // Combat
-        pm.registerEvents(DamagePopup, this)
-            // Item
-        pm.registerEvents(ItemExtensionManager, this)
-        pm.registerEvents(UUIDForItem, this)
-            // Player
-        pm.registerEvents(PlayerManager, this)
-
-        pm.registerEvents(AnimalShearing, this)
-        pm.registerEvents(BlockPlacer, this)
-        pm.registerEvents(Elevator, this)
-        pm.registerEvents(LevelTheFarmlandAnPath, this)
-        pm.registerEvents(ReplantSapling, this)
-        pm.registerEvents(SafeCropAndReplant, this)
-        pm.registerEvents(SafeFarmland, this)
-        pm.registerEvents(SortChest, this)
-        pm.registerEvents(StarterItem, this)
-        pm.registerEvents(StoneGenerator, this)
+        registerEvent(
+            // Menu
+            MenuController,
+            SoundSampleMenu,
+            // Monster
+            AdvCreeper,
+            AdvEnderman,
+            AdvSkeleton,
+            AdvSpider,
+            AdvWitch,
+            AdvZombie,
+            // System
+                // Combat
+            DamagePopup,
+//            HealthBar,
+                // Item
+            ItemExtensionManager,
+            UUIDForItem,
+                // Player
+            HomePoint,
+            PlayerManager,
+                // Other
+            AnimalShearing,
+            BlockPlacer,
+            ChatSound,
+            Elevator,
+            LevelTheFarmlandAnPath,
+            ReplantSapling,
+            SafeCropAndReplant,
+            SafeFarmland,
+            SortChest,
+            StarterItem,
+            StoneGenerator,
+            TombStone,
+            WorldGuard,
+        )
     }
 
     private fun registerCommands() {
@@ -67,6 +94,7 @@ class Main: JavaPlugin() {
 
     override fun onDisable() {
         DataBaseManager.savePlayerStatus()
+        TombStone.saveTombStoneFile()
         PlayerManager.hideAllManaIndicator()
         refreshBossbar()
         println("Disabled")

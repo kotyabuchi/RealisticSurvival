@@ -124,11 +124,12 @@ data class PlayerStatus(val player: Player) {
 
     fun notifyLevelUp(job: JobMaster) {
         val jobStatus = getJobStatus(job)
+        job.levelUpEvent(player)
         player.showTitle(
             Title.title(
                 Component.text("Level Up!"),
                 Component.text("${job.jobName.upperCamelCase()} Lv. ${jobStatus.getLevel()}"),
-                Title.Times.of(Duration.ofMillis(500), Duration.ofSeconds(2), Duration.ofMillis(500))
+                Title.Times.times(Duration.ofMillis(500), Duration.ofSeconds(2), Duration.ofMillis(500))
             )
         )
         player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 0.2f, 1.0f)
@@ -136,7 +137,7 @@ data class PlayerStatus(val player: Player) {
 
     fun notifyLearnedSkill(skill: Skill) {
         player.playSound(player.eyeLocation, Sound.ENTITY_PLAYER_LEVELUP, 0.2f, 2.0f)
-        player.sendMessage(Component.text("[${skill.skillName}]を習得しました").normalize(NamedTextColor.GREEN))
+        player.sendMessage(Component.text("[${skill.displayName}]を習得しました").normalize(NamedTextColor.GREEN))
     }
 
     fun levelUp(job: JobMaster, level: Int) {

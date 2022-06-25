@@ -1,16 +1,22 @@
 package com.github.kotyabuchi.RealisticSurvival.Menu
 
+import com.github.kotyabuchi.RealisticSurvival.CustomModelData
 import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.Home.AddHomeButton
 import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.Home.HomeInfoButton
 import com.github.kotyabuchi.RealisticSurvival.System.Player.Home
 import com.github.kotyabuchi.RealisticSurvival.System.Player.getStatus
+import com.github.kotyabuchi.RealisticSurvival.System.TombStone
 import com.github.kotyabuchi.RealisticSurvival.Utility.DataBaseManager
+import com.github.kotyabuchi.RealisticSurvival.Utility.toInt
 import net.kyori.adventure.text.Component
+import org.bukkit.Bukkit
+import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.persistence.PersistentDataType
 
-class HomeMenu(val player: Player): Menu(Component.text("${player.name}'s Homes"), player.getStatus().homes.size, FrameType.TOP, FrameType.SIDE) {
+class HomeMenu(val player: Player, hasBed: Boolean, private val hasLastDeath: Boolean): Menu(Component.text("${player.name}'s Homes"), 1 + hasBed.toInt() + hasLastDeath.toInt() + player.getStatus().homes.size, FrameType.TOP, FrameType.SIDE) {
 
     init {
         createMenu()
@@ -25,6 +31,17 @@ class HomeMenu(val player: Player): Menu(Component.text("${player.name}'s Homes"
         player.bedSpawnLocation?.let { loc ->
             loc.yaw = 0f
             setMenuButton(HomeInfoButton(player, Home("Bed", loc, Material.RED_BED)), 0)
+        }
+        val pdc = player.persistentDataContainer
+        if (hasLastDeath) {
+            pdc.get(TombStone.lastDeathPointKey, PersistentDataType.STRING)?.split(",")?.let { lastDeathStr ->
+                val lastDeathWorld = Bukkit.getWorld(lastDeathStr[0])
+                val lastDeathX = lastDeathStr[1].toDouble()
+                val lastDeathY = lastDeathStr[2].toDouble()
+                val lastDeathZ = lastDeathStr[3].toDouble()
+                val lastDeathLoc = Location(lastDeathWorld, lastDeathX, lastDeathY, lastDeathZ)
+                setMenuButton(HomeInfoButton(player, Home("Last Death", lastDeathLoc, TombStone.tombStoneItem.type), CustomModelData.TOMB_STONE))
+            }
         }
         player.getStatus().homes.forEach {
             if (getLastBlankSlot(page) == null) page++

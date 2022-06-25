@@ -18,8 +18,13 @@ class JobStatus {
         totalExp += exp
     }
 
-    fun setExp(point: Double) {
-        exp = point
+    fun setExp(point: Double, changeTotalExp: Boolean = false) {
+        val changeAmount = point - exp
+        if (changeTotalExp) {
+            setTotalExp(totalExp + changeAmount)
+        } else {
+            exp = point
+        }
     }
 
     fun setTotalExp(point: Double) {

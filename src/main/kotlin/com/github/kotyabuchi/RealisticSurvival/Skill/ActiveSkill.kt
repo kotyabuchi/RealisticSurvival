@@ -23,11 +23,11 @@ interface ActiveSkill: ToggleSkill {
         when {
             level < needLevel -> {
                 player.playSound(player.location, Sound.ENTITY_BLAZE_SHOOT, 0.5f, 2f)
-                sendErrorMessage(player, Component.text("$skillName: Not enough levels (Need Lv.$needLevel)").color(NamedTextColor.RED))
+                sendErrorMessage(player, Component.text("$displayName: Not enough levels (Need Lv.$needLevel)").color(NamedTextColor.RED))
             }
             !isReadySkill(uuid) -> {
                 player.playSound(player.location, Sound.ENTITY_BLAZE_SHOOT, 0.5f, 2f)
-                sendErrorMessage(player, Component.text("$skillName: Not yet (${(getRemainingCoolTime(uuid) / 1000.0).floor1Digits()}s)").color(NamedTextColor.RED))
+                sendErrorMessage(player, Component.text("$displayName: Not yet (${(getRemainingCoolTime(uuid) / 1000.0).floor1Digits()}s)").color(NamedTextColor.RED))
             }
             playerStatus.decreaseMana(cost) -> {
                 enableAction(player, level)
@@ -36,7 +36,7 @@ interface ActiveSkill: ToggleSkill {
                 if (hasActiveTime) restartActiveTime(player, level)
             }
             else -> {
-                sendErrorMessage(player, Component.text("$skillName: Not enough mana ").color(NamedTextColor.RED)
+                sendErrorMessage(player, Component.text("$displayName: Not enough mana ").color(NamedTextColor.RED)
                     .append(Component.text("(").color(NamedTextColor.WHITE))
                     .append(Component.text("${Emoji.DIAMOND}$cost").color(NamedTextColor.AQUA))
                     .append(Component.text(")").color(NamedTextColor.WHITE)))
@@ -52,7 +52,7 @@ interface ActiveSkill: ToggleSkill {
         removeSkillLevel(player)
     }
 
-    fun restartActiveTime(player: Player, level: Int = getSkillLevel(player) ?: 1) {
+    fun restartActiveTime(player: Player, level: Int) {
         val uuid = player.uniqueId
         activeTimeMap[uuid]?.cancel()
         activeTimeMap[uuid] = object : BukkitRunnable() {

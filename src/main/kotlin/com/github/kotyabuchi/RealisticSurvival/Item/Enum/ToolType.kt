@@ -14,7 +14,6 @@ enum class ToolType(override val materialCost: Int?): EquipmentType {
         }
     },
     AXE(3) {
-
         override fun includes(item: Material): Boolean {
             return item == Material.WOODEN_AXE ||
                     item == Material.STONE_AXE ||

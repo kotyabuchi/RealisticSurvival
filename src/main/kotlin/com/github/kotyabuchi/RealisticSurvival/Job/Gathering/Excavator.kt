@@ -1,7 +1,9 @@
 package com.github.kotyabuchi.RealisticSurvival.Job.Gathering
 
-import com.github.kotyabuchi.RealisticSurvival.Job.GatheringJob
+import com.github.kotyabuchi.RealisticSurvival.Skill.Gathering.MultiBreakExcavator
 import com.github.kotyabuchi.RealisticSurvival.Skill.PassiveSkill.Gathering.Archaeologist
+import com.github.kotyabuchi.RealisticSurvival.Skill.PassiveSkill.Gathering.HadesBlessing
+import com.github.kotyabuchi.RealisticSurvival.Skill.SkillCommand
 import org.bukkit.Material
 
 object Excavator: GatheringJob("EXCAVATOR") {
@@ -20,6 +22,8 @@ object Excavator: GatheringJob("EXCAVATOR") {
         }
         addExpMap(2, Material.CLAY)
 
+        registerSkill(SkillCommand.RLR, MultiBreakExcavator)
         registerPassiveSkill(Archaeologist(this))
+        registerPassiveSkill(HadesBlessing(this))
     }
 }

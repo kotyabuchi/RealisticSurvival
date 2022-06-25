@@ -1,7 +1,7 @@
 package com.github.kotyabuchi.RealisticSurvival.Job.Gathering
 
-import com.github.kotyabuchi.RealisticSurvival.Job.GatheringJob
 import com.github.kotyabuchi.RealisticSurvival.Skill.Gathering.TreeAssist
+import com.github.kotyabuchi.RealisticSurvival.Skill.PassiveSkill.Gathering.AutoReplantSapling
 import com.github.kotyabuchi.RealisticSurvival.Skill.SkillCommand
 import com.github.kotyabuchi.RealisticSurvival.Utility.isWood
 import org.bukkit.Material
@@ -15,5 +15,6 @@ object Lumberjack: GatheringJob("LUMBERJACK") {
         }
 
         registerSkill(SkillCommand.LRL, TreeAssist)
+//        registerPassiveSkill(AutoReplantSapling(this))
     }
 }

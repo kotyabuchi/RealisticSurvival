@@ -30,21 +30,21 @@ object PlayerManager: Listener, KoinComponent {
     val playerStatusMap = mutableMapOf<UUID, PlayerStatus>()
 
     init {
-        val status = DataBaseManager.loadPlayerStatus(*main.server.onlinePlayers.toTypedArray())
-
-        status.forEach {
-            playerStatusMap[it.player.uniqueId] = it
-            it.showManaIndicator()
-        }
-
-        object : BukkitRunnable() {
-            override fun run() {
-                playerStatusMap.values.forEach {
-                    it.increaseMana(it.manaRegen)
-                    it.refreshManaIndicator()
-                }
-            }
-        }.runTaskTimer(main, 0, 10)
+//        val status = DataBaseManager.loadPlayerStatus(*main.server.onlinePlayers.toTypedArray())
+//
+//        status.forEach {
+//            playerStatusMap[it.player.uniqueId] = it
+//            it.showManaIndicator()
+//        }
+//
+//        object : BukkitRunnable() {
+//            override fun run() {
+//                playerStatusMap.values.forEach {
+//                    it.increaseMana(it.manaRegen)
+//                    it.refreshManaIndicator()
+//                }
+//            }
+//        }.runTaskTimer(main, 0, 10)
     }
 
     fun hideAllManaIndicator() {
@@ -75,7 +75,7 @@ object PlayerManager: Listener, KoinComponent {
         val player = event.player
         val playerStatus = DataBaseManager.loadPlayerStatus(player).first()
         playerStatusMap[player.uniqueId] = playerStatus
-        playerStatus.showManaIndicator()
+//        playerStatus.showManaIndicator()
     }
 
     @EventHandler

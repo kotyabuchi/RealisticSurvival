@@ -38,7 +38,7 @@ open class JobMaster(val jobName: String): Listener, KoinComponent {
     private val skillMap: MutableMap<SkillCommand, Skill> = mutableMapOf()
     private val passiveSkillSet: MutableSet<PassiveSkill> = mutableSetOf()
 
-    private val commandTitleTime = Title.Times.of(Duration.ZERO, Duration.ofSeconds(2), Duration.ZERO)
+    private val commandTitleTime = Title.Times.times(Duration.ZERO, Duration.ofSeconds(2), Duration.ZERO)
 
     @EventHandler
     fun modeChange(event: PlayerSwapHandItemsEvent) {
@@ -127,12 +127,12 @@ open class JobMaster(val jobName: String): Listener, KoinComponent {
 
     protected fun registerSkill(skillCommand: SkillCommand, skill: Skill) {
         skillMap[skillCommand] = skill
-        main.server.pluginManager.registerEvents(skill, main)
+        main.registerEvent(skill)
     }
 
     protected fun registerPassiveSkill(skill: PassiveSkill) {
         passiveSkillSet.add(skill)
-        main.server.pluginManager.registerEvents(skill, main)
+        main.registerEvent(skill)
     }
 
     fun getSkills(): Map<SkillCommand, Skill> {

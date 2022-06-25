@@ -1,6 +1,5 @@
 package com.github.kotyabuchi.RealisticSurvival.Job.Gathering
 
-import com.github.kotyabuchi.RealisticSurvival.Job.GatheringJob
 import com.github.kotyabuchi.RealisticSurvival.Skill.Gathering.BlessOfDemeter
 import com.github.kotyabuchi.RealisticSurvival.Skill.SkillCommand
 import com.github.kotyabuchi.RealisticSurvival.Utility.isHoe

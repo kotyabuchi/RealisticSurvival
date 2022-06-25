@@ -29,6 +29,9 @@ object StoneGenerator: Listener, KoinComponent {
                     return
                 }
                 toBlock.type = when (toBlock.getRelative(BlockFace.DOWN).type) {
+                    Material.DEEPSLATE -> {
+                        Material.DEEPSLATE
+                    }
                     Material.GRANITE -> {
                          Material.GRANITE
                     }

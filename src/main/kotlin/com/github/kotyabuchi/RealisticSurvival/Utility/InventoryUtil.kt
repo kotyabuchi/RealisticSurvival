@@ -13,25 +13,27 @@ fun PlayerInventory.addItemOrDrop(player: Player, vararg items: ItemStack): Bool
     items.forEach { item ->
         var amount = item.amount
 
-        for ((index, itemStack) in contents.withIndex()) {
-            if (itemStack == null) {
-                this.setItem(index, item)
-                addedItems[index] = item
-                amount = 0
-            } else {
-                val addItemClone = item.clone()
-                val checkItemClone = itemStack.clone()
-                addItemClone.amount = 1
-                checkItemClone.amount = 1
-                if (addItemClone == checkItemClone) {
-                    val canAddAmount = min(amount, itemStack.maxStackSize - itemStack.amount)
-                    itemStack.amount += canAddAmount
-                    addItemClone.amount = canAddAmount
-                    addedItems[index] = addItemClone
-                    amount -= canAddAmount
+        contents.let {
+            for ((index, itemStack) in contents.withIndex()) {
+                if (itemStack == null) {
+                    this.setItem(index, item)
+                    addedItems[index] = item
+                    amount = 0
+                } else {
+                    val addItemClone = item.clone()
+                    val checkItemClone = itemStack.clone()
+                    addItemClone.amount = 1
+                    checkItemClone.amount = 1
+                    if (addItemClone == checkItemClone) {
+                        val canAddAmount = min(amount, itemStack.maxStackSize - itemStack.amount)
+                        itemStack.amount += canAddAmount
+                        addItemClone.amount = canAddAmount
+                        addedItems[index] = addItemClone
+                        amount -= canAddAmount
+                    }
                 }
+                if (amount <= 0) break
             }
-            if (amount <= 0) break
         }
 
         if (amount > 0) {
@@ -43,14 +45,14 @@ fun PlayerInventory.addItemOrDrop(player: Player, vararg items: ItemStack): Bool
 }
 
 fun Inventory.findFirst(searchItem: ItemStack): FindItemResult? {
-    this.contents.forEachIndexed { index, itemStack ->
+    this.storageContents.forEachIndexed { index, itemStack ->
         if (itemStack != null && searchItem.isSimilar(itemStack)) return FindItemResult(index, itemStack)
     }
     return null
 }
 
 fun Inventory.findLast(searchItem: ItemStack): FindItemResult? {
-    this.contents.reversed().forEachIndexed { index, itemStack ->
+    this.storageContents.reversed().forEachIndexed { index, itemStack ->
         if (itemStack != null && searchItem.isSimilar(itemStack)) return FindItemResult(index, itemStack)
     }
     return null
@@ -58,17 +60,27 @@ fun Inventory.findLast(searchItem: ItemStack): FindItemResult? {
 
 fun Inventory.findAll(searchItem: ItemStack): List<FindItemResult> {
     val result = mutableListOf<FindItemResult>()
-    this.contents.forEachIndexed { index, itemStack ->
+    this.storageContents.forEachIndexed { index, itemStack ->
         if (itemStack != null && searchItem.isSimilar(itemStack)) result.add(FindItemResult(index, itemStack))
     }
     return result
 }
 
 fun Inventory.getFirstItem(): FindItemResult? {
-    this.contents.forEachIndexed { index, itemStack ->
+    this.storageContents.forEachIndexed { index, itemStack ->
         if (itemStack != null && !itemStack.type.isAir) return FindItemResult(index, itemStack)
     }
     return null
+}
+
+fun Inventory.removeSimilar(removeItem: ItemStack) {
+    val removeSlots = mutableListOf<Int>()
+    this.storageContents.forEachIndexed { index, itemStack ->
+        if (itemStack != null && itemStack.isSimilar(removeItem)) removeSlots.add(index)
+    }
+    removeSlots.forEach { slot ->
+        this.setItem(slot, null)
+    }
 }
 
 fun Inventory.consume(itemStack: ItemStack, amount: Int = itemStack.amount, reverse: Boolean = false): Boolean {
@@ -78,14 +90,15 @@ fun Inventory.consume(itemStack: ItemStack, amount: Int = itemStack.amount, reve
 
     var foundAmount = 0
     for (item in contents) {
+        if (item == null) continue
         if (itemStack.isSimilar(item)) {
             val useAmount = min(item.amount, amount - foundAmount)
             foundAmount += useAmount
             item.amount -= useAmount
-        }
-        if (foundAmount >= amount) {
-            result = true
-            break
+            if (foundAmount >= amount) {
+                result = true
+                break
+            }
         }
     }
     if (result) {
@@ -96,9 +109,11 @@ fun Inventory.consume(itemStack: ItemStack, amount: Int = itemStack.amount, reve
 
 fun Inventory.findItemAmount(itemStack: ItemStack): Int {
     var foundAmount = 0
-    for (item in contents) {
-        if (itemStack.isSimilar(item)) {
-            foundAmount += item.amount
+    storageContents.let {
+        for (item in it) {
+            if (item != null && itemStack.isSimilar(item)) {
+                foundAmount += item.amount
+            }
         }
     }
     return foundAmount
