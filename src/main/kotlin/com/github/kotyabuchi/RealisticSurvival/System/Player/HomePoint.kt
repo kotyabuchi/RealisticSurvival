@@ -32,6 +32,7 @@ object HomePoint: Listener {
     @EventHandler
     fun onMove(event: PlayerMoveEvent) {
         val player = event.player
+        if (!event.hasExplicitlyChangedPosition()) return
         if (!homeNameTypingPlayers.contains(player)) return
         homeNameTypingPlayers.remove(player)
 
