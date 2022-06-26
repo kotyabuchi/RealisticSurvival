@@ -1,10 +1,9 @@
 package com.github.kotyabuchi.RealisticSurvival.Menu
 
-import com.github.kotyabuchi.RealisticSurvival.Event.ChangeMenuPageEvent
 import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.SoundSampleButton
 import net.kyori.adventure.text.Component
 import org.bukkit.Sound
-import org.bukkit.event.EventHandler
+import org.bukkit.entity.Player
 import org.bukkit.event.Listener
 
 object SoundSampleMenu: Menu(Component.text("Sound Sample"), Sound.values().size), Listener {
@@ -24,11 +23,9 @@ object SoundSampleMenu: Menu(Component.text("Sound Sample"), Sound.values().size
         }
     }
 
-    @EventHandler
-    fun onChangePage(event: ChangeMenuPageEvent) {
-        if (!event.isNext) return
-        if (event.menu != this) return
-        val nextPage = event.nextPage - 1
+    override fun changePageEvent(nextPage: Int, totalPage: Int, isNext: Boolean, player: Player) {
+        println("change page sound")
+        if (!isNext) return
         if (createdPages.contains(nextPage)) return
         soundList[nextPage].forEachIndexed { index, sound ->
             setMenuButton(SoundSampleButton(sound), nextPage, index % menuContentSize)

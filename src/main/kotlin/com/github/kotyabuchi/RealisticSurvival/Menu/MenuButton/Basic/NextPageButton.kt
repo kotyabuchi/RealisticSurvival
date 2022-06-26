@@ -1,8 +1,6 @@
 package com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.Basic
 
 import com.github.kotyabuchi.RealisticSurvival.CustomModelData
-import com.github.kotyabuchi.RealisticSurvival.Event.ChangeMenuPageEvent
-import com.github.kotyabuchi.RealisticSurvival.Event.CustomEventCaller
 import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.ButtonItem
 import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.MenuButton
 import com.github.kotyabuchi.RealisticSurvival.System.Player.getStatus
@@ -21,8 +19,7 @@ class NextPageButton(private val page: Int, private val totalPage: Int): MenuBut
         val player = event.whoClicked as? Player ?: return
         val status = player.getStatus()
         status.getOpeningMenu()?.let { menu ->
-            val changeMenuPageEvent = ChangeMenuPageEvent(menu, page, totalPage, true, player)
-            CustomEventCaller.callEvent(changeMenuPageEvent)
+            menu.changePageEvent(page - 1, totalPage, true, player)
             status.nextPage()
         }
     }

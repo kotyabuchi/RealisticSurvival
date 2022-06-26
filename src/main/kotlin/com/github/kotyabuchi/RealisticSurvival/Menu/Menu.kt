@@ -151,6 +151,8 @@ abstract class Menu(val title: Component, contentAmount: Int, vararg frames: Fra
 
     open fun doItemClickEvent(slot: Int, event: InventoryClickEvent, page: Int = 0) {}
 
+    open fun changePageEvent(nextPage: Int, totalPage: Int, isNext: Boolean, player: Player) {}
+
     open fun doCloseMenuAction(player: Player) {}
 
     fun playClickedButtonSound(button: MenuButton, player: Player) {
