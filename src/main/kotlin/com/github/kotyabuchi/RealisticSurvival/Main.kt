@@ -73,6 +73,7 @@ class Main: JavaPlugin() {
             StarterItem,
             StoneGenerator,
             TombStone,
+            UtilityRecipe,
             WorldGuard,
         )
     }
@@ -89,6 +90,7 @@ class Main: JavaPlugin() {
         DataBaseManager.startAutoSaveScheduler()
         registerEvents()
         registerCommands()
+        UtilityRecipe.registerRecipe()
         println("Enabled")
     }
 
