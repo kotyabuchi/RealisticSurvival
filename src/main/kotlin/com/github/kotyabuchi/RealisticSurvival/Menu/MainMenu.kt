@@ -1,6 +1,6 @@
 package com.github.kotyabuchi.RealisticSurvival.Menu
 
-import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.Home.HomeButton
+import com.github.kotyabuchi.RealisticSurvival.Menu.Home.Button.HomeButton
 import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.Job.JobButton
 import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.SoundMenuButton
 import net.kyori.adventure.text.Component

@@ -1,6 +1,6 @@
 package com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton
 
-import com.github.kotyabuchi.RealisticSurvival.Menu.HomeMenu
+import com.github.kotyabuchi.RealisticSurvival.Menu.Home.HomeMenu
 import com.github.kotyabuchi.RealisticSurvival.System.Player.getStatus
 import com.github.kotyabuchi.RealisticSurvival.System.TombStone
 import net.kyori.adventure.text.Component

@@ -1,6 +1,6 @@
-package com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.Home
+package com.github.kotyabuchi.RealisticSurvival.Menu.Home.Button
 
-import com.github.kotyabuchi.RealisticSurvival.Menu.HomeMenu
+import com.github.kotyabuchi.RealisticSurvival.Menu.Home.HomeMenu
 import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.ButtonItem
 import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.MenuButton
 import com.github.kotyabuchi.RealisticSurvival.System.Player.getStatus

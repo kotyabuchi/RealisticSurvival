@@ -1,12 +1,12 @@
-package com.github.kotyabuchi.RealisticSurvival.Menu
+package com.github.kotyabuchi.RealisticSurvival.Menu.Home
 
 import com.github.kotyabuchi.RealisticSurvival.CustomModelData
-import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.Home.AddHomeButton
-import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.Home.HomeInfoButton
+import com.github.kotyabuchi.RealisticSurvival.Menu.Menu
+import com.github.kotyabuchi.RealisticSurvival.Menu.Home.Button.CreateHomeButton
+import com.github.kotyabuchi.RealisticSurvival.Menu.Home.Button.HomeInfoButton
 import com.github.kotyabuchi.RealisticSurvival.System.Player.Home
 import com.github.kotyabuchi.RealisticSurvival.System.Player.getStatus
 import com.github.kotyabuchi.RealisticSurvival.System.TombStone
-import com.github.kotyabuchi.RealisticSurvival.Utility.DataBaseManager
 import com.github.kotyabuchi.RealisticSurvival.Utility.toInt
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
@@ -16,7 +16,10 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.persistence.PersistentDataType
 
-class HomeMenu(val player: Player, hasBed: Boolean, private val hasLastDeath: Boolean): Menu(Component.text("${player.name}'s Homes"), 1 + hasBed.toInt() + hasLastDeath.toInt() + player.getStatus().homes.size, FrameType.TOP, FrameType.SIDE) {
+class HomeMenu(val player: Player, hasBed: Boolean, private val hasLastDeath: Boolean): Menu(Component.text("${player.name}'s Homes"), 1 + hasBed.toInt() + hasLastDeath.toInt() + player.getStatus().homes.size,
+    FrameType.TOP,
+    FrameType.SIDE
+) {
 
     init {
         createMenu()
@@ -48,7 +51,7 @@ class HomeMenu(val player: Player, hasBed: Boolean, private val hasLastDeath: Bo
             setMenuButton(HomeInfoButton(player, it), page)
         }
         repeat(page + 1) {
-            setMenuButton(AddHomeButton(), it, menuSize - 5)
+            setMenuButton(CreateHomeButton(), it, menuSize - 5)
         }
     }
 
@@ -63,11 +66,12 @@ class HomeMenu(val player: Player, hasBed: Boolean, private val hasLastDeath: Bo
             if (event.isLeftClick) {
                 getButton(slot, page)?.clickEvent(event)
             } else if (event.isRightClick) {
-                val homeId = home.homeId ?: return
-                DataBaseManager.removeHome(homeId)
-                status.homes.remove(home)
-                refresh()
-                status.openMenu(this, 0, true)
+                home.homeId?.let { status.openMenu(HomeSettingMenu(home, it)) }
+//                val homeId = home.homeId ?: return
+//                DataBaseManager.removeHome(homeId)
+//                status.homes.remove(home)
+//                refresh()
+//                status.openMenu(this, 0, true)
             }
         } else {
             super.doButtonClickEvent(slot, event, page)
