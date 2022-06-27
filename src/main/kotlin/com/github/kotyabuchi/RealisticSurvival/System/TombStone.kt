@@ -38,7 +38,6 @@ object TombStone: Listener, KoinComponent {
     private val tombStoneFile = File(main.dataFolder, "TombStones.json")
     private val tombStones: JsonObject
     private val tombStoneKey = NamespacedKey(main, "TombStone")
-    val lastDeathPointKey = NamespacedKey(main, "LastDeathPoint")
 
     val tombStoneItem = ItemStack(Material.OAK_SIGN)
 
@@ -122,7 +121,6 @@ object TombStone: Listener, KoinComponent {
         }
         event.drops.clear()
         tombStones.set(player.uniqueId.toString(), playersTombStones)
-        player.persistentDataContainer.set(lastDeathPointKey, PersistentDataType.STRING, "${tombStoneLoc.world.name},${tombStoneLoc.x},${tombStoneLoc.y},${tombStoneLoc.z}")
     }
 
     @EventHandler
@@ -172,6 +170,11 @@ object TombStone: Listener, KoinComponent {
         return getPlayerTombStones(player.uniqueId)
     }
 
+    fun hasTombStone(player: Player): Boolean {
+        val tombStones = getPlayerTombStones(player)
+        return tombStones != null && !tombStones.isEmpty
+    }
+
     fun getTombStoneItems(playerUUID: UUID, tombStoneUUID: UUID): TombStoneItem? {
         val tombStoneJson = getPlayerTombStones(playerUUID)?.get(tombStoneUUID.toString())?.asObject() ?: return null
         return TombStoneItem(tombStoneJson)
@@ -219,7 +222,6 @@ object TombStone: Listener, KoinComponent {
                         }
 
                         removeTombStone(player, tombStone)
-                        player.persistentDataContainer.remove(lastDeathPointKey)
 
                         cancel()
                     }
