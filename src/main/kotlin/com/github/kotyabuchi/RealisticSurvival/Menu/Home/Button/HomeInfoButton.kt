@@ -1,6 +1,7 @@
 package com.github.kotyabuchi.RealisticSurvival.Menu.Home.Button
 
 import com.github.kotyabuchi.RealisticSurvival.CustomModelData
+import com.github.kotyabuchi.RealisticSurvival.Menu.Home.HomeSettingMenu
 import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.ButtonItem
 import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.MenuButton
 import com.github.kotyabuchi.RealisticSurvival.System.Player.Home
@@ -31,13 +32,14 @@ class HomeInfoButton(val player: Player, val home: Home, modelData: CustomModelD
         lore.add(Component.text("Y: ${location.y}").normalize())
         lore.add(Component.text("Z: ${location.z}").normalize())
         lore.add(Component.text("Yaw: ${location.yaw}").normalize())
+        if (home.isPublic) lore.add(Component.text("Public").normalize(NamedTextColor.GREEN))
         lore.add(Component.empty())
         lore.add(Component.text("Left Click: Teleport to location").normalize(NamedTextColor.GOLD))
-        lore.add(Component.text("Right Click: Remove home").normalize(NamedTextColor.RED))
+        if (player.isOp || player.uniqueId == home.creator) lore.add(Component.text("Right Click: Edit setting").normalize(NamedTextColor.GREEN))
         menuIcon = ButtonItem(home.icon, Component.text(home.name), lore = lore, modelData = modelData)
     }
 
-    override fun clickEvent(event: InventoryClickEvent) {
+    override fun leftClickEvent(event: InventoryClickEvent) {
         val player = event.whoClicked as? Player ?: return
         val playerStatus = player.getStatus()
         val world = player.world
@@ -66,5 +68,10 @@ class HomeInfoButton(val player: Player, val home: Home, modelData: CustomModelD
         } else {
             player.sendMessage(Component.text("テレポートに失敗しました").normalize(NamedTextColor.RED))
         }
+    }
+
+    override fun rightClickEvent(event: InventoryClickEvent) {
+        val status = (event.whoClicked as? Player)?.getStatus() ?: return
+        if (player.isOp || player.uniqueId == home.creator) home.homeId?.let { status.openMenu(HomeSettingMenu(home)) }
     }
 }

@@ -31,7 +31,7 @@ class JobInfoButton(private val jobType: JobType, player: Player): MenuButton() 
         menuIcon = ButtonItem(jobType.getIcon(), Component.text(jobType.regularName), lore = lore)
     }
 
-    override fun clickEvent(event: InventoryClickEvent) {
+    override fun leftClickEvent(event: InventoryClickEvent) {
         val player = event.whoClicked as? Player ?: return
         player.getStatus().openMenu(SkillInfoMenu(player, jobType.jobClass, event.isRightClick))
     }

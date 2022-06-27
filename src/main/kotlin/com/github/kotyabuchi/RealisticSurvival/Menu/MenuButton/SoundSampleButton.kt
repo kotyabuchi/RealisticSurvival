@@ -30,7 +30,7 @@ class SoundSampleButton(private val sound: Sound): MenuButton() {
         clickSound = null
     }
 
-    override fun clickEvent(event: InventoryClickEvent) {
+    override fun leftClickEvent(event: InventoryClickEvent) {
         val player = event.whoClicked as? Player ?: return
         when (event.click) {
             ClickType.LEFT -> {

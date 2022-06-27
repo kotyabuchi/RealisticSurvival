@@ -1,26 +1,26 @@
 package com.github.kotyabuchi.RealisticSurvival.Menu.Home.Button
 
-import com.github.kotyabuchi.RealisticSurvival.Menu.Home.HomeMenu
+import com.github.kotyabuchi.RealisticSurvival.Menu.Menu
 import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.ButtonItem
 import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.MenuButton
+import com.github.kotyabuchi.RealisticSurvival.System.Player.Home
+import com.github.kotyabuchi.RealisticSurvival.System.Player.HomePoint
 import com.github.kotyabuchi.RealisticSurvival.System.Player.getStatus
-import com.github.kotyabuchi.RealisticSurvival.System.TombStone
 import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.persistence.PersistentDataType
 
-object HomeButton: MenuButton() {
+class ChangePublicButton(private val home: Home, private val menu: Menu): MenuButton() {
 
     init {
-        menuIcon = ButtonItem(Material.ENDER_PEARL, Component.text("Homes"))
+        menuIcon = ButtonItem(Material.FILLED_MAP, Component.text("Change to " + (if (home.isPublic) "private" else "public")))
     }
 
     override fun leftClickEvent(event: InventoryClickEvent) {
         val player = event.whoClicked as? Player ?: return
-        val hasBed = player.bedSpawnLocation != null
-        val hasLastDeath = player.persistentDataContainer.has(TombStone.lastDeathPointKey, PersistentDataType.STRING)
-        player.getStatus().openMenu(HomeMenu(player, hasBed, hasLastDeath))
+        HomePoint.changeVisibility(player, home, !home.isPublic)
+        menu.refresh()
+        player.getStatus().openMenu(menu, 0, true)
     }
 }

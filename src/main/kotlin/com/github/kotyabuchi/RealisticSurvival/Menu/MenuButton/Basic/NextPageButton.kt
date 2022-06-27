@@ -15,7 +15,7 @@ class NextPageButton(private val page: Int, private val totalPage: Int): MenuBut
         menuIcon = ButtonItem(Material.ARROW, Component.text("Next page $page / $totalPage"), modelData = CustomModelData.ARROW_RIGHT)
     }
 
-    override fun clickEvent(event: InventoryClickEvent) {
+    override fun leftClickEvent(event: InventoryClickEvent) {
         val player = event.whoClicked as? Player ?: return
         val status = player.getStatus()
         status.getOpeningMenu()?.let { menu ->

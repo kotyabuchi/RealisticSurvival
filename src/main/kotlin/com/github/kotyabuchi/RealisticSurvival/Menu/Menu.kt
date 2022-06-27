@@ -5,6 +5,7 @@ import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.Basic.BackPrevBut
 import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.Basic.BlankButton
 import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.Basic.NextPageButton
 import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.MenuButton
+import com.github.kotyabuchi.RealisticSurvival.System.Player.getStatus
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
@@ -68,6 +69,10 @@ abstract class Menu(val title: Component, contentAmount: Int, vararg frames: Fra
             }
         }
         return this
+    }
+
+    fun backToPrevMenu(player: Player) {
+        prevMenu?.let { player.getStatus().openMenu(it, prev = true) }
     }
 
     fun setMenuButton(menuButton: MenuButton, page: Int = 0, slots: IntRange, checkNextPage: Boolean = true): Menu {
@@ -141,10 +146,10 @@ abstract class Menu(val title: Component, contentAmount: Int, vararg frames: Fra
         return buttonItems[page].containsKey(slot)
     }
 
-    open fun doButtonClickEvent(slot: Int, event: InventoryClickEvent, page: Int = 0) {
+    open fun doButtonClickEvent(slot: Int, button: MenuButton, event: InventoryClickEvent, page: Int = 0) {
         createPageIfNeed(page)
-        val button = getButton(slot, page) ?: return
-        button.clickEvent(event)
+        if (event.isLeftClick) button.leftClickEvent(event)
+        if (event.isRightClick) button.rightClickEvent(event)
         val player = event.whoClicked as? Player ?: return
         playClickedButtonSound(button, player)
     }

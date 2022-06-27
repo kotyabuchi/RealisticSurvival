@@ -120,8 +120,8 @@ object MenuController: Listener, KoinComponent {
         val openingPage = playerStatus.getOpeningPage()
         if (clickedInventory == openingMenu.getInventory(openingPage)) {
             event.isCancelled = true
-            if (openingMenu.hasButton(event.rawSlot, openingPage)) {
-                openingMenu.doButtonClickEvent(event.rawSlot, event, openingPage)
+            openingMenu.getButton(event.rawSlot, openingPage)?.let { button ->
+                openingMenu.doButtonClickEvent(event.rawSlot, button, event, openingPage)
             }
         } else if (openingMenu.disallowPlayerInventoryClick && clickedInventory is PlayerInventory) {
             event.isCancelled = true
@@ -136,7 +136,7 @@ object MenuController: Listener, KoinComponent {
         if (status.openMenuWithCloseMenu) {
             status.openMenuWithCloseMenu = false
         } else {
-            status.closeMenu()
+            status.closeMenu(false)
         }
     }
 }

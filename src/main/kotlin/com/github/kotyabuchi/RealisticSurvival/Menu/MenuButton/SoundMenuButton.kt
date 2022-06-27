@@ -14,7 +14,7 @@ object SoundMenuButton: MenuButton() {
         menuIcon = ButtonItem(Material.NOTE_BLOCK, Component.text("Sound Sample").normalize())
     }
 
-    override fun clickEvent(event: InventoryClickEvent) {
+    override fun leftClickEvent(event: InventoryClickEvent) {
         val player = event.whoClicked as? Player ?: return
         player.getStatus().openMenu(SoundSampleMenu)
     }

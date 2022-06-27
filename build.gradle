@@ -32,7 +32,7 @@ dependencies {
     api 'io.insert-koin:koin-core:3.2.0'
     api 'org.apache.commons:commons-lang3:3.12.0'
     api 'org.xerial:sqlite-jdbc:3.36.0.3'
-//    api files('anvilgui-1.5.3-20220609.032626-7.jar')
+    api 'net.wesjd:anvilgui:1.5.3-SNAPSHOT'
     api 'de.tr7zw:item-nbt-api-plugin:2.10.0'
     api 'com.eclipsesource.minimal-json:minimal-json:0.9.5'
 }

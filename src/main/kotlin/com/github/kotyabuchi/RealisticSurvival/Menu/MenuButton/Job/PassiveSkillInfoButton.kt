@@ -40,7 +40,7 @@ class PassiveSkillInfoButton(val player: Player, val skill: PassiveSkill, val me
         menuIcon = ButtonItem(Material.WRITABLE_BOOK, Component.text(skill.displayName).normalize(), lore = lore)
     }
 
-    override fun clickEvent(event: InventoryClickEvent) {
+    override fun leftClickEvent(event: InventoryClickEvent) {
         skill.toggleSkill(player, player.getJobLevel(skill.ownerJob))
         menu.refresh()
         player.getStatus().openMenu(menu, 0, true)

@@ -1,26 +1,27 @@
-package com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.Basic
+package com.github.kotyabuchi.RealisticSurvival.Menu.Home.Button
 
 import com.github.kotyabuchi.RealisticSurvival.CustomModelData
 import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.ButtonItem
 import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.MenuButton
+import com.github.kotyabuchi.RealisticSurvival.System.Player.HomePoint
 import com.github.kotyabuchi.RealisticSurvival.System.Player.getStatus
+import com.github.kotyabuchi.RealisticSurvival.Utility.normalize
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class BackPageButton(private val page: Int, private val totalPage: Int): MenuButton() {
+class CreateHomeButton: MenuButton() {
 
     init {
-        menuIcon = ButtonItem(Material.ARROW, Component.text("Back page $page / $totalPage"), modelData = CustomModelData.ARROW_LEFT)
+        menuIcon = ButtonItem(Material.ENDER_EYE, Component.text("Create Home").normalize(NamedTextColor.GREEN), modelData = CustomModelData.PLUS)
     }
 
     override fun leftClickEvent(event: InventoryClickEvent) {
         val player = event.whoClicked as? Player ?: return
-        val status = player.getStatus()
-        status.getOpeningMenu()?.let { menu ->
-            menu.changePageEvent(page - 1, totalPage, false, player)
-            status.backPage()
-        }
+        player.getStatus().closeMenu()
+        HomePoint.openCreateHomeUI(player)
     }
 }
+

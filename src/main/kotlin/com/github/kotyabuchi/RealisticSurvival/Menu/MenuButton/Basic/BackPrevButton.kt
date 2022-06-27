@@ -16,8 +16,9 @@ class BackPrevButton(private val prevMenu: Menu): MenuButton() {
         menuIcon = ButtonItem(Material.ARROW, Component.text("Back to ").append(prevMenu.title), modelData = CustomModelData.RETURN)
     }
 
-    override fun clickEvent(event: InventoryClickEvent) {
+    override fun leftClickEvent(event: InventoryClickEvent) {
         val player = event.whoClicked as? Player ?: return
+        prevMenu.refresh()
         player.getStatus().openMenu(prevMenu, prev = true)
     }
 }

@@ -15,7 +15,7 @@ object WorldsButton: MenuButton() {
         menuIcon = ButtonItem(Material.GRASS_BLOCK, Component.text("Worlds"))
     }
 
-    override fun clickEvent(event: InventoryClickEvent) {
+    override fun leftClickEvent(event: InventoryClickEvent) {
         val player = event.whoClicked as? Player ?: return
         val hasBed = player.bedSpawnLocation != null
         val hasLastDeath = player.persistentDataContainer.has(TombStone.lastDeathPointKey, PersistentDataType.STRING)

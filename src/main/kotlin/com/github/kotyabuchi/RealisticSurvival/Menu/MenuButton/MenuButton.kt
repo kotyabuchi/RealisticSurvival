@@ -8,5 +8,6 @@ open class MenuButton {
     lateinit var menuIcon: ItemStack
     var clickSound: Sound? = Sound.UI_BUTTON_CLICK
 
-    open fun clickEvent(event: InventoryClickEvent) {}
+    open fun leftClickEvent(event: InventoryClickEvent) {}
+    open fun rightClickEvent(event: InventoryClickEvent) {}
 }

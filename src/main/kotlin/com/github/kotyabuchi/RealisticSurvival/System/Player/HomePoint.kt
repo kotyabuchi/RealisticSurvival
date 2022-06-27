@@ -1,55 +1,84 @@
 package com.github.kotyabuchi.RealisticSurvival.System.Player
 
-import com.github.kotyabuchi.RealisticSurvival.Utility.*
-import io.papermc.paper.event.player.AsyncChatEvent
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
+import com.github.kotyabuchi.RealisticSurvival.Main
+import com.github.kotyabuchi.RealisticSurvival.Utility.DataBaseManager
+import com.github.kotyabuchi.RealisticSurvival.Utility.sendErrorMessage
+import com.github.kotyabuchi.RealisticSurvival.Utility.sendSuccessMessage
+import com.github.kotyabuchi.RealisticSurvival.Utility.toInt
+import net.wesjd.anvilgui.AnvilGUI
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.Player
-import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.player.PlayerMoveEvent
+import org.bukkit.inventory.ItemStack
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import java.sql.DriverManager
 import java.sql.PreparedStatement
 import java.sql.SQLException
+import java.util.*
 
-object HomePoint: Listener {
+object HomePoint: Listener, KoinComponent {
 
-    private val homeNameTypingPlayers = mutableSetOf<Player>()
+    private val main: Main by inject()
+    private val publicHomes = mutableListOf<Home>()
 
-    @EventHandler
-    fun onType(event: AsyncChatEvent) {
-        val player = event.player
-        if (!homeNameTypingPlayers.contains(player)) return
-        homeNameTypingPlayers.remove(player)
-        val homeName = PlainTextComponentSerializer.plainText().serialize(event.originalMessage())
-        addHome(player, homeName, player.location)
-        player.sendSuccessMessage("ホームポイント[${homeName}]を追加しました。")
-        event.isCancelled = true
+    init {
+        loadPublicHome()
     }
 
-    @EventHandler
-    fun onMove(event: PlayerMoveEvent) {
-        val player = event.player
-        if (!event.hasExplicitlyChangedPosition()) return
-        if (!homeNameTypingPlayers.contains(player)) return
-        homeNameTypingPlayers.remove(player)
+    private fun loadPublicHome() {
+        try {
+            DriverManager.getConnection(DataBaseManager.dbHeader).use { conn ->
+                val pstmt = conn.prepareStatement("SELECT * FROM homes WHERE is_public = 1")
+                val homeRs = pstmt.executeQuery()
 
-        player.sendErrorMessage("ホームポイントの追加をキャンセルしました。")
-        player.playErrorSound()
+                while (homeRs.next()) {
+                    val homeId = homeRs.getInt("home_id")
+                    val homeName = homeRs.getString("home_name")
+                    val world = main.server.getWorld(homeRs.getString("world"))
+                    val x = homeRs.getDouble("x")
+                    val y = homeRs.getDouble("y")
+                    val z = homeRs.getDouble("z")
+                    val yaw = homeRs.getFloat("yaw")
+                    val icon = Material.valueOf(homeRs.getString("icon") ?: "ENDER_PEARL")
+                    val creator = UUID.fromString(homeRs.getString("uuid"))
+                    val isPublic = (homeRs.getInt("is_public") == 1)
+                    world?.let {
+                        publicHomes.add(Home(homeId, homeName, world, x, y, z, yaw, icon, creator, isPublic))
+                    }
+                }
+            }
+        } catch (e: SQLException) {
+            e.printStackTrace()
+        }
     }
 
-    fun addHomeNameTypingPlayer(player: Player) {
-        homeNameTypingPlayers.add(player)
-        player.sendMessage(Component.text("ホームポイントの名前をチャットで入力してください。"))
+    fun openCreateHomeUI(player: Player) {
+        var createdHome = false
+        val homeItem = ItemStack(Material.NAME_TAG)
+        AnvilGUI.Builder()
+            .itemLeft(homeItem)
+            .text(" ")
+            .title("Create Home")
+            .plugin(main)
+            .onClose {
+                if (!createdHome) player.sendErrorMessage("ホームポイントの作成をキャンセルしました。")
+            }
+            .onComplete { _, text ->
+                val homeName = text.trim()
+                if (homeName != "") {
+                    createHome(player, homeName, player.location)
+                    createdHome = true
+                }
+                AnvilGUI.Response.close()
+            }
+            .open(player)
     }
 
-    private fun addHome(player: Player, homeName: String, location: Location): Int? {
-        var pstmt: PreparedStatement
-
+    private fun createHome(player: Player, homeName: String, location: Location) {
         val block = location.block.location.add(.5, .0, .5)
-        val world = location.world ?: return null
+        val world = location.world ?: return
         val worldName = world.name
         val x = block.x
         val y = location.y
@@ -57,7 +86,7 @@ object HomePoint: Listener {
         val yaw = location.yaw
         try {
             DriverManager.getConnection(DataBaseManager.dbHeader).use { conn ->
-                pstmt = conn.prepareStatement("INSERT INTO homes(uuid, home_name, world, x, y, z, yaw, icon) VALUES (?,?,?,?,?,?,?,?)")
+                val pstmt = conn.prepareStatement("INSERT INTO homes(uuid, home_name, world, x, y, z, yaw, icon) VALUES (?,?,?,?,?,?,?,?)")
                 pstmt.setString(1, player.uniqueId.toString())
                 pstmt.setString(2, homeName)
                 pstmt.setString(3, worldName)
@@ -71,13 +100,108 @@ object HomePoint: Listener {
                 val rs = conn.createStatement().executeQuery("SELECT LAST_INSERT_ROWID()")
                 if (rs.next()) {
                     val homeId = rs.getInt("LAST_INSERT_ROWID()")
-                    player.getStatus().homes.add(Home(homeId, homeName, world, x, y, z, yaw, Material.ENDER_PEARL))
-                    return homeId
+                    player.getStatus().homes.add(Home(homeId, homeName, world, x, y, z, yaw, Material.ENDER_PEARL, player.uniqueId))
                 }
+                player.sendSuccessMessage("ホームポイント[${homeName}]を作成しました。")
             }
         } catch (e: SQLException) {
             e.printStackTrace()
         }
-        return null
+    }
+
+    fun openRenameHomeUI(player: Player, home: Home) {
+        var renamed = false
+        val homeItem = ItemStack(Material.NAME_TAG)
+        AnvilGUI.Builder()
+            .itemLeft(homeItem)
+            .text(" ")
+            .title("Rename Home")
+            .plugin(main)
+            .onClose {
+                if (!renamed) player.sendErrorMessage("ホームポイントのリネームをキャンセルしました。")
+            }
+            .onComplete { _, text ->
+                val homeName = text.trim()
+                if (homeName != "") {
+                    renameHome(player, home, homeName)
+                    renamed = true
+                }
+                AnvilGUI.Response.close()
+            }
+            .open(player)
+    }
+
+    private fun renameHome(player: Player, home: Home, newName: String) {
+        home.homeId?.let { id ->
+            try {
+                DriverManager.getConnection(DataBaseManager.dbHeader).use { conn ->
+                    val pstmt = conn.prepareStatement("UPDATE homes SET home_name = ? WHERE home_id = ?")
+                    pstmt.setString(1, newName)
+                    pstmt.setInt(2, id)
+                    pstmt.executeUpdate()
+
+                    home.name = newName
+                    player.sendSuccessMessage("名前を変更しました。")
+                }
+            } catch (e: SQLException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun changeVisibility(player: Player, home: Home, changeValue: Boolean) {
+        home.homeId?.let { id ->
+            if (!player.isOp && home.creator != player.uniqueId) {
+                player.sendErrorMessage("作成者のみ公開設定を変更できます。")
+                return
+            }
+            try {
+                DriverManager.getConnection(DataBaseManager.dbHeader).use { conn ->
+                    val pstmt = conn.prepareStatement("UPDATE homes SET is_public = ? WHERE home_id = ?")
+                    pstmt.setInt(1, changeValue.toInt())
+                    pstmt.setInt(2, id)
+                    pstmt.executeUpdate()
+
+                    home.isPublic = changeValue
+                    player.sendSuccessMessage("[${home.name}]を" + (if (changeValue) "公開" else "非公開") + "に変更しました。")
+                }
+            } catch (e: SQLException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun changeIcon(home: Home, newIcon: Material) {
+        home.homeId?.let { id ->
+            try {
+                DriverManager.getConnection(DataBaseManager.dbHeader).use { conn ->
+                    val pstmt = conn.prepareStatement("UPDATE homes SET icon = ? WHERE home_id = ?")
+                    pstmt.setString(1, newIcon.name)
+                    pstmt.setInt(2, id)
+                    pstmt.executeUpdate()
+
+                    home.changeIcon(newIcon)
+                }
+            } catch (e: SQLException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun removeHome(player: Player, home: Home) {
+        home.homeId?.let { id ->
+            try {
+                DriverManager.getConnection(DataBaseManager.dbHeader).use { conn ->  //try-with-resources
+                    val pstmt = conn.prepareStatement("DELETE FROM homes WHERE home_id = ?")
+                    pstmt.setInt(1, id)
+                    pstmt.execute()
+
+                    player.getStatus().homes.remove(home)
+                    player.sendSuccessMessage("[${home.name}]を削除しました。")
+                }
+            } catch (e: SQLException) {
+                e.printStackTrace()
+            }
+        }
     }
 }

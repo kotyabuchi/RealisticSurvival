@@ -4,6 +4,7 @@ import com.github.kotyabuchi.RealisticSurvival.CustomModelData
 import com.github.kotyabuchi.RealisticSurvival.Menu.Menu
 import com.github.kotyabuchi.RealisticSurvival.Menu.Home.Button.CreateHomeButton
 import com.github.kotyabuchi.RealisticSurvival.Menu.Home.Button.HomeInfoButton
+import com.github.kotyabuchi.RealisticSurvival.Menu.MenuButton.MenuButton
 import com.github.kotyabuchi.RealisticSurvival.System.Player.Home
 import com.github.kotyabuchi.RealisticSurvival.System.Player.getStatus
 import com.github.kotyabuchi.RealisticSurvival.System.TombStone
@@ -55,26 +56,20 @@ class HomeMenu(val player: Player, hasBed: Boolean, private val hasLastDeath: Bo
         }
     }
 
-    override fun doButtonClickEvent(slot: Int, event: InventoryClickEvent, page: Int) {
-        createPageIfNeed(page)
-        val button = getButton(slot, page)
-        if (button is HomeInfoButton) {
-            val player = event.whoClicked as? Player ?: return
-            playClickedButtonSound(button, player)
-            val status = player.getStatus()
-            val home = button.home
-            if (event.isLeftClick) {
-                getButton(slot, page)?.clickEvent(event)
-            } else if (event.isRightClick) {
-                home.homeId?.let { status.openMenu(HomeSettingMenu(home, it)) }
-//                val homeId = home.homeId ?: return
-//                DataBaseManager.removeHome(homeId)
-//                status.homes.remove(home)
-//                refresh()
-//                status.openMenu(this, 0, true)
-            }
-        } else {
-            super.doButtonClickEvent(slot, event, page)
-        }
-    }
+//    override fun doButtonClickEvent(slot: Int, button: MenuButton, event: InventoryClickEvent, page: Int) {
+//        createPageIfNeed(page)
+//        if (button is HomeInfoButton) {
+//            val player = event.whoClicked as? Player ?: return
+//            playClickedButtonSound(button, player)
+//            val status = player.getStatus()
+//            val home = button.home
+//            if (event.isLeftClick) {
+//                getButton(slot, page)?.leftClickEvent(event)
+//            } else if (event.isRightClick) {
+//                home.homeId?.let { status.openMenu(HomeSettingMenu(home, it)) }
+//            }
+//        } else {
+//            super.doButtonClickEvent(slot, button, event, page)
+//        }
+//    }
 }

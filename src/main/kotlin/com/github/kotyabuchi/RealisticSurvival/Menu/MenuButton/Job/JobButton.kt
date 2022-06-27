@@ -15,7 +15,7 @@ object JobButton: MenuButton() {
         menuIcon = ButtonItem(Material.DIAMOND_PICKAXE, Component.text("JobInfo"))
     }
 
-    override fun clickEvent(event: InventoryClickEvent) {
+    override fun leftClickEvent(event: InventoryClickEvent) {
         val player = event.whoClicked as? Player ?: return
         player.getStatus().openMenu(JobMenu(player))
     }

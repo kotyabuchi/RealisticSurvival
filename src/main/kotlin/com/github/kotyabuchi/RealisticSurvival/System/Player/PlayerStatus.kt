@@ -48,10 +48,11 @@ data class PlayerStatus(val player: Player) {
     private fun getManaTitle(): Component = Component.text("\u25C6").normalize(NamedTextColor.AQUA).append(Component.text("Mana ${mana.floor1Digits()}/${maxMana.floor1Digits()} +${manaRegen.floor2Digits()}"))
     private fun getManaProgress(): Float = max(0.0, min(1.0, mana / maxMana)).toFloat()
 
-    fun closeMenu() {
+    fun closeMenu(closeInventory: Boolean = true) {
         openingMenu?.doCloseMenuAction(player)
         openingMenuPage = 0
         openingMenu = null
+        if (closeInventory) player.closeInventory()
     }
 
     fun setOpeningMenu(menu: Menu) {
