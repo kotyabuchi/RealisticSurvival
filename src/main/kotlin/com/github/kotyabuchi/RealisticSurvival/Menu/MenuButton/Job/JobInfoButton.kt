@@ -35,4 +35,9 @@ class JobInfoButton(private val jobType: JobType, player: Player): MenuButton() 
         val player = event.whoClicked as? Player ?: return
         player.getStatus().openMenu(SkillInfoMenu(player, jobType.jobClass, event.isRightClick))
     }
+
+    override fun rightClickEvent(event: InventoryClickEvent) {
+        val player = event.whoClicked as? Player ?: return
+        player.getStatus().openMenu(SkillInfoMenu(player, jobType.jobClass, event.isRightClick))
+    }
 }
