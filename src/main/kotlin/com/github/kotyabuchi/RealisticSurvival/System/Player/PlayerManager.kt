@@ -8,7 +8,6 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
-import org.bukkit.scheduler.BukkitRunnable
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.util.*
@@ -30,21 +29,11 @@ object PlayerManager: Listener, KoinComponent {
     val playerStatusMap = mutableMapOf<UUID, PlayerStatus>()
 
     init {
-//        val status = DataBaseManager.loadPlayerStatus(*main.server.onlinePlayers.toTypedArray())
-//
-//        status.forEach {
-//            playerStatusMap[it.player.uniqueId] = it
-//            it.showManaIndicator()
-//        }
-//
-//        object : BukkitRunnable() {
-//            override fun run() {
-//                playerStatusMap.values.forEach {
-//                    it.increaseMana(it.manaRegen)
-//                    it.refreshManaIndicator()
-//                }
-//            }
-//        }.runTaskTimer(main, 0, 10)
+        val status = DataBaseManager.loadPlayerStatus(*main.server.onlinePlayers.toTypedArray())
+
+        status.forEach {
+            playerStatusMap[it.player.uniqueId] = it
+        }
     }
 
     fun hideAllManaIndicator() {
