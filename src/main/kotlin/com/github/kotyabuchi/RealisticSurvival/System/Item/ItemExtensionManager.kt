@@ -1,8 +1,8 @@
 package com.github.kotyabuchi.RealisticSurvival.System.Item
 
 import com.github.kotyabuchi.RealisticSurvival.Event.CustomEventCaller
+import com.github.kotyabuchi.RealisticSurvival.Event.PrepareItemExtensionCraftEvent
 import com.github.kotyabuchi.RealisticSurvival.Item.ItemExtension
-import com.github.kotyabuchi.RealisticSurvival.Utility.findFirst
 import com.github.kotyabuchi.RealisticSurvival.Utility.hasDurability
 import com.github.kotyabuchi.RealisticSurvival.Utility.isArmors
 import org.bukkit.Sound
@@ -50,6 +50,7 @@ object ItemExtensionManager: Listener {
 
     @EventHandler
     fun onCraft(event: PrepareItemCraftEvent) {
+        if (event is PrepareItemExtensionCraftEvent) return
         val inv = event.inventory
         val result = if (event.isRepair) {
             inv.result
@@ -58,7 +59,10 @@ object ItemExtensionManager: Listener {
             recipe.result
         } ?: return
         if (!result.type.hasDurability()) return
-        inv.result = ItemExtension(result).applySetting().itemStack
+        val extensionItemResult = ItemExtension(result).applySetting()
+        val prepareItemExtensionCraftEvent = PrepareItemExtensionCraftEvent(extensionItemResult, inv, event.view, event.isRepair)
+        CustomEventCaller.callEvent(prepareItemExtensionCraftEvent)
+        inv.result = prepareItemExtensionCraftEvent.result.itemStack
     }
 
     @EventHandler
