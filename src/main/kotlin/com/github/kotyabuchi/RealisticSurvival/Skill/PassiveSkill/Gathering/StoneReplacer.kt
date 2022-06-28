@@ -48,6 +48,7 @@ class StoneReplacer(override val ownerJob: GatheringJob) : PassiveSkill {
             return
         }
         event.isCancelled = true
+        ownerJob.addBrokenBlockSet(block)
 
         block.breakBlock(main, player, event.itemStack, event.block, damage = false,
             blockCallBack = {
