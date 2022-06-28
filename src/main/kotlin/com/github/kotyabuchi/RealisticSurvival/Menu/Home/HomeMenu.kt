@@ -39,13 +39,15 @@ class HomeMenu(val player: Player, hasBed: Boolean, private val hasTombStone: Bo
             tombStones?.let {
                 try {
                     val recentTombStone = tombStones.get(tombStones.names().last()).asObject()
-                    val jsonLocation = recentTombStone.get("Location").asObject()
-                    val world = Bukkit.getWorld(UUID.fromString(jsonLocation.getString("World", "")))
-                    val x = jsonLocation.getDouble("X", 0.0)
-                    val y = jsonLocation.getDouble("Y", 0.0)
-                    val z = jsonLocation.getDouble("Z", 0.0)
-                    val tombStoneLocation = Location(world, x, y, z)
-                    setMenuButton(HomeInfoButton(player, Home("Recent TombStone", tombStoneLocation, TombStone.tombStoneItem.type), CustomModelData.TOMB_STONE))
+                    val jsonLocation = recentTombStone.get("Location")?.asObject()
+                    jsonLocation?.let {
+                        val world = Bukkit.getWorld(UUID.fromString(jsonLocation.getString("World", "")))
+                        val x = jsonLocation.getDouble("X", 0.0)
+                        val y = jsonLocation.getDouble("Y", 0.0)
+                        val z = jsonLocation.getDouble("Z", 0.0)
+                        val tombStoneLocation = Location(world, x, y, z)
+                        setMenuButton(HomeInfoButton(player, Home("Recent TombStone", tombStoneLocation, TombStone.tombStoneItem.type), CustomModelData.TOMB_STONE))
+                    }
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }

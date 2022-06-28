@@ -10,6 +10,7 @@ import com.github.kotyabuchi.RealisticSurvival.Utility.consume
 import com.github.kotyabuchi.RealisticSurvival.Utility.normalize
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Particle
@@ -23,6 +24,8 @@ class HomeInfoButton(val player: Player, val home: Home, modelData: CustomModelD
     private val location = Location(home.world, home.x, home.y, home.z, home.yaw, 0f)
 
     init {
+        val playerUUID = player.uniqueId
+        val creatorUUID = home.creator
         val otherWorld = player.world != home.world
 
         val worldColor = if (otherWorld) NamedTextColor.RED else NamedTextColor.WHITE
@@ -32,10 +35,18 @@ class HomeInfoButton(val player: Player, val home: Home, modelData: CustomModelD
         lore.add(Component.text("Y: ${location.y}").normalize())
         lore.add(Component.text("Z: ${location.z}").normalize())
         lore.add(Component.text("Yaw: ${location.yaw}").normalize())
-        if (home.isPublic) lore.add(Component.text("Public").normalize(NamedTextColor.GREEN))
+        if (home.isPublic) {
+            if (creatorUUID == playerUUID) {
+                lore.add(Component.text("Public").normalize(NamedTextColor.GREEN))
+            } else if (creatorUUID != null) {
+                Bukkit.getPlayer(creatorUUID)?.let { creator ->
+                    lore.add(Component.text("CreateBy: ${creator.name}"))
+                }
+            }
+        }
         lore.add(Component.empty())
         lore.add(Component.text("Left Click: Teleport to location").normalize(NamedTextColor.GOLD))
-        if (player.isOp || player.uniqueId == home.creator) lore.add(Component.text("Right Click: Edit setting").normalize(NamedTextColor.GREEN))
+        if (player.isOp || playerUUID == creatorUUID) lore.add(Component.text("Right Click: Edit setting").normalize(NamedTextColor.GREEN))
         menuIcon = ButtonItem(home.icon, Component.text(home.name), lore = lore, modelData = modelData)
     }
 

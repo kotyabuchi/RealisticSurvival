@@ -14,14 +14,13 @@ import org.bukkit.inventory.ItemStack
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.sql.DriverManager
-import java.sql.PreparedStatement
 import java.sql.SQLException
 import java.util.*
 
 object HomePoint: Listener, KoinComponent {
 
     private val main: Main by inject()
-    private val publicHomes = mutableListOf<Home>()
+    private val publicHomes = mutableSetOf<Home>()
 
     init {
         loadPublicHome()
@@ -52,6 +51,10 @@ object HomePoint: Listener, KoinComponent {
         } catch (e: SQLException) {
             e.printStackTrace()
         }
+    }
+
+    fun getPublicHomes(): Set<Home> {
+        return publicHomes
     }
 
     fun openCreateHomeUI(player: Player) {
@@ -163,6 +166,7 @@ object HomePoint: Listener, KoinComponent {
                     pstmt.executeUpdate()
 
                     home.isPublic = changeValue
+                    if (changeValue) publicHomes.add(home) else publicHomes.remove(home)
                     player.sendSuccessMessage("[${home.name}]を" + (if (changeValue) "公開" else "非公開") + "に変更しました。")
                 }
             } catch (e: SQLException) {
