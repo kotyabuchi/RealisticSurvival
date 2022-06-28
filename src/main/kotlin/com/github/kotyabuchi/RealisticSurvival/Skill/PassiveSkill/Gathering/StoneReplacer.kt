@@ -25,6 +25,8 @@ class StoneReplacer(override val ownerJob: GatheringJob) : PassiveSkill {
 
     @EventHandler
     fun onMine(event: BlockMineEvent) {
+        val player = event.player
+
         if (event.isCancelled) return
         if (!isEnabledSkill(event.player)) return
         if (event.isMainBlock && event.isMultiBreak) return
@@ -32,26 +34,26 @@ class StoneReplacer(override val ownerJob: GatheringJob) : PassiveSkill {
         if (!event.isMineAssist) return
 
         val block = event.block
+        val inventory = player.inventory
 
-        val fillBlock = if (block.y <= 0 && event.player.inventory.consume(ItemStack(Material.DEEPSLATE))) {
+        val fillBlock = if (block.y <= 0 && inventory.consume(ItemStack(Material.DEEPSLATE))) {
             Material.DEEPSLATE
-        } else if (block.y <= 0 && event.player.inventory.consume(ItemStack(Material.COBBLED_DEEPSLATE))) {
+        } else if (block.y <= 0 && inventory.consume(ItemStack(Material.COBBLED_DEEPSLATE))) {
             Material.COBBLED_DEEPSLATE
-        } else if (event.player.inventory.consume(ItemStack(Material.STONE))) {
+        } else if (inventory.consume(ItemStack(Material.STONE))) {
             Material.STONE
-        } else if (event.player.inventory.consume(ItemStack(Material.COBBLESTONE))) {
+        } else if (inventory.consume(ItemStack(Material.COBBLESTONE))) {
             Material.COBBLESTONE
         } else {
             return
         }
         event.isCancelled = true
 
-        block.breakBlock(main, event.player, event.itemStack, event.block, damage = false,
+        block.breakBlock(main, player, event.itemStack, event.block, damage = false,
             blockCallBack = {
                 it.type = fillBlock
             },
             dropItemCallBack = {
-                val player = it.player
                 val items = it.items
                 val dropItem = items.map { item -> item.itemStack }
                 player.inventory.addItemOrDrop(player, *dropItem.toTypedArray())

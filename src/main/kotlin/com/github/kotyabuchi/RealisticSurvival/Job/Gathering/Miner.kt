@@ -5,6 +5,7 @@ import com.github.kotyabuchi.RealisticSurvival.Skill.Gathering.MultiBreakMiner
 import com.github.kotyabuchi.RealisticSurvival.Skill.PassiveSkill.Gathering.GemCollector
 import com.github.kotyabuchi.RealisticSurvival.Skill.PassiveSkill.Gathering.HadesBlessing
 import com.github.kotyabuchi.RealisticSurvival.Skill.PassiveSkill.Gathering.StoneReplacer
+import com.github.kotyabuchi.RealisticSurvival.Skill.PassiveSkill.Gathering.TunnelAssist
 import com.github.kotyabuchi.RealisticSurvival.Skill.SkillCommand
 import org.bukkit.Material
 
@@ -39,6 +40,7 @@ object Miner: GatheringJob("MINER") {
         registerSkill(SkillCommand.RLR, MultiBreakMiner)
         registerPassiveSkill(GemCollector(this))
         registerPassiveSkill(StoneReplacer(this))
+        registerPassiveSkill(TunnelAssist(this))
         registerPassiveSkill(HadesBlessing(this))
     }
 }
