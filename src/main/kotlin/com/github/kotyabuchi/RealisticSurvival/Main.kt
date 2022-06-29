@@ -55,6 +55,7 @@ class Main: JavaPlugin() {
                 // Item
             AnvilPressCraft,
             CraftExtension,
+            GlobalMending,
             ItemExtensionManager,
             UUIDForItem,
                 // Player
