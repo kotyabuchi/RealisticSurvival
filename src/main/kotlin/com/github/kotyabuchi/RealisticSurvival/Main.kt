@@ -74,6 +74,7 @@ class Main: JavaPlugin() {
             StarterItem,
             StoneGenerator,
             TombStone,
+            UpgradeSpawner,
             UtilityRecipe,
             WorldGuard,
         )
