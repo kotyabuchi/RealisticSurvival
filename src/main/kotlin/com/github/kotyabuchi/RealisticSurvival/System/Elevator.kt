@@ -69,15 +69,9 @@ object Elevator: Listener {
     private fun teleport(player: Player, block: Block) {
         val playerLoc = player.location
         val blockLoc = block.location
-        val needMana = abs(playerLoc.y - blockLoc.y) / 5.0
-        if (player.getStatus().decreaseMana(needMana)) {
-            player.world.playSound(playerLoc, Sound.BLOCK_PISTON_EXTEND, 1f, 1.5f)
-            playerLoc.y = blockLoc.y
-            player.teleport(playerLoc)
-            player.world.playSound(blockLoc, Sound.BLOCK_PISTON_EXTEND, 1f, 1.5f)
-        } else {
-            player.sendMessage(Component.text("Not enough mana ").normalize(NamedTextColor.RED)
-                .append(Component.text("${Emoji.DIAMOND}${needMana.floor1Digits()}").normalize(NamedTextColor.AQUA)))
-        }
+        player.world.playSound(playerLoc, Sound.BLOCK_PISTON_EXTEND, 1f, 1.5f)
+        playerLoc.y = blockLoc.y
+        player.teleport(playerLoc)
+        player.world.playSound(blockLoc, Sound.BLOCK_PISTON_EXTEND, 1f, 1.5f)
     }
 }
