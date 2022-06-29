@@ -85,16 +85,16 @@ fun Inventory.removeSimilar(removeItem: ItemStack) {
 
 fun Inventory.consume(itemStack: ItemStack, amount: Int = itemStack.amount, reverse: Boolean = false): Boolean {
     var result = false
-    val contents = this.storageContents.clone()
+    val consumeItems = mutableMapOf<Int, Int>()
     if (reverse) contents.reverse()
 
     var foundAmount = 0
-    for (item in contents) {
+    for ((index, item) in contents.withIndex()) {
         if (item == null) continue
         if (itemStack.isSimilar(item)) {
-            val useAmount = min(item.amount, amount - foundAmount)
-            foundAmount += useAmount
-            item.amount -= useAmount
+            val consumeAmount = min(item.amount, amount - foundAmount)
+            foundAmount += consumeAmount
+            consumeItems[index] = consumeAmount
             if (foundAmount >= amount) {
                 result = true
                 break
@@ -102,7 +102,11 @@ fun Inventory.consume(itemStack: ItemStack, amount: Int = itemStack.amount, reve
         }
     }
     if (result) {
-        this.storageContents = contents
+        consumeItems.forEach { (index, consumedAmount) ->
+            contents[index]?.let {
+                it.amount -= consumedAmount
+            }
+        }
     }
     return result
 }
