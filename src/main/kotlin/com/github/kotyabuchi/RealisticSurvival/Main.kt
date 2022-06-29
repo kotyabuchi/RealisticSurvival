@@ -7,9 +7,7 @@ import com.github.kotyabuchi.RealisticSurvival.Menu.SoundSampleMenu
 import com.github.kotyabuchi.RealisticSurvival.Monster.*
 import com.github.kotyabuchi.RealisticSurvival.System.*
 import com.github.kotyabuchi.RealisticSurvival.System.Combat.DamagePopup
-import com.github.kotyabuchi.RealisticSurvival.System.Item.CraftExtension
-import com.github.kotyabuchi.RealisticSurvival.System.Item.ItemExtensionManager
-import com.github.kotyabuchi.RealisticSurvival.System.Item.UUIDForItem
+import com.github.kotyabuchi.RealisticSurvival.System.Item.*
 import com.github.kotyabuchi.RealisticSurvival.System.Player.HomePoint
 import com.github.kotyabuchi.RealisticSurvival.System.Player.PlayerManageCommand
 import com.github.kotyabuchi.RealisticSurvival.System.Player.PlayerManager
@@ -55,6 +53,7 @@ class Main: JavaPlugin() {
             DamagePopup,
 //            HealthBar,
                 // Item
+            AnvilPressCraft,
             CraftExtension,
             ItemExtensionManager,
             UUIDForItem,

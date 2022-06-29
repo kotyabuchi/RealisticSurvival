@@ -86,9 +86,9 @@ fun Material.getWoodType(): WoodType {
     if (this == Material.AZALEA_LEAVES || this == Material.FLOWERING_AZALEA_LEAVES) return WoodType.OAK
     return when {
         name.contains("JUNGLE") -> WoodType.JUNGLE
+        name.contains("DARK_OAK") -> WoodType.DARK_OAK
         name.contains("OAK") -> WoodType.OAK
         name.contains("BIRCH") -> WoodType.BIRCH
-        name.contains("DARK_OAK") -> WoodType.DARK_OAK
         name.contains("SPRUCE") -> WoodType.SPRUCE
         name.contains("ACACIA") -> WoodType.ACACIA
         name.contains("MANGROVE") -> WoodType.MANGROVE
