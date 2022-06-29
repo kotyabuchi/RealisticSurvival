@@ -29,23 +29,26 @@ object ItemExtensionManager: Listener {
         event.isCancelled = true
         val itemStack = event.item
         val itemExtension = ItemExtension(itemStack)
+        val beforeDurability = itemExtension.durability
+        val damage = event.damage
+
         if (itemStack.type.isArmors()) {
-            itemExtension.damage(event.damage)
+            itemExtension.damage(damage)
         } else {
-            itemExtension.damage(event.damage, event.player)
+            itemExtension.damage(damage, event.player)
         }
         itemExtension.applyDurability().applySetting()
 
-        if (itemExtension.durability > 0) return
         val player = event.player
+        if (itemExtension.durability > 0) return
+        if (beforeDurability > 1 && damage > 1) {
+            itemExtension.mending(1, player).applyDurability().applySetting()
+            return
+        }
         val itemBreakEvent = PlayerItemBreakEvent(player, itemStack)
         CustomEventCaller.callEvent(itemBreakEvent)
         player.world.playSound(player.location, Sound.ENTITY_ITEM_BREAK, 1f, 1f)
         itemStack.subtract(Int.MAX_VALUE)
-//        val inv = player.inventory
-//        inv.findFirst(itemStack)?.slot?.let { slot ->
-//            inv.setItem(slot, null)
-//        }
     }
 
     @EventHandler

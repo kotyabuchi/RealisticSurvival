@@ -126,7 +126,7 @@ fun Material.getEquipmentType(): EquipmentType? {
 }
 
 fun ItemStack.damage(player: Player, amount: Int) {
-    if (this.type.hasDurability() && amount > 0) CustomEventCaller.callEvent(PlayerItemDamageEvent(player, this, amount))
+    if (this.type.hasDurability() && amount > 0) CustomEventCaller.callEvent(PlayerItemDamageEvent(player, this, amount, amount))
 }
 
 fun ItemStack.damage(amount: Int): Boolean {

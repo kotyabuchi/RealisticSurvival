@@ -52,6 +52,8 @@ object TreeAssist: ToolLinkedSkill {
         if (!material.isWood()) return
         if (!itemStack.type.isAxe()) return
         if (!isEnabledSkill(player)) return
+        event.isCancelled = true
+
         restartActiveTime(player, 1)
 
         val woodList: MutableList<Block> = mutableListOf()
