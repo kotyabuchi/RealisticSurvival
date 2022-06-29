@@ -41,7 +41,7 @@ class TunnelAssist(override val ownerJob: GatheringJob) : PassiveSkill {
         val block = event.block
         val player = event.player
         val level = getSkillLevel(player) ?: return
-        val distance = if (level == 50) 3 else floor((level - 50) / 150.0).toInt() + 3
+        val distance = if (level == 50) 2 else floor((level - 50) / 150.0).toInt() + 2
 
         val targetBlockFace = player.getTargetBlockFace(6) ?: return
         val xRange: IntRange
