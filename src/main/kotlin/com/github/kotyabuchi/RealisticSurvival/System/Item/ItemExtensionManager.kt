@@ -5,6 +5,7 @@ import com.github.kotyabuchi.RealisticSurvival.Event.PrepareItemExtensionCraftEv
 import com.github.kotyabuchi.RealisticSurvival.Item.ItemExtension
 import com.github.kotyabuchi.RealisticSurvival.Utility.hasDurability
 import com.github.kotyabuchi.RealisticSurvival.Utility.isArmors
+import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.event.EventHandler
@@ -40,11 +41,16 @@ object ItemExtensionManager: Listener {
         itemExtension.applyDurability().applySetting()
 
         val player = event.player
+        if (itemExtension.durability == 1 && itemStack.type == Material.ELYTRA) {
+            player.world.playSound(player.location, Sound.ENTITY_ITEM_BREAK, 1f, 1f)
+            return
+        }
         if (itemExtension.durability > 0) return
         if (beforeDurability > 1 && damage > 1) {
             itemExtension.mending(1, player).applyDurability().applySetting()
             return
         }
+
         val itemBreakEvent = PlayerItemBreakEvent(player, itemStack)
         CustomEventCaller.callEvent(itemBreakEvent)
         player.world.playSound(player.location, Sound.ENTITY_ITEM_BREAK, 1f, 1f)
