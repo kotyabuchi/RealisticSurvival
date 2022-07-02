@@ -11,6 +11,7 @@ import com.github.kotyabuchi.RealisticSurvival.System.Item.*
 import com.github.kotyabuchi.RealisticSurvival.System.Player.HomePoint
 import com.github.kotyabuchi.RealisticSurvival.System.Player.PlayerManageCommand
 import com.github.kotyabuchi.RealisticSurvival.System.Player.PlayerManager
+import com.github.kotyabuchi.RealisticSurvival.System.Player.ResourceStorageManager
 import com.github.kotyabuchi.RealisticSurvival.Utility.DataBaseManager
 import org.bukkit.NamespacedKey
 import org.bukkit.event.Listener
@@ -61,6 +62,7 @@ class Main: JavaPlugin() {
                 // Player
             HomePoint,
             PlayerManager,
+            ResourceStorageManager,
                 // Other
             AnimalShearing,
             BlockPlacer,

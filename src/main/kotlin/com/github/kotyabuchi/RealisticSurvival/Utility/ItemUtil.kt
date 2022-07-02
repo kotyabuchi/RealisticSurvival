@@ -112,7 +112,8 @@ fun Material.isArmors(): Boolean {
     return this.isHelmet() ||
             this.isChestplate() ||
             this.isLeggings() ||
-            this.isBoots()
+            this.isBoots() ||
+            this == Material.ELYTRA
 }
 
 fun Material.getEquipmentType(): EquipmentType? {
