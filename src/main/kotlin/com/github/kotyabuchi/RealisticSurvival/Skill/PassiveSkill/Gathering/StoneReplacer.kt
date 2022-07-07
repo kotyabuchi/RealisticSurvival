@@ -1,14 +1,17 @@
 package com.github.kotyabuchi.RealisticSurvival.Skill.PassiveSkill.Gathering
 
 import com.github.kotyabuchi.RealisticSurvival.Event.BlockMineEvent
+import com.github.kotyabuchi.RealisticSurvival.Event.CustomEventCaller
 import com.github.kotyabuchi.RealisticSurvival.Job.Gathering.GatheringJob
 import com.github.kotyabuchi.RealisticSurvival.Main
 import com.github.kotyabuchi.RealisticSurvival.Skill.PassiveSkill.PassiveSkill
 import com.github.kotyabuchi.RealisticSurvival.Utility.addItemOrDrop
 import com.github.kotyabuchi.RealisticSurvival.Utility.breakBlock
 import com.github.kotyabuchi.RealisticSurvival.Utility.consume
+import com.github.kotyabuchi.RealisticSurvival.Utility.getRemaining
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
+import org.bukkit.event.player.PlayerAttemptPickupItemEvent
 import org.bukkit.inventory.ItemStack
 import org.koin.core.component.inject
 import java.util.*
@@ -56,9 +59,10 @@ class StoneReplacer(override val ownerJob: GatheringJob) : PassiveSkill {
             },
             dropItemCallBack = {
                 val items = it.items
-                val dropItem = items.map { item -> item.itemStack }
-                player.inventory.addItemOrDrop(player, *dropItem.toTypedArray())
                 items.forEach { item ->
+                    val playerAttemptPickupItemEvent = PlayerAttemptPickupItemEvent(player, item, player.inventory.getRemaining(item.itemStack))
+                    CustomEventCaller.callEvent(playerAttemptPickupItemEvent)
+                    player.inventory.addItemOrDrop(player, playerAttemptPickupItemEvent.item.itemStack)
                     item.remove()
                 }
                 items.clear()

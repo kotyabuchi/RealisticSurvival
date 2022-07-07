@@ -1,5 +1,7 @@
 package com.github.kotyabuchi.RealisticSurvival.Utility
 
+import kotlin.math.floor
+
 inline fun <reified T : Enum<T>> valueOfOrNull(type: String): T? {
     return try {
         java.lang.Enum.valueOf(T::class.java, type)
@@ -22,4 +24,8 @@ inline fun <T: Any> ifLet(vararg elements: T?, closure: (List<T>) -> Unit) {
     if (elements.all { it != null }) {
         closure(elements.filterNotNull())
     }
+}
+
+fun Double.floorInt(): Int {
+    return floor(this).toInt()
 }

@@ -4,9 +4,9 @@ import com.github.kotyabuchi.RealisticSurvival.Job.JobType
 import com.github.kotyabuchi.RealisticSurvival.Main
 import com.github.kotyabuchi.RealisticSurvival.System.Player.*
 import com.github.kotyabuchi.RealisticSurvival.System.TombStone
-import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -38,6 +38,8 @@ object DataBaseManager: KoinComponent {
                     stmt.executeUpdate("CREATE TABLE IF NOT EXISTS jobs (job_id INTEGER PRIMARY KEY AUTOINCREMENT, job_name TEXT UNIQUE NOT NULL)")
                     stmt.executeUpdate("CREATE TABLE IF NOT EXISTS player_mana (uuid TEXT NOT NULL PRIMARY KEY, max_mana REAL NOT NULL, mana REAL NOT NULL)")
                     stmt.executeUpdate("CREATE TABLE IF NOT EXISTS homes (home_id INTEGER PRIMARY KEY AUTOINCREMENT, uuid TEXT NOT NULL, home_name TEXT NOT NULL, world TEXT NOT NULL, x REAL NOT NULL, y REAL NOT NULL, z REAL NOT NULL, yaw REAL NOT NULL, icon TEXT, is_public INTEGER DEFAULT 0)")
+                    stmt.executeUpdate("CREATE TABLE IF NOT EXISTS resource_storage_size (uuid TEXT NOT NULL PRIMARY KEY, slot_size INTEGER NOT NULL DEFAULT 2)")
+                    stmt.executeUpdate("CREATE TABLE IF NOT EXISTS resource_storage (uuid TEXT NOT NULL, material TEXT NOT NULL, amount INTEGER NOT NULL)")
                     conn.commit()
 
                     try {
@@ -71,8 +73,9 @@ object DataBaseManager: KoinComponent {
                 DriverManager.getConnection(dbHeader).use { conn ->  //try-with-resources
                     players.forEach { player ->
                         val playerStatus = PlayerStatus(player)
+                        val uuid = player.uniqueId.toString()
                         pstmt = conn.prepareStatement("SELECT * FROM player_job_status INNER JOIN jobs ON (player_job_status.job_id = jobs.job_id) WHERE player_job_status.uuid = ?")
-                        pstmt.setString(1, player.uniqueId.toString())
+                        pstmt.setString(1, uuid)
                         val jobRs = pstmt.executeQuery()
 
                         while (jobRs.next()) {
@@ -84,7 +87,7 @@ object DataBaseManager: KoinComponent {
                         }
 
                         pstmt = conn.prepareStatement("SELECT * FROM player_mana WHERE uuid = ?")
-                        pstmt.setString(1, player.uniqueId.toString())
+                        pstmt.setString(1, uuid)
                         val manaRs = pstmt.executeQuery()
 
                         if (manaRs.next()) {
@@ -98,7 +101,7 @@ object DataBaseManager: KoinComponent {
                         }
 
                         pstmt = conn.prepareStatement("SELECT * FROM homes WHERE uuid = ?")
-                        pstmt.setString(1, player.uniqueId.toString())
+                        pstmt.setString(1, uuid)
                         val homeRs = pstmt.executeQuery()
 
                         while (homeRs.next()) {
@@ -116,6 +119,28 @@ object DataBaseManager: KoinComponent {
                                 playerStatus.homes.add(Home(homeId, homeName, world, x, y, z, yaw, icon, creator, isPublic))
                             }
                         }
+
+                        val resourceStorage = ResourceStorage()
+                        pstmt = conn.prepareStatement("SELECT * FROM resource_storage_size WHERE uuid = ?")
+                        pstmt.setString(1, uuid)
+                        val resourceStorageSizeRs = pstmt.executeQuery()
+
+                        while (resourceStorageSizeRs.next()) {
+                            resourceStorage.slotSize = resourceStorageSizeRs.getInt("slot_size")
+                        }
+
+                        pstmt = conn.prepareStatement("SELECT * FROM resource_storage WHERE uuid = ?")
+                        pstmt.setString(1, uuid)
+                        val resourceStorageRs = pstmt.executeQuery()
+
+                        while (resourceStorageRs.next()) {
+                            val material = Material.valueOf(resourceStorageRs.getString("material"))
+                            val amount = resourceStorageRs.getInt("amount")
+                            println("$material: ${resourceStorage.existsMaterial(ItemStack(material))}")
+                            resourceStorage.storeResource(ItemStack(material, amount))
+                        }
+                        playerStatus.resourceStorage = resourceStorage
+
                         result.add(playerStatus)
                     }
                 }
@@ -167,10 +192,32 @@ object DataBaseManager: KoinComponent {
                             pstmt.setDouble(2, status.maxMana)
                             pstmt.setDouble(3, status.mana)
                             pstmt.addBatch()
-                            println("&a[System]${status.player.name}'s status saved'".colorS())
+                        }
+                        pstmt.executeBatch()
+                        statusList.forEach { status ->
+                            pstmt = conn.prepareStatement("DELETE FROM resource_storage WHERE uuid = ?")
+                            pstmt.setString(1, status.player.uniqueId.toString())
+                            pstmt.addBatch()
+                        }
+                        pstmt.executeBatch()
+                        statusList.forEach { status ->
+                            status.resourceStorage.getStoredResources().forEach { (material, amount) ->
+                                pstmt = conn.prepareStatement("INSERT INTO resource_storage(uuid, material, amount) VALUES (?, ?, ?)")
+                                pstmt.setString(1, status.player.uniqueId.toString())
+                                pstmt.setString(2, material.name)
+                                pstmt.setInt(3, amount)
+                                pstmt.addBatch()
+                            }
+                        }
+                        statusList.forEach { status ->
+                            pstmt = conn.prepareStatement("REPLACE INTO resource_storage_size VALUES (?, ?)")
+                            pstmt.setString(1, status.player.uniqueId.toString())
+                            pstmt.setInt(2, status.resourceStorage.slotSize)
+                            pstmt.addBatch()
                         }
                         pstmt.executeBatch()
                         conn.commit()
+//                        println("&a[System]${status.player.name}'s status saved'".colorS())
                     } catch (e: SQLException) {
                         conn.rollback()
                         e.printStackTrace()

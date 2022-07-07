@@ -1,47 +1,95 @@
 package com.github.kotyabuchi.RealisticSurvival.Utility
 
+import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.PlayerInventory
 import kotlin.math.min
 
-fun PlayerInventory.addItemOrDrop(player: Player, vararg items: ItemStack): Boolean {
-    val addedItems = mutableMapOf<Int, ItemStack>()
-    val contents = this.storageContents
+//fun PlayerInventory.addItemOrDrop(player: Player, vararg items: ItemStack): Boolean {
+//    val addedItems = mutableMapOf<Int, ItemStack>()
+//    val contents = this.storageContents
+//
+//    items.forEach { item ->
+//        var amount = item.amount
+//
+//        contents.let {
+//            for ((index, itemStack) in contents.withIndex()) {
+//                if (itemStack == null) {
+//                    this.setItem(index, item)
+//                    addedItems[index] = item
+//                    amount = 0
+//                } else {
+//                    val addItemClone = item.clone()
+//                    val checkItemClone = itemStack.clone()
+//                    addItemClone.amount = 1
+//                    checkItemClone.amount = 1
+//                    if (addItemClone == checkItemClone) {
+//                        val canAddAmount = min(amount, itemStack.maxStackSize - itemStack.amount)
+//                        itemStack.amount += canAddAmount
+//                        addItemClone.amount = canAddAmount
+//                        addedItems[index] = addItemClone
+//                        amount -= canAddAmount
+//                    }
+//                }
+//                if (amount <= 0) break
+//            }
+//        }
+//
+//        if (amount > 0) {
+//            item.amount = amount
+//            player.world.dropItem(player.location, item)
+//        }
+//    }
+//    return addedItems.isNotEmpty()
+//}
 
+fun PlayerInventory.addItemOrDrop(player: Player, vararg items: ItemStack) {
     items.forEach { item ->
-        var amount = item.amount
+        val nullSlots = mutableListOf<Int>()
+        var storeAmount = item.amount
 
-        contents.let {
-            for ((index, itemStack) in contents.withIndex()) {
-                if (itemStack == null) {
-                    this.setItem(index, item)
-                    addedItems[index] = item
-                    amount = 0
-                } else {
-                    val addItemClone = item.clone()
-                    val checkItemClone = itemStack.clone()
-                    addItemClone.amount = 1
-                    checkItemClone.amount = 1
-                    if (addItemClone == checkItemClone) {
-                        val canAddAmount = min(amount, itemStack.maxStackSize - itemStack.amount)
-                        itemStack.amount += canAddAmount
-                        addItemClone.amount = canAddAmount
-                        addedItems[index] = addItemClone
-                        amount -= canAddAmount
-                    }
+        for ((index, itemStack) in storageContents.withIndex()) {
+            if (itemStack == null) {
+                nullSlots.add(index)
+            } else {
+                if (item.isSimilar(itemStack)) {
+                    val canStoreAmount = min(storeAmount, item.maxStackSize - itemStack.amount)
+                    itemStack.amount += canStoreAmount
+                    storeAmount -= canStoreAmount
+                    if (storeAmount <= 0) break
                 }
-                if (amount <= 0) break
             }
         }
-
-        if (amount > 0) {
-            item.amount = amount
-            player.world.dropItem(player.location, item)
+        if (storeAmount > 0) {
+            for (nullSlot in nullSlots) {
+                val canStoreAmount = min(storeAmount, item.maxStackSize)
+                this.setItem(nullSlot, item.asQuantity(canStoreAmount))
+                storeAmount -= canStoreAmount
+                if (storeAmount <= 0) return
+            }
+            player.world.dropItem(player.location, item.asQuantity(storeAmount))
         }
+        if (item.amount != storeAmount) player.world.playSound(player.location, Sound.ENTITY_ITEM_PICKUP, .5f, 1.5f)
     }
-    return addedItems.isNotEmpty()
+}
+
+fun Inventory.getRemaining(item: ItemStack): Int {
+    var remainingAmount = item.amount
+
+    for (itemStack in storageContents) {
+        if (itemStack == null) {
+            remainingAmount -= min(remainingAmount, item.maxStackSize)
+        } else {
+            if (item.isSimilar(itemStack)) {
+                val canStoreAmount = min(remainingAmount, item.maxStackSize - itemStack.amount)
+                remainingAmount -= canStoreAmount
+            }
+        }
+        if (remainingAmount <= 0) break
+    }
+    return remainingAmount
 }
 
 fun Inventory.findFirst(searchItem: ItemStack): FindItemResult? {
