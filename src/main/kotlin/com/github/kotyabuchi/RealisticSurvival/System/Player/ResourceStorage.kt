@@ -14,6 +14,10 @@ class ResourceStorage {
         return storedResources
     }
 
+    fun getStoredResourceAmount(material: Material): Int {
+        return storedResources[material] ?: 0
+    }
+
     fun existsMaterial(itemStack: ItemStack): Boolean {
         return storedResources.any{ ItemStack(it.key).isSimilar(itemStack) }
     }

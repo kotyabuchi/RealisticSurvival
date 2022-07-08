@@ -4,14 +4,14 @@ import com.github.kotyabuchi.RealisticSurvival.Event.BlockMineEvent
 import com.github.kotyabuchi.RealisticSurvival.Job.Gathering.GatheringJob
 import com.github.kotyabuchi.RealisticSurvival.Main
 import com.github.kotyabuchi.RealisticSurvival.Skill.PassiveSkill.PassiveSkill
-import com.github.kotyabuchi.RealisticSurvival.Utility.consume
+import com.github.kotyabuchi.RealisticSurvival.Utility.consumeFillBlock
+import com.github.kotyabuchi.RealisticSurvival.Utility.consumeFillBlockFromResourceStorage
 import com.github.kotyabuchi.RealisticSurvival.Utility.reverse
-import org.bukkit.Material
 import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.inventory.Inventory
-import org.bukkit.inventory.ItemStack
 import org.koin.core.component.inject
 import java.util.*
 import kotlin.math.floor
@@ -79,28 +79,18 @@ class TunnelAssist(override val ownerJob: GatheringJob) : PassiveSkill {
                     val isZWall = checkZRange && (z == zRange.first || z == zRange.last)
                     val checkBlock = block.getRelative(x, y, z)
                     if (isXWall || isYWall || isZWall) {
-                        placeBlockWithConsume(checkBlock, inventory)
+                        placeBlockWithConsume(checkBlock, player, inventory)
                     } else {
-                        placeBlockWithConsume(checkBlock.getRelative(reveredFace), inventory)
+                        placeBlockWithConsume(checkBlock.getRelative(reveredFace), player, inventory)
                     }
                 }
             }
         }
     }
 
-    private fun placeBlockWithConsume(block: Block, inventory: Inventory) {
+    private fun placeBlockWithConsume(block: Block, player: Player, inventory: Inventory) {
         if (!block.type.isAir && !block.isLiquid) return
-        val fillBlock = if (block.y <= 0 && inventory.consume(ItemStack(Material.DEEPSLATE))) {
-            Material.DEEPSLATE
-        } else if (block.y <= 0 && inventory.consume(ItemStack(Material.COBBLED_DEEPSLATE))) {
-            Material.COBBLED_DEEPSLATE
-        } else if (inventory.consume(ItemStack(Material.STONE))) {
-            Material.STONE
-        } else if (inventory.consume(ItemStack(Material.COBBLESTONE))) {
-            Material.COBBLESTONE
-        } else {
-            return
-        }
+        val fillBlock = player.consumeFillBlockFromResourceStorage(block) ?: inventory.consumeFillBlock(block) ?: return
         block.type = fillBlock
     }
 }

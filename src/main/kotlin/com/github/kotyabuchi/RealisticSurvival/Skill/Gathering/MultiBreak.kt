@@ -32,6 +32,7 @@ abstract class MultiBreak: ToggleSkill {
 
         val player = event.player
 
+        if (player.isSneaking) return
         if (!isEnabledSkill(player)) return
 
         val block = event.block

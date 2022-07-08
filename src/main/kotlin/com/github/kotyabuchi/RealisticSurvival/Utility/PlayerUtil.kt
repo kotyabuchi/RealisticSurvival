@@ -1,10 +1,13 @@
 package com.github.kotyabuchi.RealisticSurvival.Utility
 
 import com.github.kotyabuchi.RealisticSurvival.Main
+import com.github.kotyabuchi.RealisticSurvival.System.Player.getStatus
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
+import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.Sound
+import org.bukkit.block.Block
 import org.bukkit.entity.Player
 import org.bukkit.persistence.PersistentDataType
 
@@ -56,4 +59,47 @@ fun Player.toggleTag(main: Main, tagName: String): Boolean {
         pdc.set(NamespacedKey(main, tagName), PersistentDataType.BYTE, 1)
         true
     }
+}
+
+fun Player.consumeFillBlockFromResourceStorage(block: Block): Material? {
+    val resourceStorage = getStatus().resourceStorage
+    var fillBlock: Material? = null
+    val groundFillBlockMaterials = listOf(Material.STONE, Material.COBBLESTONE)
+    val underGroundFillBlockMaterials = listOf(Material.DEEPSLATE, Material.COBBLED_DEEPSLATE)
+    if (block.y > 0) {
+        for (material in groundFillBlockMaterials) {
+            if (resourceStorage.getStoredResourceAmount(material) > 1) {
+                resourceStorage.restoreResource(material, 1)
+                fillBlock = material
+                break
+            }
+        }
+        if (fillBlock == null) {
+            for (material in underGroundFillBlockMaterials) {
+                if (resourceStorage.getStoredResourceAmount(material) > 1) {
+                    resourceStorage.restoreResource(material, 1)
+                    fillBlock = material
+                    break
+                }
+            }
+        }
+    } else {
+        for (material in underGroundFillBlockMaterials) {
+            if (resourceStorage.getStoredResourceAmount(material) > 1) {
+                resourceStorage.restoreResource(material, 1)
+                fillBlock = material
+                break
+            }
+        }
+        if (fillBlock == null) {
+            for (material in groundFillBlockMaterials) {
+                if (resourceStorage.getStoredResourceAmount(material) > 1) {
+                    resourceStorage.restoreResource(material, 1)
+                    fillBlock = material
+                    break
+                }
+            }
+        }
+    }
+    return fillBlock
 }
