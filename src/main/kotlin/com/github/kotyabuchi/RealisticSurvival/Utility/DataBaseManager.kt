@@ -15,7 +15,7 @@ import java.sql.DriverManager
 import java.sql.PreparedStatement
 import java.sql.SQLException
 import java.sql.Statement
-import java.util.UUID
+import java.util.*
 
 object DataBaseManager: KoinComponent {
 
@@ -174,7 +174,6 @@ object DataBaseManager: KoinComponent {
                     try {
                         pstmt = conn.prepareStatement("REPLACE INTO player_job_status VALUES (?, ?, ?)")
                         statusList.forEach { status ->
-                            pstmt = conn.prepareStatement("REPLACE INTO player_job_status VALUES (?, ?, ?)")
                             JobType.values().forEach { job ->
                                 jobs[job]?.let { jobId ->
                                     val jobStatus = status.getJobStatus(job.jobClass)
@@ -186,31 +185,32 @@ object DataBaseManager: KoinComponent {
                             }
                         }
                         pstmt.executeBatch()
+                        pstmt = conn.prepareStatement("REPLACE INTO player_mana VALUES (?, ?, ?)")
                         statusList.forEach { status ->
-                            pstmt = conn.prepareStatement("REPLACE INTO player_mana VALUES (?, ?, ?)")
                             pstmt.setString(1, status.player.uniqueId.toString())
                             pstmt.setDouble(2, status.maxMana)
                             pstmt.setDouble(3, status.mana)
                             pstmt.addBatch()
                         }
                         pstmt.executeBatch()
+                        pstmt = conn.prepareStatement("DELETE FROM resource_storage WHERE uuid = ?")
                         statusList.forEach { status ->
-                            pstmt = conn.prepareStatement("DELETE FROM resource_storage WHERE uuid = ?")
                             pstmt.setString(1, status.player.uniqueId.toString())
                             pstmt.addBatch()
                         }
                         pstmt.executeBatch()
+                        pstmt = conn.prepareStatement("INSERT INTO resource_storage(uuid, material, amount) VALUES (?, ?, ?)")
                         statusList.forEach { status ->
                             status.resourceStorage.getStoredResources().forEach { (material, amount) ->
-                                pstmt = conn.prepareStatement("INSERT INTO resource_storage(uuid, material, amount) VALUES (?, ?, ?)")
                                 pstmt.setString(1, status.player.uniqueId.toString())
                                 pstmt.setString(2, material.name)
                                 pstmt.setInt(3, amount)
                                 pstmt.addBatch()
                             }
                         }
+                        pstmt.executeBatch()
+                        pstmt = conn.prepareStatement("REPLACE INTO resource_storage_size VALUES (?, ?)")
                         statusList.forEach { status ->
-                            pstmt = conn.prepareStatement("REPLACE INTO resource_storage_size VALUES (?, ?)")
                             pstmt.setString(1, status.player.uniqueId.toString())
                             pstmt.setInt(2, status.resourceStorage.slotSize)
                             pstmt.addBatch()
