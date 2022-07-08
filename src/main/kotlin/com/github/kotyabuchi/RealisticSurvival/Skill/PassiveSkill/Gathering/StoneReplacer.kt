@@ -5,14 +5,10 @@ import com.github.kotyabuchi.RealisticSurvival.Event.CustomEventCaller
 import com.github.kotyabuchi.RealisticSurvival.Job.Gathering.GatheringJob
 import com.github.kotyabuchi.RealisticSurvival.Main
 import com.github.kotyabuchi.RealisticSurvival.Skill.PassiveSkill.PassiveSkill
-import com.github.kotyabuchi.RealisticSurvival.Utility.addItemOrDrop
-import com.github.kotyabuchi.RealisticSurvival.Utility.breakBlock
-import com.github.kotyabuchi.RealisticSurvival.Utility.consume
-import com.github.kotyabuchi.RealisticSurvival.Utility.getRemaining
+import com.github.kotyabuchi.RealisticSurvival.Utility.*
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent
-import org.bukkit.inventory.ItemStack
 import org.koin.core.component.inject
 import java.util.*
 
@@ -39,17 +35,8 @@ class StoneReplacer(override val ownerJob: GatheringJob) : PassiveSkill {
         val block = event.block
         val inventory = player.inventory
 
-        val fillBlock = if (block.y <= 0 && inventory.consume(ItemStack(Material.DEEPSLATE))) {
-            Material.DEEPSLATE
-        } else if (block.y <= 0 && inventory.consume(ItemStack(Material.COBBLED_DEEPSLATE))) {
-            Material.COBBLED_DEEPSLATE
-        } else if (inventory.consume(ItemStack(Material.STONE))) {
-            Material.STONE
-        } else if (inventory.consume(ItemStack(Material.COBBLESTONE))) {
-            Material.COBBLESTONE
-        } else {
-            return
-        }
+        val fillBlock: Material = player.consumeFillBlockFromResourceStorage(block) ?: inventory.consumeFillBlock(block) ?: return
+
         event.isCancelled = true
         ownerJob.addBrokenBlockSet(block)
 

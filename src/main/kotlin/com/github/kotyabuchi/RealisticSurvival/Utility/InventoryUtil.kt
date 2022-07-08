@@ -1,6 +1,8 @@
 package com.github.kotyabuchi.RealisticSurvival.Utility
 
+import org.bukkit.Material
 import org.bukkit.Sound
+import org.bukkit.block.Block
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
@@ -169,6 +171,44 @@ fun Inventory.findItemAmount(itemStack: ItemStack): Int {
         }
     }
     return foundAmount
+}
+
+fun Inventory.consumeFillBlock(block: Block): Material? {
+    var fillBlock: Material? = null
+    val groundFillBlockMaterials = listOf(Material.STONE, Material.COBBLESTONE)
+    val underGroundFillBlockMaterials = listOf(Material.DEEPSLATE, Material.COBBLED_DEEPSLATE)
+    if (block.y > 0) {
+        for (material in groundFillBlockMaterials) {
+            if (this.consume(ItemStack(material))) {
+                fillBlock = material
+                break
+            }
+        }
+        if (fillBlock == null) {
+            for (material in underGroundFillBlockMaterials) {
+                if (this.consume(ItemStack(material))) {
+                    fillBlock = material
+                    break
+                }
+            }
+        }
+    } else {
+        for (material in underGroundFillBlockMaterials) {
+            if (this.consume(ItemStack(material))) {
+                fillBlock = material
+                break
+            }
+        }
+        if (fillBlock == null) {
+            for (material in groundFillBlockMaterials) {
+                if (this.consume(ItemStack(material))) {
+                    fillBlock = material
+                    break
+                }
+            }
+        }
+    }
+    return fillBlock
 }
 
 data class FindItemResult(val slot: Int, val itemStack: ItemStack)
