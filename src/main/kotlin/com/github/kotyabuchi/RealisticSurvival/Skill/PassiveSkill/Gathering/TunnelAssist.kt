@@ -20,7 +20,6 @@ class TunnelAssist(override val ownerJob: GatheringJob) : PassiveSkill {
     override val main: Main by inject()
     override val skillName: String = "TUNNEL_ASSIST"
     override val displayName: String = "Tunnel Assist"
-    override val cost: Int = 0
     override val needLevel: Int = 100
     override var description: String = "[Mine Assist]使用時にトンネル状に外壁を作成する"
     override val coolTime: Long = 0

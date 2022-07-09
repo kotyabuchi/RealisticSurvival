@@ -16,7 +16,6 @@ class GemCollector(override val ownerJob: GatheringJob): PassiveSkill {
     override val main: Main by inject()
     override val skillName: String = "GEM_COLLECTOR"
     override val displayName: String = "Gem Collector"
-    override val cost: Int = 0
     override val needLevel: Int = 0
     override var description: String = "石を破壊した際に低確率で鉱石がドロップする"
     override val coolTime: Long = 0

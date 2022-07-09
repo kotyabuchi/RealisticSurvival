@@ -16,7 +16,6 @@ import kotlin.math.floor
 abstract class MultiBreak: ToggleSkill {
     override val main: Main by inject()
     override val displayName: String = "Multi Break"
-    override val cost: Int = 0
     override val needLevel: Int = 50
     override var description: String = "周囲のブロックをまとめて採掘する"
     override val coolTime: Long = 0

@@ -23,9 +23,7 @@ object PlayerManageCommand: CommandExecutor, TabCompleter, KoinComponent {
     private val main: Main by inject()
     private val server = main.server
 
-    private val args1List = listOf("mana", "skill", "tombstone")
-    private val manaArgs2List = listOf("set", "increase", "decrease")
-    private val manaArgs3List = listOf("mana", "maxmana")
+    private val args1List = listOf("skill", "tombstone")
     private val skillArgs2List = listOf("set", "increase", "decrease")
     private val skillArgs3List = listOf("xp", "level")
     private val tombStoneArgs2List = listOf("show", "remove")
@@ -41,11 +39,6 @@ object PlayerManageCommand: CommandExecutor, TabCompleter, KoinComponent {
             }
             2 -> {
                 when (args[0].lowercase()) {
-                    "mana" -> {
-                        manaArgs2List.forEach {
-                            if (it.contains(args[1], true)) result.add(it)
-                        }
-                    }
                     "skill" -> {
                         skillArgs2List.forEach {
                             if (it.contains(args[1], true)) result.add(it)
@@ -60,11 +53,6 @@ object PlayerManageCommand: CommandExecutor, TabCompleter, KoinComponent {
             }
             3 -> {
                 when (args[0].lowercase()) {
-                    "mana" -> {
-                        manaArgs3List.forEach {
-                            if (it.contains(args[2], true)) result.add(it)
-                        }
-                    }
                     "skill" -> {
                         skillArgs3List.forEach {
                             if (it.contains(args[2], true)) result.add(it)
@@ -91,11 +79,6 @@ object PlayerManageCommand: CommandExecutor, TabCompleter, KoinComponent {
             }
             5 -> {
                 when (args[0].lowercase()) {
-                    "mana" -> {
-                        main.server.onlinePlayers.forEach {
-                            result.add(it.name)
-                        }
-                    }
                     "skill" -> {
                         JobType.values().forEach {
                             if (it.name.contains(args[4], true)) result.add(it.regularName)
@@ -120,50 +103,6 @@ object PlayerManageCommand: CommandExecutor, TabCompleter, KoinComponent {
         if (args.isEmpty()) return true
         if (!sender.isOp) return true
         when (args[0].lowercase()) {
-            "mana" -> {
-                if (args.size < 4) return true
-                val type = args[2]
-                val amount = args[3].toDoubleOrNull() ?: return true
-                val target = if (args.size < 5) {
-                    sender as? Player ?: return true
-                } else {
-                    main.server.getPlayer(args[4]) ?: return true
-                }
-                val playerStatus = target.getStatus()
-                when (args[1].lowercase()) {
-                    "set" -> {
-                        when (type.lowercase()) {
-                            "mana" -> {
-                                playerStatus.mana = amount
-                            }
-                            "maxmana" -> {
-                                playerStatus.maxMana = amount
-                            }
-                        }
-                    }
-                    "increase" -> {
-                        when (type.lowercase()) {
-                            "mana" -> {
-                                playerStatus.increaseMana(amount)
-                            }
-                            "maxmana" -> {
-                                playerStatus.increaseMaxMana(amount)
-                            }
-                        }
-                    }
-                    "decrease" -> {
-                        when (type.lowercase()) {
-                            "mana" -> {
-                                playerStatus.decreaseMana(amount)
-                            }
-                            "maxmana" -> {
-                                playerStatus.maxMana -= amount
-                            }
-                        }
-                    }
-                }
-                playerStatus.refreshManaIndicator()
-            }
             "skill" -> {
                 if (args.size < 5) return true
                 val type = args[2]

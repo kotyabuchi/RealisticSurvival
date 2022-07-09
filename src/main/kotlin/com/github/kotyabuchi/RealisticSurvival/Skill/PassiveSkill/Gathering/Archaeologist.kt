@@ -15,7 +15,6 @@ class Archaeologist(override val ownerJob: GatheringJob): PassiveSkill {
     override val main: Main by inject()
     override val skillName: String = "ARCHAEOLOGIST"
     override val displayName: String = "Archaeologist"
-    override val cost: Int = 0
     override val needLevel: Int = 20
     override var description: String = "土や砂を破壊した際に低確率で希少なアイテムがドロップする"
     override val coolTime: Long = 0

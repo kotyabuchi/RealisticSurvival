@@ -57,7 +57,6 @@ class HomeInfoButton(val player: Player, val home: Home, modelData: CustomModelD
         val inv = player.inventory
 
         inv.consume(ItemStack(Material.ENDER_PEARL))
-        playerStatus.refreshManaIndicator()
         playerStatus.closeMenu()
         for (i in 0 until 20) {
             val x = Random.nextInt(15) / 10.0 - .75

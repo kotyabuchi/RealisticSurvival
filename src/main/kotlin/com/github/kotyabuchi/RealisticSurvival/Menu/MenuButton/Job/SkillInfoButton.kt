@@ -15,7 +15,6 @@ class SkillInfoButton(command: SkillCommand, skill: Skill): MenuButton() {
     init {
         val lore = mutableListOf<Component>()
         lore.add(Component.text("NeedLevel: ", ButtonData.buttonLoreStyle).append(Component.text(skill.needLevel).normalize()))
-        lore.add(Component.text("Cost: ", ButtonData.buttonLoreStyle).append(Component.text(skill.cost).normalize(NamedTextColor.AQUA)))
         if (skill.coolTime != 0L) lore.add(Component.text("CoolTime: ", ButtonData.buttonLoreStyle).append(Component.text("${skill.coolTime / 1000}s").normalize()))
         lore.add(Component.text("Command: ", ButtonData.buttonLoreStyle).append(Component.text(command.name).normalize()))
         lore.add(Component.text("===============", ButtonData.buttonLoreStyle))

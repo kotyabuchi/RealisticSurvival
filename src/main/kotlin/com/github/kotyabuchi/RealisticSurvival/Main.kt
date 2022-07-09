@@ -101,7 +101,6 @@ class Main: JavaPlugin() {
     override fun onDisable() {
         DataBaseManager.savePlayerStatus()
         TombStone.saveTombStoneFile()
-        PlayerManager.hideAllManaIndicator()
         refreshBossbar()
         println("Disabled")
     }

@@ -16,7 +16,6 @@ class HadesBlessing(override val ownerJob: JobMaster): ToolLinkedEffectSkill() {
     override val main: Main by inject()
     override val skillName: String = "HADES_BLESSING"
     override val displayName: String = "Hades Blessing"
-    override val cost: Int = 0
     override val needLevel: Int = 20
     override var description: String = "採掘速度が上昇する"
     override val coolTime: Long = 0

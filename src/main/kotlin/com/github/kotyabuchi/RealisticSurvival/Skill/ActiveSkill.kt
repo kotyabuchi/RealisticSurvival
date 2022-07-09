@@ -1,7 +1,5 @@
 package com.github.kotyabuchi.RealisticSurvival.Skill
 
-import com.github.kotyabuchi.RealisticSurvival.System.Player.getStatus
-import com.github.kotyabuchi.RealisticSurvival.Utility.Emoji
 import com.github.kotyabuchi.RealisticSurvival.Utility.floor1Digits
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
@@ -18,7 +16,6 @@ interface ActiveSkill: ToggleSkill {
     fun calcActiveTime(level: Int): Int = 0
 
     override fun enableSkill(player: Player, level: Int) {
-        val playerStatus = player.getStatus()
         val uuid = player.uniqueId
         when {
             level < needLevel -> {
@@ -28,18 +25,6 @@ interface ActiveSkill: ToggleSkill {
             !isReadySkill(uuid) -> {
                 player.playSound(player.location, Sound.ENTITY_BLAZE_SHOOT, 0.5f, 2f)
                 sendErrorMessage(player, Component.text("$displayName: Not yet (${(getRemainingCoolTime(uuid) / 1000.0).floor1Digits()}s)").color(NamedTextColor.RED))
-            }
-            playerStatus.decreaseMana(cost) -> {
-                enableAction(player, level)
-                setLastUseTime(uuid)
-                setSkillLevel(player, level)
-                if (hasActiveTime) restartActiveTime(player, level)
-            }
-            else -> {
-                sendErrorMessage(player, Component.text("$displayName: Not enough mana ").color(NamedTextColor.RED)
-                    .append(Component.text("(").color(NamedTextColor.WHITE))
-                    .append(Component.text("${Emoji.DIAMOND}$cost").color(NamedTextColor.AQUA))
-                    .append(Component.text(")").color(NamedTextColor.WHITE)))
             }
         }
     }

@@ -5,9 +5,7 @@ import com.github.kotyabuchi.RealisticSurvival.Main
 import com.github.kotyabuchi.RealisticSurvival.Menu.Menu
 import com.github.kotyabuchi.RealisticSurvival.Skill.Skill
 import com.github.kotyabuchi.RealisticSurvival.Utility.*
-import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.title.Title
 import org.bukkit.Sound
 import org.bukkit.boss.BarColor
@@ -16,26 +14,8 @@ import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.scheduler.BukkitTask
 import java.time.Duration
-import kotlin.math.max
-import kotlin.math.min
 
 data class PlayerStatus(val player: Player) {
-
-    var maxMana: Double = 10.0
-        set(value) {
-            field = value
-            manaRegen = value / 300.0
-            if (mana > value) {
-                mana = value
-            }
-        }
-    var mana: Double = 10.0
-        set(value) {
-            field = min(maxMana, value)
-        }
-    var manaRegen: Double = maxMana / 300.0
-    private val manaIndicator: BossBar = BossBar.bossBar(getManaTitle(), getManaProgress(), BossBar.Color.BLUE, BossBar.Overlay.PROGRESS)
-
     private var openingMenu: Menu? = null
     private var openingMenuPage: Int = 0
     var openMenuWithCloseMenu = false
@@ -46,9 +26,6 @@ data class PlayerStatus(val player: Player) {
 
     private val jobStatusMap = mutableMapOf<JobMaster, JobStatus>()
     private val expBarMap = mutableMapOf<JobMaster, BukkitTask>()
-
-    private fun getManaTitle(): Component = Component.text("\u25C6").normalize(NamedTextColor.AQUA).append(Component.text("Mana ${mana.floor1Digits()}/${maxMana.floor1Digits()} +${manaRegen.floor2Digits()}"))
-    private fun getManaProgress(): Float = max(0.0, min(1.0, mana / maxMana)).toFloat()
 
     fun closeMenu(closeInventory: Boolean = true) {
         openingMenu?.doCloseMenuAction(player)
@@ -87,44 +64,6 @@ data class PlayerStatus(val player: Player) {
         openingMenuPage = page
     }
 
-    fun increaseMaxMana(amount: Double): PlayerStatus {
-        maxMana += amount
-        return this
-    }
-
-    fun increaseMaxMana(amount: Int): PlayerStatus {
-        maxMana += amount
-        return this
-    }
-
-    fun increaseMana(amount: Double): PlayerStatus {
-        mana += amount
-        return this
-    }
-
-    fun increaseMana(amount: Int): PlayerStatus {
-        mana += amount
-        return this
-    }
-
-    fun decreaseMana(amount: Double): Boolean {
-        return if (mana >= amount) {
-            mana -= amount
-            true
-        } else {
-            false
-        }
-    }
-
-    fun decreaseMana(amount: Int): Boolean {
-        return if (mana >= amount) {
-            mana -= amount
-            true
-        } else {
-            false
-        }
-    }
-
     fun notifyLevelUp(job: JobMaster) {
         val jobStatus = getJobStatus(job)
         job.levelUpEvent(player)
@@ -140,13 +79,10 @@ data class PlayerStatus(val player: Player) {
 
     fun notifyLearnedSkill(skill: Skill) {
         player.playSound(player.eyeLocation, Sound.ENTITY_PLAYER_LEVELUP, 0.2f, 2.0f)
-        player.sendMessage(Component.text("[${skill.displayName}]を習得しました").normalize(NamedTextColor.GREEN))
+        player.sendSuccessMessage("[${skill.displayName}]を習得しました")
     }
 
     fun levelUp(job: JobMaster, level: Int) {
-        increaseMaxMana(1.0)
-        mana = maxMana
-        refreshManaIndicator()
         notifyLevelUp(job)
 
         job.getPassiveSkills().forEach {
@@ -206,20 +142,6 @@ data class PlayerStatus(val player: Player) {
 
     fun getAllJobStatus(): List<JobStatus> {
         return jobStatusMap.values.toList()
-    }
-
-    fun showManaIndicator() {
-        refreshManaIndicator()
-        player.showBossBar(manaIndicator)
-    }
-
-    fun hideManaIndicator() {
-        player.hideBossBar(manaIndicator)
-    }
-
-    fun refreshManaIndicator() {
-        manaIndicator.name(getManaTitle())
-        manaIndicator.progress(getManaProgress())
     }
 
     fun save() {

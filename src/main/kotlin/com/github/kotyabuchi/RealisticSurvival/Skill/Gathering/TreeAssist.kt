@@ -27,7 +27,6 @@ object TreeAssist: ToolLinkedSkill {
     override val main: Main by inject()
     override val skillName: String = "TREE_ASSIST"
     override val displayName: String = "Tree Assist"
-    override val cost: Int = 0
     override val needLevel: Int = 0
     override val description: String = "原木を破壊した際に繋がった原木もまとめて伐採する"
 

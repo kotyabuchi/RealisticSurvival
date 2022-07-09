@@ -36,7 +36,6 @@ object DataBaseManager: KoinComponent {
                     stmt = conn.createStatement()
                     stmt.executeUpdate("CREATE TABLE IF NOT EXISTS player_job_status (uuid TEXT NOT NULL, job_id INTEGER NOT NULL, job_total_exp REAL NOT NULL, UNIQUE(uuid, job_id))")
                     stmt.executeUpdate("CREATE TABLE IF NOT EXISTS jobs (job_id INTEGER PRIMARY KEY AUTOINCREMENT, job_name TEXT UNIQUE NOT NULL)")
-                    stmt.executeUpdate("CREATE TABLE IF NOT EXISTS player_mana (uuid TEXT NOT NULL PRIMARY KEY, max_mana REAL NOT NULL, mana REAL NOT NULL)")
                     stmt.executeUpdate("CREATE TABLE IF NOT EXISTS homes (home_id INTEGER PRIMARY KEY AUTOINCREMENT, uuid TEXT NOT NULL, home_name TEXT NOT NULL, world TEXT NOT NULL, x REAL NOT NULL, y REAL NOT NULL, z REAL NOT NULL, yaw REAL NOT NULL, icon TEXT, is_public INTEGER DEFAULT 0)")
                     stmt.executeUpdate("CREATE TABLE IF NOT EXISTS resource_storage_size (uuid TEXT NOT NULL PRIMARY KEY, slot_size INTEGER NOT NULL DEFAULT 2)")
                     stmt.executeUpdate("CREATE TABLE IF NOT EXISTS resource_storage (uuid TEXT NOT NULL, material TEXT NOT NULL, amount INTEGER NOT NULL)")
@@ -84,20 +83,6 @@ object DataBaseManager: KoinComponent {
                                 jobStatus.setTotalExp(jobRs.getDouble("job_total_exp"))
                                 playerStatus.setJobStatus(job, jobStatus)
                             }
-                        }
-
-                        pstmt = conn.prepareStatement("SELECT * FROM player_mana WHERE uuid = ?")
-                        pstmt.setString(1, uuid)
-                        val manaRs = pstmt.executeQuery()
-
-                        if (manaRs.next()) {
-                            playerStatus.maxMana = manaRs.getDouble("max_mana")
-                            playerStatus.mana = manaRs.getDouble("mana")
-                        } else {
-                            playerStatus.getAllJobStatus().forEach {
-                                playerStatus.increaseMaxMana(it.getLevel() - 1.0)
-                            }
-                            playerStatus.mana = playerStatus.maxMana
                         }
 
                         pstmt = conn.prepareStatement("SELECT * FROM homes WHERE uuid = ?")
@@ -183,14 +168,6 @@ object DataBaseManager: KoinComponent {
                                     pstmt.addBatch()
                                 }
                             }
-                        }
-                        pstmt.executeBatch()
-                        pstmt = conn.prepareStatement("REPLACE INTO player_mana VALUES (?, ?, ?)")
-                        statusList.forEach { status ->
-                            pstmt.setString(1, status.player.uniqueId.toString())
-                            pstmt.setDouble(2, status.maxMana)
-                            pstmt.setDouble(3, status.mana)
-                            pstmt.addBatch()
                         }
                         pstmt.executeBatch()
                         pstmt = conn.prepareStatement("DELETE FROM resource_storage WHERE uuid = ?")

@@ -17,7 +17,6 @@ object MineAssist: ToggleSkill {
     override val main: Main by inject()
     override val skillName: String = "MINE_ASSIST"
     override val displayName: String = "Mine Assist"
-    override val cost: Int = 0
     override val needLevel: Int = 0
     override var description: String = "鉱石を破壊した際に繋がった鉱石もまとめて採掘する"
     override val coolTime: Long = 0

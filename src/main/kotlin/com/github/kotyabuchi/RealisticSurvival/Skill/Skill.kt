@@ -1,8 +1,6 @@
 package com.github.kotyabuchi.RealisticSurvival.Skill
 
 import com.github.kotyabuchi.RealisticSurvival.Main
-import com.github.kotyabuchi.RealisticSurvival.System.Player.getStatus
-import com.github.kotyabuchi.RealisticSurvival.Utility.Emoji
 import com.github.kotyabuchi.RealisticSurvival.Utility.floor1Digits
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
@@ -19,7 +17,6 @@ interface Skill: Listener, KoinComponent {
 
     val skillName: String
     val displayName: String
-    val cost: Int
     val needLevel: Int
     val description: String
     val coolTime: Long
@@ -27,7 +24,6 @@ interface Skill: Listener, KoinComponent {
     fun getSkillNamespacedKey(): NamespacedKey = NamespacedKey(main, skillName)
 
     fun enableSkill(player: Player, level: Int) {
-        val playerStatus = player.getStatus()
         val uuid = player.uniqueId
         when {
             level < needLevel -> {
@@ -42,16 +38,6 @@ interface Skill: Listener, KoinComponent {
                 enableAction(player, level)
                 setLastUseTime(uuid)
             }
-//            playerStatus.decreaseMana(cost) -> {
-//                enableAction(player, level)
-//                setLastUseTime(uuid)
-//            }
-//            else -> {
-//                sendErrorMessage(player, Component.text("$displayName: Not enough mana ").color(NamedTextColor.RED)
-//                    .append(Component.text("(").color(NamedTextColor.WHITE))
-//                    .append(Component.text("${Emoji.DIAMOND}$cost").color(NamedTextColor.AQUA))
-//                    .append(Component.text(")").color(NamedTextColor.WHITE)))
-//            }
         }
     }
 

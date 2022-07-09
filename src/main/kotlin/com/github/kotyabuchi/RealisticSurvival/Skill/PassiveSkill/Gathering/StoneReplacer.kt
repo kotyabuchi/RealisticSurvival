@@ -16,7 +16,6 @@ class StoneReplacer(override val ownerJob: GatheringJob) : PassiveSkill {
     override val main: Main by inject()
     override val skillName: String = "STONE_REPLACER"
     override val displayName: String = "Stone Replacer"
-    override val cost: Int = 0
     override val needLevel: Int = 0
     override var description: String = "[Mine Assist]使用時に鉱石を石に置き換える"
     override val coolTime: Long = 0

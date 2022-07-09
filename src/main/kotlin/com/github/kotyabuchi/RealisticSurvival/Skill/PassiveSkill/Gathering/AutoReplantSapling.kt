@@ -15,7 +15,6 @@ class AutoReplantSapling(override val ownerJob: JobMaster): PassiveSkill {
     override val main: Main by inject()
     override val skillName: String = "AUTO_REPLANT_SAPLING"
     override val displayName: String = "Auto Replant Sapling"
-    override val cost: Int = 0
     override val needLevel: Int = 0
     override var description: String = "原木を破壊した際に自動で苗木を植える"
     override val coolTime: Long = 0

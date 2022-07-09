@@ -26,7 +26,6 @@ object BlessOfDemeter: Skill {
     override val main: Main by inject()
     override val skillName: String = "TOTEM_OF_DEMETER"
     override val displayName: String = "Totem of Demeter"
-    override val cost: Int = 35
     override val needLevel: Int = 20
     override val description: String = "周囲の植物の成長を促進するトーテムをその場に設置する"
 

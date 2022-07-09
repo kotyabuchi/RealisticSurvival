@@ -36,12 +36,6 @@ object PlayerManager: Listener, KoinComponent {
         }
     }
 
-    fun hideAllManaIndicator() {
-        playerStatusMap.values.forEach {
-            it.hideManaIndicator()
-        }
-    }
-
     fun getAllPlayerStatus(): Collection<PlayerStatus> {
         val removeList = mutableListOf<UUID>()
         val result = mutableListOf<PlayerStatus>()
@@ -64,17 +58,13 @@ object PlayerManager: Listener, KoinComponent {
         val player = event.player
         val playerStatus = DataBaseManager.loadPlayerStatus(player).first()
         playerStatusMap[player.uniqueId] = playerStatus
-//        playerStatus.showManaIndicator()
     }
 
     @EventHandler
     fun onQuitServer(event: PlayerQuitEvent) {
         val player = event.player
         val uuid = player.uniqueId
-        playerStatusMap[uuid]?.let {
-            it.save()
-            it.hideManaIndicator()
-        }
+        playerStatusMap[uuid]?.save()
         playerStatusMap.remove(uuid)
     }
 }
