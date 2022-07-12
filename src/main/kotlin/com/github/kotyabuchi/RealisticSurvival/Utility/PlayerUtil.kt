@@ -7,6 +7,7 @@ import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.Sound
+import org.bukkit.World
 import org.bukkit.block.Block
 import org.bukkit.entity.Player
 import org.bukkit.persistence.PersistentDataType
@@ -62,44 +63,55 @@ fun Player.toggleTag(main: Main, tagName: String): Boolean {
 }
 
 fun Player.consumeFillBlockFromResourceStorage(block: Block): Material? {
+    val environment = block.world.environment
     val resourceStorage = getStatus().resourceStorage
-    var fillBlock: Material? = null
     val groundFillBlockMaterials = listOf(Material.STONE, Material.COBBLESTONE)
     val underGroundFillBlockMaterials = listOf(Material.DEEPSLATE, Material.COBBLED_DEEPSLATE)
+    val netherFillBlockMaterials = listOf(Material.NETHERRACK)
+    val endFillBlockMaterials = listOf(Material.END_STONE)
+
+    if (environment == World.Environment.NETHER) {
+        for (material in netherFillBlockMaterials) {
+            if (resourceStorage.getStoredResourceAmount(material) > 1) {
+                resourceStorage.restoreResource(material, 1)
+                return material
+            }
+        }
+    }
+    if (environment == World.Environment.THE_END) {
+        for (material in endFillBlockMaterials) {
+            if (resourceStorage.getStoredResourceAmount(material) > 1) {
+                resourceStorage.restoreResource(material, 1)
+                return material
+            }
+        }
+    }
     if (block.y > 0) {
         for (material in groundFillBlockMaterials) {
             if (resourceStorage.getStoredResourceAmount(material) > 1) {
                 resourceStorage.restoreResource(material, 1)
-                fillBlock = material
-                break
+                return material
             }
         }
-        if (fillBlock == null) {
-            for (material in underGroundFillBlockMaterials) {
-                if (resourceStorage.getStoredResourceAmount(material) > 1) {
-                    resourceStorage.restoreResource(material, 1)
-                    fillBlock = material
-                    break
-                }
+        for (material in underGroundFillBlockMaterials) {
+            if (resourceStorage.getStoredResourceAmount(material) > 1) {
+                resourceStorage.restoreResource(material, 1)
+                return material
             }
         }
     } else {
         for (material in underGroundFillBlockMaterials) {
             if (resourceStorage.getStoredResourceAmount(material) > 1) {
                 resourceStorage.restoreResource(material, 1)
-                fillBlock = material
-                break
+                return material
             }
         }
-        if (fillBlock == null) {
-            for (material in groundFillBlockMaterials) {
-                if (resourceStorage.getStoredResourceAmount(material) > 1) {
-                    resourceStorage.restoreResource(material, 1)
-                    fillBlock = material
-                    break
-                }
+        for (material in groundFillBlockMaterials) {
+            if (resourceStorage.getStoredResourceAmount(material) > 1) {
+                resourceStorage.restoreResource(material, 1)
+                return material
             }
         }
     }
-    return fillBlock
+    return null
 }
