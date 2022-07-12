@@ -5,9 +5,9 @@ import org.bukkit.entity.Item
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBurnEvent
-import org.bukkit.event.block.BlockIgniteEvent
 import org.bukkit.event.block.BlockSpreadEvent
 import org.bukkit.event.entity.EntityCombustEvent
+import org.bukkit.event.entity.EntityDamageEvent
 
 object WorldGuard: Listener {
 
@@ -30,5 +30,13 @@ object WorldGuard: Listener {
                 source == Material.SOUL_FIRE) {
             event.isCancelled = true
         }
+    }
+
+    @EventHandler
+    fun onBurnItem(event: EntityDamageEvent) {
+        if (event.cause != EntityDamageEvent.DamageCause.FIRE &&
+                event.cause != EntityDamageEvent.DamageCause.FIRE_TICK) return
+        if (event.entity !is Item) return
+        event.isCancelled = true
     }
 }
