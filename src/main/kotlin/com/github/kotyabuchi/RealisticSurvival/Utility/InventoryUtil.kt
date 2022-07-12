@@ -1,7 +1,9 @@
 package com.github.kotyabuchi.RealisticSurvival.Utility
 
+import com.github.kotyabuchi.RealisticSurvival.System.Player.getStatus
 import org.bukkit.Material
 import org.bukkit.Sound
+import org.bukkit.World
 import org.bukkit.block.Block
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
@@ -174,41 +176,50 @@ fun Inventory.findItemAmount(itemStack: ItemStack): Int {
 }
 
 fun Inventory.consumeFillBlock(block: Block): Material? {
-    var fillBlock: Material? = null
+    val environment = block.world.environment
     val groundFillBlockMaterials = listOf(Material.STONE, Material.COBBLESTONE)
     val underGroundFillBlockMaterials = listOf(Material.DEEPSLATE, Material.COBBLED_DEEPSLATE)
+    val netherFillBlockMaterials = listOf(Material.NETHERRACK)
+    val endFillBlockMaterials = listOf(Material.END_STONE)
+
+    if (environment == World.Environment.NETHER) {
+        for (material in netherFillBlockMaterials) {
+            if (this.consume(ItemStack(material))) {
+                return material
+            }
+        }
+    }
+    if (environment == World.Environment.THE_END) {
+        for (material in endFillBlockMaterials) {
+            if (this.consume(ItemStack(material))) {
+                return material
+            }
+        }
+    }
     if (block.y > 0) {
         for (material in groundFillBlockMaterials) {
             if (this.consume(ItemStack(material))) {
-                fillBlock = material
-                break
+                return material
             }
         }
-        if (fillBlock == null) {
-            for (material in underGroundFillBlockMaterials) {
-                if (this.consume(ItemStack(material))) {
-                    fillBlock = material
-                    break
-                }
+        for (material in underGroundFillBlockMaterials) {
+            if (this.consume(ItemStack(material))) {
+                return material
             }
         }
     } else {
         for (material in underGroundFillBlockMaterials) {
             if (this.consume(ItemStack(material))) {
-                fillBlock = material
-                break
+                return material
             }
         }
-        if (fillBlock == null) {
-            for (material in groundFillBlockMaterials) {
-                if (this.consume(ItemStack(material))) {
-                    fillBlock = material
-                    break
-                }
+        for (material in groundFillBlockMaterials) {
+            if (this.consume(ItemStack(material))) {
+                return material
             }
         }
     }
-    return fillBlock
+    return null
 }
 
 data class FindItemResult(val slot: Int, val itemStack: ItemStack)
