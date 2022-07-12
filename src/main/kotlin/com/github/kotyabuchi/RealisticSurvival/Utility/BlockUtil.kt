@@ -10,6 +10,7 @@ import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
 import org.bukkit.block.Chest
 import org.bukkit.block.Container
+import org.bukkit.block.data.Waterlogged
 import org.bukkit.entity.Item
 import org.bukkit.entity.Player
 import org.bukkit.event.block.BlockDropItemEvent
@@ -312,7 +313,12 @@ fun Block.breakBlock(main: Main, player: Player, itemStack: ItemStack, mainBlock
             it?.let { mainBlock.world.dropItem(mainBlock.location.toCenterLocation(), it) }
         }
     }
-    this.type = Material.AIR
+    val blockData = this.blockData
+    if (blockData is Waterlogged && blockData.isWaterlogged) {
+        this.type = Material.WATER
+    } else {
+        this.type = Material.AIR
+    }
     val dropEvent = BlockDropItemEvent(this, state, player, dropItems)
     main.server.pluginManager.callEvent(dropEvent)
     dropItemCallBack(dropEvent)
