@@ -26,6 +26,12 @@ interface ActiveSkill: ToggleSkill {
                 player.playSound(player.location, Sound.ENTITY_BLAZE_SHOOT, 0.5f, 2f)
                 sendErrorMessage(player, Component.text("$displayName: Not yet (${(getRemainingCoolTime(uuid) / 1000.0).floor1Digits()}s)").color(NamedTextColor.RED))
             }
+            else -> {
+                enableAction(player, level)
+                setLastUseTime(uuid)
+                setSkillLevel(player, level)
+                if (hasActiveTime) restartActiveTime(player, level)
+            }
         }
     }
 
